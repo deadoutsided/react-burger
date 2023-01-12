@@ -9,7 +9,7 @@
   flex-wrap: wrap;
   row-gap: 16px;
   max-height: calc(100vh - 441px);
-  max-width: 567px;
+  max-width: 568px;
 }
 
 .scrollable::-webkit-scrollbar{

@@ -21,7 +21,6 @@ class BurgerConstructor extends React.Component{
       <div className={'mt-4 mb-4 ' + style.scrollable}>
         <DragIcon type="primary" />
         <ConstructorElement
-        extraClass="ml-2"
         isLocked={false}
         text="Соус традиционный галактический"
         price={15}
@@ -29,7 +28,6 @@ class BurgerConstructor extends React.Component{
         />
         <DragIcon type="primary" />
         <ConstructorElement
-        extraClass="ml-2"
         isLocked={false}
         text="Мясо бессмертных моллюсков Protostomia"
         price={1337}
@@ -37,7 +35,6 @@ class BurgerConstructor extends React.Component{
         />
         <DragIcon type="primary" />
         <ConstructorElement
-        extraClass="ml-2"
         isLocked={false}
         text="Плоды Фалленианского дерева"
         price={874}
@@ -45,7 +42,6 @@ class BurgerConstructor extends React.Component{
         />
         <DragIcon type="primary" />
         <ConstructorElement
-        extraClass="ml-2"
         isLocked={false}
         text="Хрустящие минеральные кольца"
         price={300}
@@ -53,7 +49,6 @@ class BurgerConstructor extends React.Component{
         />
         <DragIcon type="primary" />
         <ConstructorElement
-        extraClass="ml-2"
         isLocked={false}
         text="Хрустящие минеральные кольца"
         price={300}
@@ -61,7 +56,6 @@ class BurgerConstructor extends React.Component{
         />
         <DragIcon type="primary" />
         <ConstructorElement
-        extraClass="ml-2"
         isLocked={false}
         text="Хрустящие минеральные кольца"
         price={300}
@@ -69,7 +63,6 @@ class BurgerConstructor extends React.Component{
         />
         <DragIcon type="primary" />
         <ConstructorElement
-        extraClass="ml-2"
         isLocked={false}
         text="Хрустящие минеральные кольца"
         price={300}
@@ -77,7 +70,6 @@ class BurgerConstructor extends React.Component{
         />
         <DragIcon type="primary" />
         <ConstructorElement
-        extraClass="ml-2"
         isLocked={false}
         text="Хрустящие минеральные кольца"
         price={300}
@@ -85,7 +77,6 @@ class BurgerConstructor extends React.Component{
         />
         <DragIcon type="primary" />
         <ConstructorElement
-        extraClass="ml-2"
         isLocked={false}
         text="Соус с шипами Антарианского плоскоходца"
         price={88}
@@ -93,7 +84,6 @@ class BurgerConstructor extends React.Component{
         />
         <DragIcon type="primary" />
         <ConstructorElement
-        extraClass="ml-2"
         isLocked={false}
         text="Кристаллы марсианских альфа-сахаридов"
         price={762}
@@ -101,7 +91,6 @@ class BurgerConstructor extends React.Component{
         />
         <DragIcon type="primary" />
         <ConstructorElement
-        extraClass="ml-2"
         isLocked={false}
         text="Мини-салат Экзо-Плантаго"
         price={4400}
