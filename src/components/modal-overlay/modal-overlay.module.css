@@ -1,0 +1,13 @@
+.overlay{
+  position: absolute;
+  width: calc(100vw - 20px);
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #00000099;
+}
+
+.hidden{
+  display: none;
+}
