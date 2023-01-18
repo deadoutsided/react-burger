@@ -17,33 +17,12 @@ function BurgerConstructor(props) {
     setHidden(false);
   };
 
-  const overlay = React.useRef(null);
-
-  const handleCloseBtn = (e) => {
+  const handleClose = (e) => {
     setHidden(true);
   };
 
-  const handleEscPress = (e) => {
-    if (e.key === "Escape") {
-      setHidden(true);
-    }
-  };
-
-  const handleOverlayClick = (e) => {
-    if (e.target === overlay.current) {
-      setHidden(true);
-    }
-  };
-
   const modal = (
-    <Modal
-      title=""
-      ref={overlay}
-      isHidden={isHidden}
-      handleCloseBtn={handleCloseBtn}
-      handleEscPress={handleEscPress}
-      handleOverlayClick={handleOverlayClick}
-    >
+    <Modal title="" handleClose={handleClose}>
       <OrderDetails />
     </Modal>
   );
@@ -58,83 +37,22 @@ function BurgerConstructor(props) {
         thumbnail="https://code.s3.yandex.net/react/code/bun-02.png"
       />
       <div className={"mt-4 mb-4 " + style.scrollable}>
-        <DragIcon type="primary" />
-        <ConstructorElement
-          isLocked={false}
-          text="Соус традиционный галактический"
-          price={15}
-          thumbnail="https://code.s3.yandex.net/react/code/sauce-03.png"
-        />
-        <DragIcon type="primary" />
-        <ConstructorElement
-          isLocked={false}
-          text="Мясо бессмертных моллюсков Protostomia"
-          price={1337}
-          thumbnail="https://code.s3.yandex.net/react/code/meat-02.png"
-        />
-        <DragIcon type="primary" />
-        <ConstructorElement
-          isLocked={false}
-          text="Плоды Фалленианского дерева"
-          price={874}
-          thumbnail="https://code.s3.yandex.net/react/code/sp_1.png"
-        />
-        <DragIcon type="primary" />
-        <ConstructorElement
-          isLocked={false}
-          text="Хрустящие минеральные кольца"
-          price={300}
-          thumbnail="https://code.s3.yandex.net/react/code/mineral_rings.png"
-        />
-        <DragIcon type="primary" />
-        <ConstructorElement
-          isLocked={false}
-          text="Хрустящие минеральные кольца"
-          price={300}
-          thumbnail="https://code.s3.yandex.net/react/code/mineral_rings.png"
-        />
-        <DragIcon type="primary" />
-        <ConstructorElement
-          isLocked={false}
-          text="Хрустящие минеральные кольца"
-          price={300}
-          thumbnail="https://code.s3.yandex.net/react/code/mineral_rings.png"
-        />
-        <DragIcon type="primary" />
-        <ConstructorElement
-          isLocked={false}
-          text="Хрустящие минеральные кольца"
-          price={300}
-          thumbnail="https://code.s3.yandex.net/react/code/mineral_rings.png"
-        />
-        <DragIcon type="primary" />
-        <ConstructorElement
-          isLocked={false}
-          text="Хрустящие минеральные кольца"
-          price={300}
-          thumbnail="https://code.s3.yandex.net/react/code/mineral_rings.png"
-        />
-        <DragIcon type="primary" />
-        <ConstructorElement
-          isLocked={false}
-          text="Соус с шипами Антарианского плоскоходца"
-          price={88}
-          thumbnail="https://code.s3.yandex.net/react/code/sauce-01.png"
-        />
-        <DragIcon type="primary" />
-        <ConstructorElement
-          isLocked={false}
-          text="Кристаллы марсианских альфа-сахаридов"
-          price={762}
-          thumbnail="https://code.s3.yandex.net/react/code/core.png"
-        />
-        <DragIcon type="primary" />
-        <ConstructorElement
-          isLocked={false}
-          text="Мини-салат Экзо-Плантаго"
-          price={4400}
-          thumbnail="https://code.s3.yandex.net/react/code/salad.png"
-        />
+        {props.data.map((element, index) => {
+          if (element.type !== "bun") {
+            return (
+              <div key={index}>
+                <DragIcon type="primary" />
+                <ConstructorElement
+                  key={element._id} 
+                  isLocked={false}
+                  text={element.name}
+                  price={element.price}
+                  thumbnail={element.image}
+                />
+              </div>
+            );
+          }
+        })}
       </div>
       <ConstructorElement
         extraClass="ml-8 mb-10"

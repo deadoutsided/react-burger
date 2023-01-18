@@ -7,25 +7,31 @@ import PropTypes from "prop-types";
 
 const renderPlace = document.getElementById('modal-root');
 
-const Modal = React.forwardRef((props, ref) => {
+function Modal(props) {
 
   React.useEffect(() => {
-    document.addEventListener('keydown', props.handleEscPress);
+    const handleEscPress = (e) => {
+      if(e.key === 'Escape'){
+        props.handleClose();
+      }
+    }
+
+    document.addEventListener('keydown', handleEscPress);
 
     return () => {
-      document.removeEventListener('keydown', props.handleEscPress);
+      document.removeEventListener('keydown', handleEscPress);
     }
   }, [])
 
   return ReactDOM.createPortal(
     <>
-      <ModalOverlay ref={ref} isHidden={props.isHidden} handleOverlayClick={props.handleOverlayClick}>
+      <ModalOverlay handleClose={props.handleClose}>
         <div className={style.module + " pt-10 pr-10 pl-10 pb-15"}>
           <div className={style.titlenbtn}>
             <h3 className="text text_type_main-large">{props.title}</h3>
             <button
               className={style.button}
-              onClick={props.handleCloseBtn}
+              onClick={props.handleClose}
             >
               <CloseIcon type="primary" />
             </button>
@@ -36,14 +42,12 @@ const Modal = React.forwardRef((props, ref) => {
     </>,
     renderPlace
   );
-})
+}
 
 Modal.propTypes = {
-  handleEscPress: PropTypes.func,
   isHidden: PropTypes.bool,
-  handleOverlayClick: PropTypes.func,
   title: PropTypes.string,
-  handleCloseBtn: PropTypes.func,
+  handleClose: PropTypes.func,
   children: PropTypes.node
 }
 

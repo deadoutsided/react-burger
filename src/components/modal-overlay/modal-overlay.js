@@ -1,20 +1,26 @@
 import React from "react";
 import style from "./modal-overlay.module.css";
-import Modal from "../modal/modal";
 import PropTypes from "prop-types";
 
-const ModalOverlay = React.forwardRef((props, ref) => {
+function ModalOverlay(props) {
+
+  const overlay = React.useRef(null)
+
+  const handleOverlayClick = (e) => {
+    if(e.target === overlay.current){
+      props.handleClose();
+    }
+  }
 
   return (
-    <div onClick={props.handleOverlayClick} ref={ref} className={props.isHidden === true ? style.hidden : '' + ' ' + style.overlay}>
+    <div onClick={handleOverlayClick} ref={overlay} className={/*props.isHidden === true ? style.hidden : '' + ' ' + */style.overlay}>
       {props.children}
     </div>
   ) 
-})
+}
 
 ModalOverlay.propTypes = {
   handleOverlayClick: PropTypes.func,
-  isHidden: PropTypes.bool,
   children: PropTypes.node
 }
 

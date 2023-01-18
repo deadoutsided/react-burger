@@ -47,7 +47,7 @@ function App() {
     <div className={style.App}>
         <AppHeader />
         <BurgerIngredients data={state.ingredientData} />
-        <BurgerConstructor />
+        <BurgerConstructor data={state.ingredientData} />
     </div>
   );
 }

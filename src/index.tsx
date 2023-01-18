@@ -18,7 +18,7 @@ const modalRoot = ReactDOM.createRoot(
 )
 modalRoot.render(
   <React.StrictMode>
-    <p> i suck</p>
+    
   </React.StrictMode>
 )
 // If you want to start measuring performance in your app, pass a function

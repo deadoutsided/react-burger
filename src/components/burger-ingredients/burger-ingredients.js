@@ -20,14 +20,7 @@ function BurgerIngredients(props) {
             if (element.type === "bun")
               return (
                 <CardIngredient
-                  image={element.image}
-                  price={element.price}
-                  name={element.name}
-                  fat={element.fat}
-                  proteins={element.proteins}
-                  calories={element.calories}
-                  carbohydrates={element.carbohydrates}
-                  image_large={element.image_large}
+                  ingredient={element}
                   key={element._id}
                 />
               );
@@ -39,14 +32,7 @@ function BurgerIngredients(props) {
             if (element.type === "sauce")
               return (
                 <CardIngredient
-                  image={element.image}
-                  price={element.price}
-                  name={element.name}
-                  fat={element.fat}
-                  proteins={element.proteins}
-                  calories={element.calories}
-                  carbohydrates={element.carbohydrates}
-                  image_large={element.image_large}
+                  ingredient={element}
                   key={element._id}
                 />
               );
@@ -58,14 +44,7 @@ function BurgerIngredients(props) {
             if (element.type === "main")
               return (
                 <CardIngredient
-                  image={element.image}
-                  price={element.price}
-                  name={element.name}
-                  fat={element.fat}
-                  proteins={element.proteins}
-                  calories={element.calories}
-                  carbohydrates={element.carbohydrates}
-                  image_large={element.image_large}
+                  ingredient={element}
                   key={element._id}
                 />
               );

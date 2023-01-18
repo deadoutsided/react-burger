@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import style from "./card-ingredient.module.css";
 import Modal from "../modal/modal";
+import ingredientType from "../../utils/types";
 import {
   CurrencyIcon,
   Counter,
@@ -15,41 +16,18 @@ function CardIngredient(props) {
     setHidden(false);
   };
 
-  const overlay = React.useRef(null);
-
-  const handleCloseBtn = (e) => {
+  const handleClose = (e) => {
     setHidden(true);
-  };
-
-  const handleEscPress = (e) => {
-    if (e.key === "Escape") {
-      setHidden(true);
-    }
-  };
-
-  const handleOverlayClick = (e) => {
-    if (e.target === overlay.current) {
-      setHidden(true);
-    }
   };
 
   const modal =
     (
       <Modal
-        ref={overlay}
-        isHidden={isHidden}
-        handleCloseBtn={handleCloseBtn}
-        handleEscPress={handleEscPress}
-        handleOverlayClick={handleOverlayClick}
+        handleClose={handleClose}
         title='Детали ингредиента'
       >
         <IngredientDetails
-          name={props.name}
-          image={props.image_large}
-          fat={props.fat}
-          proteins={props.proteins}
-          calories={props.calories}
-          carbohydrates={props.carbohydrates}
+          ingredient={props.ingredient}
         />
       </Modal>
     );
@@ -58,16 +36,16 @@ function CardIngredient(props) {
     <div className={"mb-8 ml-3 mr-3 " + style.ingredient}>
       <img
         className={"pl-4 pr-4 " + style.img}
-        src={props.image}
-        alt={props.name}
+        src={props.ingredient.image}
+        alt={props.ingredient.name}
         onClick={handleCardClick}
       ></img>
       <div className={style.price + " mt-1 mb-1"}>
-        <p className={"text text_type_digits-default mr-2"}>{props.price}</p>
+        <p className={"text text_type_digits-default mr-2"}>{props.ingredient.price}</p>
         <CurrencyIcon type="primary" />
       </div>
       <p className={"text text_type_main-default " + style.name}>
-        {props.name}
+        {props.ingredient.name}
       </p>
       <Counter count={1} size="default" extraClass="m-1" />
       {!isHidden && modal}
@@ -75,16 +53,6 @@ function CardIngredient(props) {
   );
 }
 
-CardIngredient.propTypes = {
-  image: PropTypes.string,
-  price: PropTypes.number,
-  name: PropTypes.string,
-  modal: PropTypes.any,
-  image_large: PropTypes.string,
-  fat: PropTypes.number,
-  calories: PropTypes.number,
-  proteins: PropTypes.number,
-  carbohydrates: PropTypes.number
-};
+CardIngredient.propTypes = ingredientType;
 
 export default CardIngredient;
