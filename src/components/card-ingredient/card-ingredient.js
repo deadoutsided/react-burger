@@ -53,6 +53,8 @@ function CardIngredient(props) {
   );
 }
 
-CardIngredient.propTypes = ingredientType;
+CardIngredient.propTypes = {
+  ingredient: ingredientType.isRequired 
+}
 
 export default CardIngredient;
