@@ -5,6 +5,8 @@ import { CloseIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 import style from "./modal.module.css";
 import PropTypes from "prop-types";
 
+const renderPlace = document.getElementById('modal-root');
+
 const Modal = React.forwardRef((props, ref) => {
 
   React.useEffect(() => {
@@ -32,7 +34,7 @@ const Modal = React.forwardRef((props, ref) => {
         </div>
       </ModalOverlay>
     </>,
-    props.renderPlace.current
+    renderPlace
   );
 })
 
@@ -42,8 +44,7 @@ Modal.propTypes = {
   handleOverlayClick: PropTypes.func,
   title: PropTypes.string,
   handleCloseBtn: PropTypes.func,
-  children: PropTypes.node,
-  renderPlace: PropTypes.object
+  children: PropTypes.node
 }
 
 export default Modal;

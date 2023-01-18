@@ -33,12 +33,11 @@ function CardIngredient(props) {
     }
   };
 
-  const modal = //переместить внутринности modal, это отдельный компонент
+  const modal =
     (
       <Modal
         ref={overlay}
         isHidden={isHidden}
-        renderPlace={props.modal}
         handleCloseBtn={handleCloseBtn}
         handleEscPress={handleEscPress}
         handleOverlayClick={handleOverlayClick}

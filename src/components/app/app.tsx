@@ -10,8 +10,6 @@ import ModalOverlay from "../modal-overlay/modal-overlay";
 
 function App() {
 
-  const modalPlace = React.useRef(null);
-
   const [state, setState] = React.useState({
     ingredientData: [],
     loading: false,
@@ -25,23 +23,31 @@ function App() {
         loading: true,
       });
       await fetch(dataApi)
-      .then(res => res.json())
+      .then(res => {
+        if(res.ok) {
+          return res.json()
+        }
+        return Promise.reject(`Ошибка ${res.status}`);
+      })
       .then(async (data) => {
         setState({
           ...state,
           ingredientData: data.data,
           loading: false,
-        });
+        })
       })
+      .catch((err) => {
+        console.log(err);
+      });
     }
     getIngredientData();
   }, []);
 
   return (
-    <div ref={modalPlace} className={style.App}>
+    <div className={style.App}>
         <AppHeader />
-        <BurgerIngredients modal={modalPlace} data={state.ingredientData} />
-        <BurgerConstructor modal={modalPlace} />
+        <BurgerIngredients data={state.ingredientData} />
+        <BurgerConstructor />
     </div>
   );
 }

@@ -40,7 +40,6 @@ function BurgerConstructor(props) {
       title=""
       ref={overlay}
       isHidden={isHidden}
-      renderPlace={props.modal}
       handleCloseBtn={handleCloseBtn}
       handleEscPress={handleEscPress}
       handleOverlayClick={handleOverlayClick}
@@ -163,10 +162,6 @@ function BurgerConstructor(props) {
       {!isHidden && modal}
     </section>
   );
-}
-
-BurgerConstructor.propTypes = {
-  modal: PropTypes.any
 }
 
 export default BurgerConstructor;

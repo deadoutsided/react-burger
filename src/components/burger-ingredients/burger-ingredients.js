@@ -20,7 +20,6 @@ function BurgerIngredients(props) {
             if (element.type === "bun")
               return (
                 <CardIngredient
-                  modal={props.modal}
                   image={element.image}
                   price={element.price}
                   name={element.name}
@@ -40,7 +39,6 @@ function BurgerIngredients(props) {
             if (element.type === "sauce")
               return (
                 <CardIngredient
-                  modal={props.modal}
                   image={element.image}
                   price={element.price}
                   name={element.name}
@@ -60,7 +58,6 @@ function BurgerIngredients(props) {
             if (element.type === "main")
               return (
                 <CardIngredient
-                  modal={props.modal}
                   image={element.image}
                   price={element.price}
                   name={element.name}
@@ -80,8 +77,7 @@ function BurgerIngredients(props) {
 }
 
 BurgerIngredients.propTypes = {
-  data: PropTypes.array,
-  modal: PropTypes.any
+  data: PropTypes.array
 }
 
 export default BurgerIngredients;
