@@ -1,0 +1,35 @@
+.scrollable{
+  overflow-y: scroll;
+  box-sizing: content-box;
+  scrollbar-width: 6px;
+  scrollbar-color: #8585AD #2F2F37;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: wrap;
+  row-gap: 16px;
+  max-height: calc(100vh - 461px);
+  max-width: 568px;
+}
+
+.scrollable::-webkit-scrollbar{
+  width: 6px;
+}
+
+.scrollable::-webkit-scrollbar-thumb{
+  background-color: #8585AD;
+}
+
+.scrollable::-webkit-scrollbar-track{
+  background-color: #2F2F37;
+}
+
+.info{
+  display: flex;
+  justify-content: flex-end;
+}
+
+.pricecont{
+  display: flex;
+  align-items: center;
+}
