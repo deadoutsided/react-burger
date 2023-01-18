@@ -82,4 +82,8 @@ function BurgerConstructor(props) {
   );
 }
 
+BurgerConstructor.propTypes = {
+  data: PropTypes.array
+}
+
 export default BurgerConstructor;

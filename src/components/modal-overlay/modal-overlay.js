@@ -13,7 +13,7 @@ function ModalOverlay(props) {
   }
 
   return (
-    <div onClick={handleOverlayClick} ref={overlay} className={/*props.isHidden === true ? style.hidden : '' + ' ' + */style.overlay}>
+    <div onClick={handleOverlayClick} ref={overlay} className={style.overlay}>
       {props.children}
     </div>
   ) 

@@ -45,7 +45,6 @@ function Modal(props) {
 }
 
 Modal.propTypes = {
-  isHidden: PropTypes.bool,
   title: PropTypes.string,
   handleClose: PropTypes.func,
   children: PropTypes.node
