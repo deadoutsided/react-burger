@@ -160,8 +160,4 @@ function BurgerConstructor(props) {
   );
 }
 
-BurgerConstructor.propTypes = {
-  state: PropTypes.array
-}
-
 export default BurgerConstructor;
