@@ -7,13 +7,21 @@ import style from "./app.module.css";
 import dataApi from "../../utils/data";
 import Modal from "../modal/modal";
 import ModalOverlay from "../modal-overlay/modal-overlay";
+import { BurgerIngredientsContext } from '../../services/burger-ingredients-context';
+import { OrderContext } from '../../services/order-context';
 
 function App() {
 
   const [state, setState] = React.useState({
     ingredientData: [],
     loading: false,
+    error: false
+  });
+
+  const [orderState, setOrderState] = React.useState({
+    loading: false,
     error: false,
+    orderData: {}
   });
 
   React.useEffect(() => {
@@ -46,8 +54,12 @@ function App() {
   return (
     <div className={style.App}>
         <AppHeader />
-        <BurgerIngredients data={state.ingredientData} />
-        <BurgerConstructor data={state.ingredientData} />
+        <BurgerIngredientsContext.Provider value={[state, setState]}>
+          <OrderContext.Provider value={[orderState, setOrderState]}>
+            <BurgerIngredients />
+            <BurgerConstructor />
+          </OrderContext.Provider>
+        </BurgerIngredientsContext.Provider>
     </div>
   );
 }
