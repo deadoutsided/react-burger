@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState, useTransition } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
   ConstructorElement,
   CurrencyIcon,
@@ -8,72 +9,54 @@ import {
 import Modal from "../modal/modal";
 import style from "../burger-constructor/burger-constructor.module.css";
 import OrderDetails from "../order-details/order-details";
-import PropTypes from "prop-types";
-import { BurgerIngredientsContext } from "../../services/burger-ingredients-context";
-import { OrderContext } from "../../services/order-context";
+import { ADD_CONSTRUCTED_INGREDIENT, ORDER_RESET } from "../../services/actions";
+import { getOrderData } from "../../services/actions/index.js";
+import { useDrop } from "react-dnd/dist/hooks/useDrop";
 
 function BurgerConstructor(props) {
-  const [isHidden, setHidden] = React.useState(true);
-  const [constructed, setConstructed] = React.useState([]);
-  const [state, setState] = React.useContext(BurgerIngredientsContext);
-  const [orderState, setOrderState] = React.useContext(OrderContext);
+  const dispatch = useDispatch();
+
+  const { ingredientData, constructorIngredients } = useSelector(
+    (store) => store.root
+  );
+
+  const addItem = (item) => {
+    dispatch({
+      type: ADD_CONSTRUCTED_INGREDIENT,
+      ...item
+    })
+  }
+  const [{}, dropTarget] = useDrop({
+    accept: 'ingredient',
+    drop(item){
+      addItem(item)
+    }
+  });
+
+  const [isHidden, setHidden] = useState(true);
+  const [isPending, startTransition] = useTransition();
 
   React.useEffect(() => {
-    setConstructed(() => {
-      const crutch = [];
-      const rand = Math.floor(Math.random() * (2 - 0));
-      state.ingredientData.forEach((element, index) => {if((element.type !== 'bun' || state.ingredientData.find((el) => el.type === 'bun')._id === element._id || state.ingredientData.findLast((el) => el.type === 'bun')._id === element._id) && index % 2 === rand)  crutch.push(element)});
-      return crutch;
-    })
-  }, [state])
-
-  const orderRequest = async () => {
-    setOrderState({
-      ...orderState,
-      loading: true,
-      error: false
-    })
-    await fetch('https://norma.nomoreparties.space/api/orders', {
-      method: 'POST',
-      headers:{
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        ingredients: constructed.map((item) => item._id)
-      })})
-      .then(async (res) => {
-        if(res.ok){
-        return res.json()
-      }
-        else return Promise.reject(`Ошибка ${res.status}`)
-      })
-      .then(async (data) => {
-        console.log(data);
-        setOrderState({
-          loading: false,
-          error: false,
-          orderData: data
-        })
-        .catch((err) => {
-          setOrderState({
-            ...orderState,
-            loading: false,
-            error: true
-          })
-          console.log(err);
-        })
-      })
-    }
+    const rand = Math.floor(Math.random() * (2 - 0));
+    ingredientData.forEach((element, index) => {
+      if (
+        (element.type !== "bun" ||
+          ingredientData.find((el) => el.type === "bun")._id === element._id ||
+          ingredientData.findLast((el) => el.type === "bun")._id ===
+            element._id) &&
+        (index % 2 === rand)
+      )
+        dispatch({ type: ADD_CONSTRUCTED_INGREDIENT, ingredient: element });
+    });
+  }, [ingredientData]);
 
   const handleBtnClick = (e) => {
-    orderRequest();
-    console.log(orderState);
+    dispatch(getOrderData(constructorIngredients));
     setHidden(false);
-    console.log(orderState);
   };
 
   const handleClose = (e) => {
-    setHidden(true);
+    startTransition(() => { setHidden(true); dispatch({ type: ORDER_RESET }) });
   };
 
   const modal = (
@@ -83,31 +66,29 @@ function BurgerConstructor(props) {
   );
 
   return (
-    <section className="mt-25 ml-5 pl-4 pr-4">
-      {console.log(orderState)}
-      {
-        constructed.map((element) => {
-          if(element.type === 'bun') return(
+    <section ref={dropTarget} className="mt-25 ml-5 pl-4 pr-4">
+      {constructorIngredients.map((element) => {
+        if (element.type === "bun")
+          return (
             <ConstructorElement
-            extraClass="ml-8"
-            key={element._id} 
-            type="top"
-            isLocked={true}
-            text={element.name + '(верх)'}
-            price={element.price}
-            thumbnail={element.image}
+              extraClass="ml-8"
+              key={element._id}
+              type="top"
+              isLocked={true}
+              text={element.name + "(верх)"}
+              price={element.price}
+              thumbnail={element.image}
             />
-          )
-        })
-      }
-      <div className={"mt-4 mb-4 " + style.scrollable}>
-        {constructed.map((element, index) => {
+          );
+      })}
+      <div  className={"mt-4 mb-4 " + style.scrollable}>
+        {constructorIngredients.map((element, index) => {
           if (element.type !== "bun") {
             return (
               <div className={style.constructorCont} key={index}>
                 <DragIcon type="primary" />
                 <ConstructorElement
-                  key={element._id} 
+                  key={element._id}
                   isLocked={false}
                   text={element.name}
                   price={element.price}
@@ -118,30 +99,30 @@ function BurgerConstructor(props) {
           }
         })}
       </div>
-      {
-        constructed.map((element) => {
-          if(element.type === 'bun') return(
+      {constructorIngredients.map((element) => {
+        if (element.type === "bun")
+          return (
             <ConstructorElement
-            extraClass="ml-8 mb-10"
-            key={element._id} 
-            type="bottom"
-            isLocked={true}
-            text={element.name + '(низ)'}
-            price={element.price}
-            thumbnail={element.image}
+              extraClass="ml-8 mb-10"
+              key={element._id}
+              type="bottom"
+              isLocked={true}
+              text={element.name + "(низ)"}
+              price={element.price}
+              thumbnail={element.image}
             />
-          )
-        })
-      }
+          );
+      })}
       <div className={style.info}>
         <div className={style.pricecont}>
           <p className="text text_type_main-large mr-2">
-            {
-              constructed.reduce((totalPrice, currItem) => {
-                if(currItem.type === 'bun') {return totalPrice + currItem.price * 2;}
-                else {return totalPrice + currItem.price;}
-              }, 0)
-            }
+            {constructorIngredients.reduce((totalPrice, currItem) => {
+              if (currItem.type === "bun") {
+                return totalPrice + currItem.price * 2;
+              } else {
+                return totalPrice + currItem.price;
+              }
+            }, 0)}
           </p>
           <CurrencyIcon />
         </div>

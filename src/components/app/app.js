@@ -1,4 +1,5 @@
 import React from "react";
+import thunk from "redux-thunk";
 import logo from "../../logo.svg";
 import AppHeader from "../app-header/app-header";
 import BurgerIngredients from "../burger-ingredients/burger-ingredients";
@@ -7,59 +8,26 @@ import style from "./app.module.css";
 import dataApi from "../../utils/data";
 import Modal from "../modal/modal";
 import ModalOverlay from "../modal-overlay/modal-overlay";
-import { BurgerIngredientsContext } from '../../services/burger-ingredients-context';
-import { OrderContext } from '../../services/order-context';
+import { OrderContext } from "../../services/order-context";
+import { HTML5Backend } from "react-dnd-html5-backend";
+import { DndProvider } from "react-dnd";
 
 function App() {
-
-  const [state, setState] = React.useState({
-    ingredientData: [],
-    loading: false,
-    error: false
-  });
-
   const [orderState, setOrderState] = React.useState({
     loading: false,
     error: false,
-    orderData: {}
+    orderData: {},
   });
-
-  React.useEffect(() => {
-    const getIngredientData = async () => {
-       setState({
-        ...state,
-        loading: true,
-      });
-      await fetch(dataApi)
-      .then(res => {
-        if(res.ok) {
-          return res.json()
-        }
-        return Promise.reject(`Ошибка ${res.status}`);
-      })
-      .then(async (data) => {
-        setState({
-          ...state,
-          ingredientData: data.data,
-          loading: false,
-        })
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    }
-    getIngredientData();
-  }, []);
 
   return (
     <div className={style.App}>
-        <AppHeader />
-        <BurgerIngredientsContext.Provider value={[state, setState]}>
-          <OrderContext.Provider value={[orderState, setOrderState]}>
-            <BurgerIngredients />
-            <BurgerConstructor />
-          </OrderContext.Provider>
-        </BurgerIngredientsContext.Provider>
+      <AppHeader />
+      <OrderContext.Provider value={[orderState, setOrderState]}>
+        <DndProvider backend={HTML5Backend}>
+          <BurgerIngredients />
+          <BurgerConstructor />
+        </DndProvider>
+      </OrderContext.Provider>
     </div>
   );
 }
