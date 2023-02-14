@@ -12,6 +12,10 @@
   max-width: 568px;
 }
 
+.constructorCont{
+  width: 100%;
+}
+
 .scrollable::-webkit-scrollbar{
   width: 6px;
 }

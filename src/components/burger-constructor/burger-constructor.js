@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState, useTransition, useRef, useCallback } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
   ConstructorElement,
   CurrencyIcon,
@@ -8,63 +9,146 @@ import {
 import Modal from "../modal/modal";
 import style from "../burger-constructor/burger-constructor.module.css";
 import OrderDetails from "../order-details/order-details";
-import PropTypes from "prop-types";
+import { ADD_CONSTRUCTED_INGREDIENT, DELETE_CONSTRUCTED_INGREDIENT, MOVE_CONSTRUCTED_INGREDIENT, ORDER_RESET } from "../../services/actions";
+import { getOrderData } from "../../services/actions/index.js";
+import { useDrop } from "react-dnd/dist/hooks/useDrop";
+import { MovableConstructorElement } from "../movable-constructor-element/movable-constructor-element";
 
 function BurgerConstructor(props) {
-  const [isHidden, setHidden] = React.useState(true);
+  const dispatch = useDispatch();
+
+  const { ingredientData, constructorIngredients } = useSelector(
+    (store) => store.root
+  );
+
+  const addItem = (item) => {
+    dispatch({
+      type: ADD_CONSTRUCTED_INGREDIENT,
+      ...item
+    })
+  }
+  const [{isHover}, dropTarget] = useDrop({
+    accept: 'ingredient',
+    drop(item){
+      addItem(item)
+    }
+  });
+
+  const findIngredient = useCallback((id) => {
+    const ingredient = constructorIngredients.filter((el, i) => i === id)
+    return {
+      ingredient,
+      index: id
+    }
+  }, [constructorIngredients]);
+  const  moveIngredient = useCallback((id, atIndex) => {
+    const {ingredient, index} = findIngredient(id);
+    dispatch({ type: MOVE_CONSTRUCTED_INGREDIENT, index: index, atIndex: atIndex, ingredient: ingredient[0]})
+  }, [findIngredient, constructorIngredients])
+
+  const [{},constrTar] = useDrop(() => ({
+    accept: 'constrIngr'
+  }))
+
+  const [isHidden, setHidden] = useState(true);
+  const [isPending, startTransition] = useTransition();
+  const delTarg = useRef(null);
+
+  React.useEffect(() => {
+    const rand = Math.floor(Math.random() * (2 - 0));
+    ingredientData.forEach((element, index) => {
+      if (
+        (element.type !== "bun" ||
+          ingredientData.find((el) => el.type === "bun")._id === element._id ||
+          ingredientData.findLast((el) => el.type === "bun")._id ===
+            element._id) &&
+        (index % 2 === rand)
+      )
+        dispatch({ type: ADD_CONSTRUCTED_INGREDIENT, id: element._id });
+    });
+  }, [ingredientData]);
 
   const handleBtnClick = (e) => {
+    dispatch(getOrderData(constructorIngredients));
     setHidden(false);
   };
 
   const handleClose = (e) => {
-    setHidden(true);
+    startTransition(() => { setHidden(true); dispatch({ type: ORDER_RESET }) });
   };
+  const handleDelete = (e) => {
+    delTarg.current.childNodes.forEach((el, i) => {
+      if(el === e.currentTarget.closest('.constructor-element').parentNode){
+        dispatch({type: DELETE_CONSTRUCTED_INGREDIENT, index: i + 1})
+      }
+    })
+  }
 
   const modal = (
     <Modal title="" handleClose={handleClose}>
       <OrderDetails />
     </Modal>
   );
+
   return (
-    <section className="mt-25 ml-5 pl-4 pr-4">
-      <ConstructorElement
-        extraClass="ml-8"
-        type="top"
-        isLocked={true}
-        text="Краторная булка N-200i (верх)"
-        price={1255}
-        thumbnail="https://code.s3.yandex.net/react/code/bun-02.png"
-      />
-      <div className={"mt-4 mb-4 " + style.scrollable}>
-        {props.data.map((element, index) => {
+    <section ref={dropTarget} className="mt-25 ml-5 pl-4 pr-4">
+      {constructorIngredients.map((element, i) => {
+        if (element.type === "bun")
+          return (
+            <ConstructorElement
+              extraClass="ml-8"
+              key={element._id}
+              type="top"
+              isLocked={true}
+              text={element.name + "(верх)"}
+              price={element.price}
+              thumbnail={element.image}
+            />
+          );
+      })}
+      <div ref={(el) => delTarg.current = el && constrTar(el)} className={"mt-4 mb-4 " + style.scrollable}>
+        {constructorIngredients.map((element, i) => {
           if (element.type !== "bun") {
             return (
-              <div key={index}>
+              <MovableConstructorElement extraClass={style.constructorCont} key={i} index={i} moveIngredient={moveIngredient} findIngredient={findIngredient}>
                 <DragIcon type="primary" />
                 <ConstructorElement
-                  key={element._id} 
                   isLocked={false}
                   text={element.name}
                   price={element.price}
                   thumbnail={element.image}
+                  handleClose={handleDelete}
                 />
-              </div>
+              </MovableConstructorElement>
             );
           }
         })}
       </div>
-      <ConstructorElement
-        extraClass="ml-8 mb-10"
-        type="bottom"
-        isLocked={true}
-        text="Краторная булка N-200i (верх)"
-        price={1255}
-        thumbnail="https://code.s3.yandex.net/react/code/bun-02.png"
-      />
+      {constructorIngredients.map((element, i) => {
+        if (element.type === "bun")
+          return (
+            <ConstructorElement
+              extraClass="ml-8 mb-10"
+              key={element._id}
+              type="bottom"
+              isLocked={true}
+              text={element.name + "(низ)"}
+              price={element.price}
+              thumbnail={element.image}
+            />
+          );
+      })}
       <div className={style.info}>
         <div className={style.pricecont}>
-          <p className="text text_type_main-large mr-2">610</p>
+          <p className="text text_type_main-large mr-2">
+            {constructorIngredients.reduce((totalPrice, currItem) => {
+              if (currItem.type === "bun") {
+                return totalPrice + currItem.price * 2;
+              } else {
+                return totalPrice + currItem.price;
+              }
+            }, 0)}
+          </p>
           <CurrencyIcon />
         </div>
         <Button
@@ -80,10 +164,6 @@ function BurgerConstructor(props) {
       {!isHidden && modal}
     </section>
   );
-}
-
-BurgerConstructor.propTypes = {
-  data: PropTypes.array
 }
 
 export default BurgerConstructor;
