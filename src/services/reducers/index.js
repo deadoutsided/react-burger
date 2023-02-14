@@ -10,6 +10,7 @@ import {
   DELETE_CURRENT_INGREDIENT,
   ADD_CONSTRUCTED_INGREDIENT,
   DELETE_CONSTRUCTED_INGREDIENT,
+  MOVE_CONSTRUCTED_INGREDIENT
 } from "../actions/index";
 
 const initialState = {
@@ -50,21 +51,22 @@ export const reducers = (state = initialState, action) => {
       };
     }
     case ADD_CONSTRUCTED_INGREDIENT: {
-      if (
+      if (state.constructorIngredients !== []/* &&
         !state.constructorIngredients.some((el) => {
-          return el._id === action.ingredient._id;
-        })
+          return el._id === action.id;
+        })*/
       ) {
         if (
           state.constructorIngredients.some((el) => {
-            return el.type === 'bun' && (el.type === action.ingredient.type)
+            return el.type === 'bun' && (el.type === state.ingredientData.find((item) => {if(item._id === action.id) return item}).type)
           })
         ) {
-          console.log("Error, ingredient already included");
+          //console.log("Error, bun already included");
+          //console.log(state.ingredientData.find((item) => item._id === action.id))
+          //console.log(state.constructorIngredients.findIndex((item) => item.type === 'bun'))
+          state.constructorIngredients.splice(state.constructorIngredients.findIndex((item) => item.type === 'bun'), 1, state.ingredientData.find((item) => item._id === action.id))
         }else
-        state.constructorIngredients.push(action.ingredient);
-      } else {
-        console.log("Error, ingredient already included");
+        state.constructorIngredients.push(state.ingredientData.find((item) => item._id === action.id));
       }
       return {
         ...state,
@@ -72,12 +74,19 @@ export const reducers = (state = initialState, action) => {
       };
     }
     case DELETE_CONSTRUCTED_INGREDIENT: {
+      state.constructorIngredients.splice(action.index, 1)
       return {
         ...state,
-        constructorIngredients: state.constructorIngredients.map(
-          (el) => el._id !== action.ingredient._id
-        ),
+        constructorIngredients: state.constructorIngredients
       };
+    }
+    case MOVE_CONSTRUCTED_INGREDIENT: {
+      state.constructorIngredients.splice(action.index, 1);
+      state.constructorIngredients.splice(action.atIndex, 0, action.ingredient)
+      return {
+        ...state,
+        constructorIngredients: state.constructorIngredients
+      }
     }
     case ORDER_REQUEST: {
       return {

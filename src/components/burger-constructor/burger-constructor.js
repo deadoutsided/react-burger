@@ -1,4 +1,4 @@
-import React, { useState, useTransition } from "react";
+import React, { useState, useTransition, useRef, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   ConstructorElement,
@@ -9,9 +9,10 @@ import {
 import Modal from "../modal/modal";
 import style from "../burger-constructor/burger-constructor.module.css";
 import OrderDetails from "../order-details/order-details";
-import { ADD_CONSTRUCTED_INGREDIENT, ORDER_RESET } from "../../services/actions";
+import { ADD_CONSTRUCTED_INGREDIENT, DELETE_CONSTRUCTED_INGREDIENT, MOVE_CONSTRUCTED_INGREDIENT, ORDER_RESET } from "../../services/actions";
 import { getOrderData } from "../../services/actions/index.js";
 import { useDrop } from "react-dnd/dist/hooks/useDrop";
+import { MovableConstructorElement } from "../movable-constructor-element/movable-constructor-element";
 
 function BurgerConstructor(props) {
   const dispatch = useDispatch();
@@ -26,15 +27,32 @@ function BurgerConstructor(props) {
       ...item
     })
   }
-  const [{}, dropTarget] = useDrop({
+  const [{isHover}, dropTarget] = useDrop({
     accept: 'ingredient',
     drop(item){
       addItem(item)
     }
   });
 
+  const findIngredient = useCallback((id) => {
+    const ingredient = constructorIngredients.filter((el, i) => i === id)
+    return {
+      ingredient,
+      index: id
+    }
+  }, [constructorIngredients]);
+  const  moveIngredient = useCallback((id, atIndex) => {
+    const {ingredient, index} = findIngredient(id);
+    dispatch({ type: MOVE_CONSTRUCTED_INGREDIENT, index: index, atIndex: atIndex, ingredient: ingredient[0]})
+  }, [findIngredient, constructorIngredients])
+
+  const [{},constrTar] = useDrop(() => ({
+    accept: 'constrIngr'
+  }))
+
   const [isHidden, setHidden] = useState(true);
   const [isPending, startTransition] = useTransition();
+  const delTarg = useRef(null);
 
   React.useEffect(() => {
     const rand = Math.floor(Math.random() * (2 - 0));
@@ -46,7 +64,7 @@ function BurgerConstructor(props) {
             element._id) &&
         (index % 2 === rand)
       )
-        dispatch({ type: ADD_CONSTRUCTED_INGREDIENT, ingredient: element });
+        dispatch({ type: ADD_CONSTRUCTED_INGREDIENT, id: element._id });
     });
   }, [ingredientData]);
 
@@ -58,6 +76,13 @@ function BurgerConstructor(props) {
   const handleClose = (e) => {
     startTransition(() => { setHidden(true); dispatch({ type: ORDER_RESET }) });
   };
+  const handleDelete = (e) => {
+    delTarg.current.childNodes.forEach((el, i) => {
+      if(el === e.currentTarget.closest('.constructor-element').parentNode){
+        dispatch({type: DELETE_CONSTRUCTED_INGREDIENT, index: i + 1})
+      }
+    })
+  }
 
   const modal = (
     <Modal title="" handleClose={handleClose}>
@@ -67,7 +92,7 @@ function BurgerConstructor(props) {
 
   return (
     <section ref={dropTarget} className="mt-25 ml-5 pl-4 pr-4">
-      {constructorIngredients.map((element) => {
+      {constructorIngredients.map((element, i) => {
         if (element.type === "bun")
           return (
             <ConstructorElement
@@ -81,25 +106,25 @@ function BurgerConstructor(props) {
             />
           );
       })}
-      <div  className={"mt-4 mb-4 " + style.scrollable}>
-        {constructorIngredients.map((element, index) => {
+      <div ref={(el) => delTarg.current = el && constrTar(el)} className={"mt-4 mb-4 " + style.scrollable}>
+        {constructorIngredients.map((element, i) => {
           if (element.type !== "bun") {
             return (
-              <div className={style.constructorCont} key={index}>
+              <MovableConstructorElement extraClass={style.constructorCont} key={i} index={i} moveIngredient={moveIngredient} findIngredient={findIngredient}>
                 <DragIcon type="primary" />
                 <ConstructorElement
-                  key={element._id}
                   isLocked={false}
                   text={element.name}
                   price={element.price}
                   thumbnail={element.image}
+                  handleClose={handleDelete}
                 />
-              </div>
+              </MovableConstructorElement>
             );
           }
         })}
       </div>
-      {constructorIngredients.map((element) => {
+      {constructorIngredients.map((element, i) => {
         if (element.type === "bun")
           return (
             <ConstructorElement

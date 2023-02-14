@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from "prop-types";
 import style from "./card-ingredient.module.css";
@@ -13,11 +13,22 @@ import { useDrag } from "react-dnd/dist/hooks";
 function CardIngredient(props) {
   const { id } = props;
   const dispatch = useDispatch();
-  const { ingredientData } = useSelector(store => store.root);
+  const { ingredientData, constructorIngredients } = useSelector(store => store.root);
+  const [count, setCount] = useState(0);
 
   const [{}, dragRef] = useDrag({
     type: 'ingredient',
     item: { id },
+  })
+
+  useEffect(() => {
+    constructorIngredients.reduce((acc, el) => {
+      if(el._id === id){
+        acc += 1;
+      }
+      setCount(acc);
+      return acc;
+    }, 0)
   })
 
   const onClick = (e) => {
@@ -40,13 +51,15 @@ function CardIngredient(props) {
       <p className={"text text_type_main-default " + style.name}>
         {props.ingredient.name}
       </p>
-      <Counter count={1} size="default" extraClass="m-1" />
+      {count > 0 && <Counter count={count} size="default" extraClass="m-1" />}
     </div>
   );
 }
 
-/*CardIngredient.propTypes = {
-  ingredient: ingredientType.isRequired 
-}*/
+CardIngredient.propTypes = {
+  ingredient: ingredientType.isRequired,
+  handleCardClick: PropTypes.func,
+  id: PropTypes.string
+}
 
 export default CardIngredient;
