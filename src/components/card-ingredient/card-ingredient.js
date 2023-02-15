@@ -11,14 +11,14 @@ import { SET_CURRENT_INGREDIENT } from "../../services/actions";
 import { useDrag } from "react-dnd/dist/hooks";
 
 function CardIngredient(props) {
-  const { id } = props;
+  const { id, ingredient } = props;
   const dispatch = useDispatch();
   const { ingredientData, constructorIngredients } = useSelector(store => store.root);
   const [count, setCount] = useState(0);
 
   const [{}, dragRef] = useDrag({
     type: 'ingredient',
-    item: { id },
+    item: { ...ingredient },
   })
 
   useEffect(() => {

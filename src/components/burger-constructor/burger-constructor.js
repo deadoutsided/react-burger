@@ -1,5 +1,6 @@
 import React, { useState, useTransition, useRef, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { v4 as uuidv4 } from 'uuid';  
 import {
   ConstructorElement,
   CurrencyIcon,
@@ -24,7 +25,9 @@ function BurgerConstructor(props) {
   const addItem = (item) => {
     dispatch({
       type: ADD_CONSTRUCTED_INGREDIENT,
-      ...item
+      item: { ...item,
+        uuid: uuidv4()
+       }
     })
   }
   const [{isHover}, dropTarget] = useDrop({
@@ -53,20 +56,6 @@ function BurgerConstructor(props) {
   const [isHidden, setHidden] = useState(true);
   const [isPending, startTransition] = useTransition();
   const delTarg = useRef(null);
-
-  /*React.useEffect(() => {
-    const rand = Math.floor(Math.random() * (2 - 0));
-    ingredientData.forEach((element, index) => {
-      if (
-        (element.type !== "bun" ||
-          ingredientData.find((el) => el.type === "bun")._id === element._id ||
-          ingredientData.findLast((el) => el.type === "bun")._id ===
-            element._id) &&
-        (index % 2 === rand)
-      )
-        dispatch({ type: ADD_CONSTRUCTED_INGREDIENT, id: element._id });
-    });
-  }, [ingredientData]);*/
 
   const handleBtnClick = (e) => {
     dispatch(getOrderData(constructorIngredients));
@@ -115,11 +104,10 @@ function BurgerConstructor(props) {
           );
       })}
       <div ref={(el) => delTarg.current = el && constrTar(el)} className={"mt-4 mb-4 " + style.scrollable}>
-        {console.log(constructedEmpty)}
         {constructedEmpty && dragHere || !constructedEmpty && constructorIngredients.map((element, i) => {
           if (element.type !== "bun") {
             return (
-              <MovableConstructorElement extraClass={style.constructorCont} key={String(Symbol(i))} index={i} moveIngredient={moveIngredient} findIngredient={findIngredient}>
+              <MovableConstructorElement extraClass={style.constructorCont} key={element.uuid} index={i} moveIngredient={moveIngredient} findIngredient={findIngredient}>
                 <DragIcon type="primary" />
                 <ConstructorElement
                   isLocked={false}

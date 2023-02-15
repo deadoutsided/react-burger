@@ -1,4 +1,3 @@
-const dataApi = "https://norma.nomoreparties.space/api/ingredients";
 export const BASE_URL = "https://norma.nomoreparties.space/api/";
 
 const checkResponse = (res) => {

@@ -51,22 +51,15 @@ export const reducers = (state = initialState, action) => {
       };
     }
     case ADD_CONSTRUCTED_INGREDIENT: {
-      if (state.constructorIngredients !== []/* &&
-        !state.constructorIngredients.some((el) => {
-          return el._id === action.id;
-        })*/
-      ) {
+      if (state.constructorIngredients !== []) {
         if (
           state.constructorIngredients.some((el) => {
-            return el.type === 'bun' && (el.type === state.ingredientData.find((item) => {if(item._id === action.id) return item}).type)
+            return el.type === 'bun' && (el.type === action.item.type)
           })
         ) {
-          //console.log("Error, bun already included");
-          //console.log(state.ingredientData.find((item) => item._id === action.id))
-          //console.log(state.constructorIngredients.findIndex((item) => item.type === 'bun'))
-          state.constructorIngredients.splice(state.constructorIngredients.findIndex((item) => item.type === 'bun'), 1, state.ingredientData.find((item) => item._id === action.id))
+          state.constructorIngredients.splice(state.constructorIngredients.findIndex((item) => item.type === 'bun'), 1, action.item)
         }else
-        state.constructorIngredients.push(state.ingredientData.find((item) => item._id === action.id));
+        state.constructorIngredients.push(action.item);
       }
       return {
         ...state,
