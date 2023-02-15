@@ -107,7 +107,8 @@ export const reducers = (state = initialState, action) => {
         ...state,
         orderLoading: false,
         orderError: false,
-        orderData: action.order
+        orderData: action.order,
+        constructorIngredients: []
       }
     }
     case ORDER_RESET: {

@@ -54,7 +54,7 @@ function BurgerConstructor(props) {
   const [isPending, startTransition] = useTransition();
   const delTarg = useRef(null);
 
-  React.useEffect(() => {
+  /*React.useEffect(() => {
     const rand = Math.floor(Math.random() * (2 - 0));
     ingredientData.forEach((element, index) => {
       if (
@@ -66,7 +66,7 @@ function BurgerConstructor(props) {
       )
         dispatch({ type: ADD_CONSTRUCTED_INGREDIENT, id: element._id });
     });
-  }, [ingredientData]);
+  }, [ingredientData]);*/
 
   const handleBtnClick = (e) => {
     dispatch(getOrderData(constructorIngredients));
@@ -90,6 +90,14 @@ function BurgerConstructor(props) {
     </Modal>
   );
 
+  const dragHere = (
+    <div>
+      <p className="text text_type_main-default">Перенесите ингредиенты вашего бургера в эту область, чтобы сформировать заказ.</p>
+    </div>
+  );
+
+  const constructedEmpty = constructorIngredients.length === 0 ? true : false;
+
   return (
     <section ref={dropTarget} className="mt-25 ml-5 pl-4 pr-4">
       {constructorIngredients.map((element, i) => {
@@ -107,10 +115,11 @@ function BurgerConstructor(props) {
           );
       })}
       <div ref={(el) => delTarg.current = el && constrTar(el)} className={"mt-4 mb-4 " + style.scrollable}>
-        {constructorIngredients.map((element, i) => {
+        {console.log(constructedEmpty)}
+        {constructedEmpty && dragHere || !constructedEmpty && constructorIngredients.map((element, i) => {
           if (element.type !== "bun") {
             return (
-              <MovableConstructorElement extraClass={style.constructorCont} key={i} index={i} moveIngredient={moveIngredient} findIngredient={findIngredient}>
+              <MovableConstructorElement extraClass={style.constructorCont} key={String(Symbol(i))} index={i} moveIngredient={moveIngredient} findIngredient={findIngredient}>
                 <DragIcon type="primary" />
                 <ConstructorElement
                   isLocked={false}

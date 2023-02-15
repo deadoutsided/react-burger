@@ -1,3 +1,22 @@
 const dataApi = "https://norma.nomoreparties.space/api/ingredients";
+export const BASE_URL = "https://norma.nomoreparties.space/api/";
 
-export default dataApi;
+const checkResponse = (res) => {
+  if(res.ok){
+    return res.json();
+  }
+  return Promise.reject(`Ошибка ${res.status}`);
+}
+
+const checkSuccess = (res) => {
+  if(res && res.success){
+    return res;
+  }
+  return Promise.reject(`Ошибка ${res.status}`);
+}
+
+function request(endpoint, options){
+  return fetch(`${BASE_URL + endpoint}`, options).then(checkResponse).then(checkSuccess);
+}
+
+export default request;
