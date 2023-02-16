@@ -22,32 +22,27 @@ function BurgerConstructor(props) {
     (store) => store.root
   );
 
-  const addItem = (item) => {
+  const addItem = (item, id) => {
     dispatch({
       type: ADD_CONSTRUCTED_INGREDIENT,
       item: { ...item,
-        uuid: uuidv4()
+        uuid: uuidv4(),
+        id: id
        }
     })
   }
   const [{isHover}, dropTarget] = useDrop({
     accept: 'ingredient',
     drop(item){
-      addItem(item)
+      addItem(item, constructorIngredients.length)
     }
   });
 
-  const findIngredient = useCallback((id) => {
-    const ingredient = constructorIngredients.filter((el, i) => i === id)
-    return {
-      ingredient,
-      index: id
-    }
-  }, [constructorIngredients]);
-  const  moveIngredient = useCallback((id, atIndex) => {
-    const {ingredient, index} = findIngredient(id);
-    dispatch({ type: MOVE_CONSTRUCTED_INGREDIENT, index: index, atIndex: atIndex, ingredient: ingredient[0]})
-  }, [findIngredient, constructorIngredients])
+  const  moveIngredient = useCallback((dragIndex, hoverIndex) => {
+    //console.log(ingredient);
+    //console.log(index)
+    dispatch({ type: MOVE_CONSTRUCTED_INGREDIENT, dragIndex: dragIndex, hoverIndex: hoverIndex, ingredient: constructorIngredients[dragIndex]})
+  }, [])
 
   const [{},constrTar] = useDrop(() => ({
     accept: 'constrIngr'
@@ -107,7 +102,7 @@ function BurgerConstructor(props) {
         {constructedEmpty && dragHere || !constructedEmpty && constructorIngredients.map((element, i) => {
           if (element.type !== "bun") {
             return (
-              <MovableConstructorElement extraClass={style.constructorCont} key={element.uuid} index={i} moveIngredient={moveIngredient} findIngredient={findIngredient}>
+              <MovableConstructorElement extraClass={style.constructorCont} key={element.uuid} index={i} id={element.id} moveIngredient={moveIngredient}>
                 <DragIcon type="primary" />
                 <ConstructorElement
                   isLocked={false}

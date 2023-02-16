@@ -74,8 +74,8 @@ export const reducers = (state = initialState, action) => {
       };
     }
     case MOVE_CONSTRUCTED_INGREDIENT: {
-      state.constructorIngredients.splice(action.index, 1);
-      state.constructorIngredients.splice(action.atIndex, 0, action.ingredient)
+      state.constructorIngredients.splice(action.dragIndex, 1);
+      state.constructorIngredients.splice(action.hoverIndex, 0, action.ingredient)
       return {
         ...state,
         constructorIngredients: state.constructorIngredients

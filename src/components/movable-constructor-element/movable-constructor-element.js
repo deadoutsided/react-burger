@@ -1,43 +1,38 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { useDrag, useDrop } from 'react-dnd'
 import style from './movable-constructor-element.module.css';
 import PropTypes from "prop-types";
 
-export const MovableConstructorElement = ({ index, extraClass, moveIngredient, findIngredient, children }) => {
-  const originalIndex = findIngredient(index).index;
-  const [{ isDragging }, drag] = useDrag(
-    () => ({
-      type: 'constrIngr',
-      item: { index, originalIndex },
-      collect: monitor => ({
-        isDragging: monitor.isDragging(),
-      }),
-      end: (item, monitor) => {
-        const { index: droppedId, originalIndex} = item;
-        const didDrop = monitor.didDrop();
-        if(!didDrop) {
-          moveIngredient(droppedId, originalIndex)
-        }
-      },
+export const MovableConstructorElement = ({ index, extraClass, moveIngredient, children, id }) => {
+  const ref = useRef(null);
+  const [{handlerId, isHover}, drop] = useDrop({
+    accept: 'constrIngr',
+    collect: monitor => ({
+      handlerId: monitor.getHandlerId(),
+      isHover: monitor.isOver()
     }),
-    [index, originalIndex, moveIngredient]
-  )
-  const [{ isHover }, drop] = useDrop(
-    () => ({
-      accept: 'constrIngr',
-      collect: monitor => ({
-        draggedItem: monitor.getItem(),
-        isHover: monitor.isOver()
-      }),
-      drop(item) {
-        moveIngredient(item.index, index)
+    drop(item, monitor){
+      if(!ref.current){
+        return
       }
-    }),
-    [findIngredient, moveIngredient]
-  )
+      const dragIndex = item.index
+      const hoverIndex = index
+      moveIngredient(dragIndex, hoverIndex)
+      item.index = hoverIndex
+    }
+  })
+
+  const [{isDragging}, drag] = useDrag({
+    type: 'constrIngr',
+    item: {id, index},
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    })
+  })
   const opacity = isDragging ? 0 : 1;
+  drag(drop(ref))
   return (
-    <div className={isHover ? extraClass + ' ' + style.hovered : extraClass} ref={(node) => drag(drop(node))} >
+    <div className={isHover ? extraClass + ' ' + style.hovered : extraClass} ref={ref} data-handler-id={handlerId} >
       {children}
     </div>
   )
