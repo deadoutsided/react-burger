@@ -1,4 +1,4 @@
-#GH-pages:
+# GH-pages:
 https://deadoutsided.github.io/react-burger/
 
 # Getting Started with Create React App
