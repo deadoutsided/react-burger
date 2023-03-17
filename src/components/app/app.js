@@ -10,6 +10,9 @@ import Modal from "../modal/modal";
 import ModalOverlay from "../modal-overlay/modal-overlay";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { DndProvider } from "react-dnd";
+import { BrowserRouter, Routes, Router } from "react-router-dom";
+
+import { SignIn } from "../../pages/sign-in"
 
 function App() {
   const [orderState, setOrderState] = React.useState({
@@ -20,11 +23,11 @@ function App() {
 
   return (
     <div className={style.App}>
-      <AppHeader />
-        <DndProvider backend={HTML5Backend}>
-          <BurgerIngredients />
-          <BurgerConstructor />
-        </DndProvider>
+    <AppHeader />
+      <DndProvider backend={HTML5Backend}>
+        <BurgerIngredients />
+        <BurgerConstructor />
+      </DndProvider>
     </div>
   );
 }
