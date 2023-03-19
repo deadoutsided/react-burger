@@ -10,7 +10,10 @@ import {
   DELETE_CURRENT_INGREDIENT,
   ADD_CONSTRUCTED_INGREDIENT,
   DELETE_CONSTRUCTED_INGREDIENT,
-  MOVE_CONSTRUCTED_INGREDIENT
+  MOVE_CONSTRUCTED_INGREDIENT,
+  REGISTRATION_REQUEST,
+  REGISTRATION_FAILED,
+  REGISTRATION_SUCCESS,
 } from "../actions/index";
 
 const initialState = {
@@ -24,6 +27,10 @@ const initialState = {
 
   currentIngredient: {},
   constructorIngredients: [],
+
+  registrationLoading: false,
+  registrationError: false,
+  registrationData: {},
 };
 
 export const reducers = (state = initialState, action) => {
@@ -54,12 +61,17 @@ export const reducers = (state = initialState, action) => {
       if (state.constructorIngredients !== []) {
         if (
           state.constructorIngredients.some((el) => {
-            return el.type === 'bun' && (el.type === action.item.type)
+            return el.type === "bun" && el.type === action.item.type;
           })
         ) {
-          state.constructorIngredients.splice(state.constructorIngredients.findIndex((item) => item.type === 'bun'), 1, action.item)
-        }else
-        state.constructorIngredients.push(action.item);
+          state.constructorIngredients.splice(
+            state.constructorIngredients.findIndex(
+              (item) => item.type === "bun"
+            ),
+            1,
+            action.item
+          );
+        } else state.constructorIngredients.push(action.item);
       }
       return {
         ...state,
@@ -67,33 +79,37 @@ export const reducers = (state = initialState, action) => {
       };
     }
     case DELETE_CONSTRUCTED_INGREDIENT: {
-      state.constructorIngredients.splice(action.index, 1)
+      state.constructorIngredients.splice(action.index, 1);
       return {
         ...state,
-        constructorIngredients: state.constructorIngredients
+        constructorIngredients: state.constructorIngredients,
       };
     }
     case MOVE_CONSTRUCTED_INGREDIENT: {
       state.constructorIngredients.splice(action.dragIndex, 1);
-      state.constructorIngredients.splice(action.hoverIndex, 0, action.ingredient)
+      state.constructorIngredients.splice(
+        action.hoverIndex,
+        0,
+        action.ingredient
+      );
       return {
         ...state,
-        constructorIngredients: state.constructorIngredients
-      }
+        constructorIngredients: state.constructorIngredients,
+      };
     }
     case ORDER_REQUEST: {
       return {
         ...state,
         orderLoading: true,
-        orderError: false
-      }
+        orderError: false,
+      };
     }
     case ORDER_FAILED: {
       return {
         ...state,
         orderError: true,
-        orderLoading: false
-      }
+        orderLoading: false,
+      };
     }
     case ORDER_SUCCESS: {
       return {
@@ -101,26 +117,48 @@ export const reducers = (state = initialState, action) => {
         orderLoading: false,
         orderError: false,
         orderData: action.order,
-        constructorIngredients: []
-      }
+        constructorIngredients: [],
+      };
     }
     case ORDER_RESET: {
       return {
         ...state,
-        orderData: {}
-      }
+        orderData: {},
+      };
     }
     case SET_CURRENT_INGREDIENT: {
-      return{
+      return {
         ...state,
-        currentIngredient: action.ingredient
-      }
+        currentIngredient: action.ingredient,
+      };
     }
     case DELETE_CURRENT_INGREDIENT: {
       return {
         ...state,
-        currentIngredient: {}
-      }
+        currentIngredient: {},
+      };
+    }
+    case REGISTRATION_REQUEST: {
+      return {
+        ...state,
+        registrationLoading: true,
+        registrationError: false,
+      };
+    }
+    case REGISTRATION_FAILED: {
+      return {
+        ...state,
+        registrationLoading: false,
+        registrationError: false,
+      };
+    }
+    case REGISTRATION_SUCCESS: {
+      return {
+        ...state,
+        registrationLoading: false,
+        registrationError: false,
+        registrationData: action.data,
+      };
     }
     default: {
       return state;

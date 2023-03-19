@@ -13,6 +13,9 @@ export const DELETE_CURRENT_INGREDIENT = "DELETE_CURRENT_INGREDIENT";
 export const ADD_CONSTRUCTED_INGREDIENT = "ADD_CONSTRUCTED_INGREDIENT";
 export const DELETE_CONSTRUCTED_INGREDIENT = "DELETE_CONSTRUCTED_INGREDIENT";
 export const MOVE_CONSTRUCTED_INGREDIENT = "MOVE_CONSTRUCTED_INGREDIENT";
+export const REGISTRATION_REQUEST = "REGISTRATION_REQUEST";
+export const REGISTRATION_FAILED = "REGISTRATION_FAILED";
+export const REGISTRATION_SUCCESS = "REGISTRATION_SUCCESS";
 
 const getIngredientDataRequest = async () => {
   return await request("ingredients");
@@ -23,16 +26,18 @@ export function getIngredientData() {
     dispatch({
       type: INGREDIENT_REQUEST,
     });
-    getIngredientDataRequest().then((res) => {
-      dispatch({
-        type: INGREDIENT_SUCCESS,
-        value: res.data,
-      });
-    })
-    .catch(
-      dispatch({
-        type: INGREDIENT_FAILED,
-      }))
+    getIngredientDataRequest()
+      .then((res) => {
+        dispatch({
+          type: INGREDIENT_SUCCESS,
+          value: res.data,
+        });
+      })
+      .catch(
+        dispatch({
+          type: INGREDIENT_FAILED,
+        })
+      );
   };
 }
 
@@ -45,7 +50,7 @@ const orderRequest = async (constructorIngredients) => {
     body: JSON.stringify({
       ingredients: constructorIngredients.map((item) => item._id),
     }),
-  })
+  });
 };
 
 export function getOrderData(constructorIngredients) {
@@ -53,9 +58,41 @@ export function getOrderData(constructorIngredients) {
     dispatch({ type: ORDER_REQUEST });
     orderRequest(constructorIngredients)
       .then((res) => {
-          dispatch({ type: ORDER_SUCCESS, order: res });
-      }).catch(
-        dispatch({ type: ORDER_FAILED })
-        );
+        dispatch({ type: ORDER_SUCCESS, order: res });
+      })
+      .catch(dispatch({ type: ORDER_FAILED }));
+  };
+}
+
+const registrationRequest = async (name, email, password) => {
+  return await request("auth/register", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      email,
+      password,
+      name,
+    }),
+  });
+};
+
+export function getRegistrationData(name, email, password) {
+  return function (dispatch) {
+    dispatch({type: REGISTRATION_REQUEST});
+    registrationRequest(name, email, password)
+      .then((res) => {
+        console.log(res);
+        dispatch({
+          type: REGISTRATION_SUCCESS,
+          data: {
+            success: res.success,
+            user: res.user,
+            accessToken: res.accessToken,
+          },
+        });
+      })
+      .catch(dispatch({ type: REGISTRATION_FAILED }));
   };
 }

@@ -10,9 +10,13 @@ import Modal from "../modal/modal";
 import ModalOverlay from "../modal-overlay/modal-overlay";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { DndProvider } from "react-dnd";
-import { BrowserRouter, Routes, Router } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import { SignIn } from "../../pages/sign-in"
+import { SignIn } from "../../pages/sign-in/sign-in";
+import { Register } from "../../pages/register/register";
+import { ForgotPassword } from "../../pages/forgot-password/forgot-password";
+import { ResetPassword } from "../../pages/reset-password/reset-password";
+import { Profile } from "../../pages/profile/profile";
 
 function App() {
   const [orderState, setOrderState] = React.useState({
@@ -23,11 +27,25 @@ function App() {
 
   return (
     <div className={style.App}>
-    <AppHeader />
-      <DndProvider backend={HTML5Backend}>
-        <BurgerIngredients />
-        <BurgerConstructor />
-      </DndProvider>
+      <AppHeader />
+      <BrowserRouter>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <DndProvider backend={HTML5Backend}>
+                <BurgerIngredients />
+                <BurgerConstructor />
+              </DndProvider>
+            }
+          ></Route>
+          <Route path="/sign-in" element={ <SignIn />} />
+          <Route path="/register" element={ <Register />} />
+          <Route path="/forgot-password" element={ <ForgotPassword /> } />
+          <Route path="/reset-password" element={ <ResetPassword /> } />
+          <Route path="/profile" element ={ <Profile /> } />
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }
