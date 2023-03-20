@@ -1,6 +1,6 @@
 import request from "../../utils/data";
 import { useSelector } from "react-redux";
-import { setCookie } from "../../utils/cookie";
+import { getCookie, setCookie } from "../../utils/cookie";
 
 export const INGREDIENT_REQUEST = "INGREDIENT_REQUEST";
 export const INGREDIENT_SUCCESS = "INGREDIENT_SUCCESS";
@@ -20,6 +20,9 @@ export const REGISTRATION_SUCCESS = "REGISTRATION_SUCCESS";
 export const SIGN_IN_REQUEST = "SIGN_IN_REQUEST";
 export const SIGN_IN_FAILED = "SIGN_IN_FAILED";
 export const SIGN_IN_SUCCESS = "SIGN_IN_SUCCESS";
+export const SIGN_OUT_REQUEST = "SIGN_OUT_REQUEST";
+export const SIGN_OUT_FAILED = "SIGN_OUT_FAILED";
+export const SIGN_OUT_SUCCESS = "SIGN_OUT_SUCCESS";
 
 const getIngredientDataRequest = async () => {
   return await request("ingredients");
@@ -95,11 +98,7 @@ export function getRegistrationData(name, email, password) {
             accessToken: res.accessToken,
           },
         });
-        let authToken;
-        res.forEach((el) => {
-          if (typeof el === "String" && el.includes("Bearer ")) authToken = el.split("Bearer ")[1];
-        });
-        if (authToken) setCookie("token", authToken);
+        if (res.refreshToken) setCookie("token", res.refreshToken);
       })
       .catch(dispatch({ type: REGISTRATION_FAILED }));
   };
@@ -131,11 +130,33 @@ export function getSignInData(email, password){
           accessToken: res.accessToken,
         }
       });
-      let authToken;
-      Object.values(res).forEach((el) => {
-        if (typeof el === "String" && el.includes("Bearer ")) authToken = el.split("Bearer ")[1];
-      });
-      if (authToken) setCookie("token", authToken);
+      if (res.refreshToken) setCookie("token", res.refreshToken);
     }).catch(dispatch({type: SIGN_IN_FAILED}))
   }
+}
+
+const signOutRequest = async () => {
+  return await request('auth/logout',{
+    method: 'POST',
+    headers: {
+      'Content-Type': "application/json"
+    },
+    body: {
+      token: `${getCookie('token')}`
+    }
+  })
+}
+
+export function getSignOutData(){
+  return function(dispatch){
+    dispatch({type: SIGN_OUT_REQUEST})
+    signOutRequest()
+    .then((res) => {
+      dispatch({
+        type: SIGN_OUT_SUCCESS,
+        res
+      })
+    }).catch(dispatch({type:SIGN_OUT_FAILED}));
+  }
+  
 }

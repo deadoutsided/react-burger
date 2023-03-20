@@ -1,3 +1,4 @@
+import { deleteCookie } from "../../utils/cookie";
 import {
   INGREDIENT_REQUEST,
   INGREDIENT_SUCCESS,
@@ -17,6 +18,9 @@ import {
   SIGN_IN_REQUEST,
   SIGN_IN_FAILED,
   SIGN_IN_SUCCESS,
+  SIGN_OUT_REQUEST,
+  SIGN_OUT_FAILED,
+  SIGN_OUT_SUCCESS,
 } from "../actions/index";
 
 const initialState = {
@@ -35,7 +39,9 @@ const initialState = {
   registrationError: false,
   authData: {},
   signInLoading: false,
-  signInError: false
+  signInError: false,
+  signOutLoading: false,
+  signOutError: false,
 };
 
 export const reducers = (state = initialState, action) => {
@@ -185,6 +191,30 @@ export const reducers = (state = initialState, action) => {
         signInLoading: false,
         signInError: false,
         authData: action.data
+      }
+    }
+    case SIGN_OUT_REQUEST:{
+      return {
+        ...state,
+        signOutLoading: true,
+        signOutError: false
+      }
+    }
+    case SIGN_OUT_FAILED: {
+      return {
+        ...state,
+        signOutLoading: false,
+        signOutError: true
+      }
+    }
+    case SIGN_OUT_SUCCESS: {
+      if(action.data.success){
+        deleteCookie('token');
+      }
+      return {
+        ...state,
+        signOutError: false,
+        signOutLoading: false,
       }
     }
     default: {

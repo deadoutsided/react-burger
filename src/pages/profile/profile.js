@@ -10,8 +10,8 @@ import style from "./profile.module.css";
 export function Profile() {
   
   const [emailValue, setEmail] = useState('');
-  const [password, setPassword] = useState('123');
-  const [nameValue, setName] = useState('sos');
+  const [password, setPassword] = useState('');
+  const [nameValue, setName] = useState('');
 
   const changeEmail = (e) => {
     setEmail(e.target.value)

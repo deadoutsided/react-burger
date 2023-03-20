@@ -27,23 +27,40 @@ function App() {
 
   return (
     <div className={style.App}>
-      <AppHeader />
       <BrowserRouter>
         <Routes>
           <Route
             path="/"
             element={
+              <>
+              <AppHeader />
               <DndProvider backend={HTML5Backend}>
                 <BurgerIngredients />
                 <BurgerConstructor />
               </DndProvider>
+              </>
             }
           ></Route>
-          <Route path="/sign-in" element={ <SignIn />} />
-          <Route path="/register" element={ <Register />} />
-          <Route path="/forgot-password" element={ <ForgotPassword /> } />
-          <Route path="/reset-password" element={ <ResetPassword /> } />
-          <Route path="/profile" element ={ <Profile /> } />
+          <Route path="/sign-in" element={ <>
+              <AppHeader />
+              <SignIn />
+              </>} />
+          <Route path="/register" element={ <>
+              <AppHeader />
+              <Register />
+              </>} />
+          <Route path="/forgot-password" element={ <>
+              <AppHeader />
+              <ForgotPassword />
+              </> } />
+          <Route path="/reset-password" element={ <>
+              <AppHeader />
+              <ResetPassword />
+              </> } />
+          <Route path="/profile" element ={ <>
+              <AppHeader />
+              <Profile />
+              </> } />
         </Routes>
       </BrowserRouter>
     </div>

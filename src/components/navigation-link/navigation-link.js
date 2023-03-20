@@ -11,6 +11,7 @@ function NavigationLink(props) {
         (props.flex ? "" : style.profileFlex) +
         " pl-5 pr-5 pt-4 pb-4"
       }
+      onClick={props.click}
     >
       {props.children}
       <p className="text text_type_main-default pl-2">{props.text}</p>

@@ -1,10 +1,15 @@
 import React from "react";
 import { Logo, BurgerIcon, ListIcon, ProfileIcon, Typography, Box } from '@ya.praktikum/react-developer-burger-ui-components';
+import { useNavigate, Navigate } from "react-router-dom";
 import header from './app-header.module.css';
 import NavigationLink from '../navigation-link/navigation-link'
 
 function AppHeader(props) {
+  const navigate = useNavigate();
 
+  const clickProfile = () => {
+    navigate("/profile");
+  }
   return (
     <header className={header.header} >
       <nav className={header.nav}>
@@ -17,7 +22,7 @@ function AppHeader(props) {
           </NavigationLink>
         </div>
         <Logo />
-        <NavigationLink text="Личный кабинет" flex={false}>
+        <NavigationLink click={clickProfile} text="Личный кабинет" flex={false}>
           <ProfileIcon type="primary" onClick={undefined} />
         </NavigationLink>
       </nav>
