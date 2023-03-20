@@ -1,5 +1,6 @@
 import request from "../../utils/data";
 import { useSelector } from "react-redux";
+import { setCookie } from "../../utils/cookie";
 
 export const INGREDIENT_REQUEST = "INGREDIENT_REQUEST";
 export const INGREDIENT_SUCCESS = "INGREDIENT_SUCCESS";
@@ -16,6 +17,9 @@ export const MOVE_CONSTRUCTED_INGREDIENT = "MOVE_CONSTRUCTED_INGREDIENT";
 export const REGISTRATION_REQUEST = "REGISTRATION_REQUEST";
 export const REGISTRATION_FAILED = "REGISTRATION_FAILED";
 export const REGISTRATION_SUCCESS = "REGISTRATION_SUCCESS";
+export const SIGN_IN_REQUEST = "SIGN_IN_REQUEST";
+export const SIGN_IN_FAILED = "SIGN_IN_FAILED";
+export const SIGN_IN_SUCCESS = "SIGN_IN_SUCCESS";
 
 const getIngredientDataRequest = async () => {
   return await request("ingredients");
@@ -80,10 +84,9 @@ const registrationRequest = async (name, email, password) => {
 
 export function getRegistrationData(name, email, password) {
   return function (dispatch) {
-    dispatch({type: REGISTRATION_REQUEST});
+    dispatch({ type: REGISTRATION_REQUEST });
     registrationRequest(name, email, password)
       .then((res) => {
-        console.log(res);
         dispatch({
           type: REGISTRATION_SUCCESS,
           data: {
@@ -92,7 +95,47 @@ export function getRegistrationData(name, email, password) {
             accessToken: res.accessToken,
           },
         });
+        let authToken;
+        res.forEach((el) => {
+          if (typeof el === "String" && el.includes("Bearer ")) authToken = el.split("Bearer ")[1];
+        });
+        if (authToken) setCookie("token", authToken);
       })
       .catch(dispatch({ type: REGISTRATION_FAILED }));
   };
+}
+
+const signInRequest = async (email, password) => {
+  return await request('auth/login', {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        email,
+        password
+      })
+  })
+}
+
+export function getSignInData(email, password){
+  return function(dispatch){
+    dispatch({type: SIGN_IN_REQUEST});
+    signInRequest(email,password)
+    .then((res) => {
+      dispatch({
+        type: SIGN_IN_SUCCESS,
+        data: {
+          success: res.success,
+          user: res.user,
+          accessToken: res.accessToken,
+        }
+      });
+      let authToken;
+      Object.values(res).forEach((el) => {
+        if (typeof el === "String" && el.includes("Bearer ")) authToken = el.split("Bearer ")[1];
+      });
+      if (authToken) setCookie("token", authToken);
+    }).catch(dispatch({type: SIGN_IN_FAILED}))
+  }
 }

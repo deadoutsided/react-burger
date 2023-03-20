@@ -14,6 +14,9 @@ import {
   REGISTRATION_REQUEST,
   REGISTRATION_FAILED,
   REGISTRATION_SUCCESS,
+  SIGN_IN_REQUEST,
+  SIGN_IN_FAILED,
+  SIGN_IN_SUCCESS,
 } from "../actions/index";
 
 const initialState = {
@@ -30,7 +33,9 @@ const initialState = {
 
   registrationLoading: false,
   registrationError: false,
-  registrationData: {},
+  authData: {},
+  signInLoading: false,
+  signInError: false
 };
 
 export const reducers = (state = initialState, action) => {
@@ -149,7 +154,7 @@ export const reducers = (state = initialState, action) => {
       return {
         ...state,
         registrationLoading: false,
-        registrationError: false,
+        registrationError: true,
       };
     }
     case REGISTRATION_SUCCESS: {
@@ -157,8 +162,30 @@ export const reducers = (state = initialState, action) => {
         ...state,
         registrationLoading: false,
         registrationError: false,
-        registrationData: action.data,
+        authData: action.data,
       };
+    }
+    case SIGN_IN_REQUEST: {
+      return {
+        ...state,
+        signInLoading: true,
+        signInError: false
+      }
+    }
+    case SIGN_IN_FAILED: {
+      return {
+        ...state,
+        signInLoading: false,
+        signInError: true
+      }
+    }
+    case SIGN_IN_SUCCESS: {
+      return {
+        ...state,
+        signInLoading: false,
+        signInError: false,
+        authData: action.data
+      }
     }
     default: {
       return state;
