@@ -208,13 +208,14 @@ export const reducers = (state = initialState, action) => {
       }
     }
     case SIGN_OUT_SUCCESS: {
-      if(action.data.success){
+      if(action.res.success){
         deleteCookie('token');
       }
       return {
         ...state,
         signOutError: false,
         signOutLoading: false,
+        authData: {},
       }
     }
     default: {

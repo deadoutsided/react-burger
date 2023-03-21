@@ -105,58 +105,63 @@ export function getRegistrationData(name, email, password) {
 }
 
 const signInRequest = async (email, password) => {
-  return await request('auth/login', {
-      method: 'POST',
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        email,
-        password
-      })
-  })
-}
+  return await request("auth/login", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      email,
+      password,
+    }),
+  });
+};
 
-export function getSignInData(email, password){
-  return function(dispatch){
-    dispatch({type: SIGN_IN_REQUEST});
-    signInRequest(email,password)
-    .then((res) => {
-      dispatch({
-        type: SIGN_IN_SUCCESS,
-        data: {
-          success: res.success,
-          user: res.user,
-          accessToken: res.accessToken,
-        }
-      });
-      if (res.refreshToken) setCookie("token", res.refreshToken);
-    }).catch(dispatch({type: SIGN_IN_FAILED}))
-  }
+export function getSignInData(email, password) {
+  return function (dispatch) {
+    dispatch({ type: SIGN_IN_REQUEST });
+    signInRequest(email, password)
+      .then((res) => {
+        dispatch({
+          type: SIGN_IN_SUCCESS,
+          data: {
+            success: res.success,
+            user: res.user,
+            accessToken: res.accessToken,
+          },
+        });
+        if (res.refreshToken) setCookie("token", res.refreshToken);
+      })
+      .catch(dispatch({ type: SIGN_IN_FAILED }));
+  };
 }
 
 const signOutRequest = async () => {
-  return await request('auth/logout',{
-    method: 'POST',
+  console.log(`${getCookie("token")}`)
+  return await request("auth/logout", {
+    method: "POST",
     headers: {
-      'Content-Type': "application/json"
+      "Content-Type": "application/json",
     },
-    body: {
-      token: `${getCookie('token')}`
-    }
-  })
-}
+    body: JSON.stringify({
+      token: getCookie("token"),
+    }),
+  });
+};
 
-export function getSignOutData(){
-  return function(dispatch){
-    dispatch({type: SIGN_OUT_REQUEST})
+export function getSignOutData() {
+  return function (dispatch) {
+    dispatch({ type: SIGN_OUT_REQUEST });
     signOutRequest()
-    .then((res) => {
-      dispatch({
-        type: SIGN_OUT_SUCCESS,
-        res
+      .then((res) => {
+        console.log(res.success);
+        if (res.success) {
+          dispatch({
+            type: SIGN_OUT_SUCCESS,
+            res,
+          });
+        }
       })
-    }).catch(dispatch({type:SIGN_OUT_FAILED}));
-  }
-  
+      .catch(dispatch({ type: SIGN_OUT_FAILED }));
+  };
 }

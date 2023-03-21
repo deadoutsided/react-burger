@@ -1,13 +1,18 @@
 import React, { useState } from "react";
-import { NavLink, Link } from "react-router-dom";
+import { NavLink, Link, Navigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import {
   EmailInput,
   PasswordInput,
   Input,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import style from "./profile.module.css";
+import { getSignOutData } from "../../services/actions";
+import { getCookie } from "../../utils/cookie";
 
 export function Profile() {
+  const dispatch = useDispatch();
+  const { authData } = useSelector((store) => store.root)
   
   const [emailValue, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -25,6 +30,15 @@ export function Profile() {
     setName(e.target.value);
   }
 
+  const onClick = (e) => {
+    dispatch(getSignOutData());
+    console.log(getCookie('token'));
+  }
+
+  if(!authData.user){
+    return (<Navigate to="/sign-in" />)
+  }
+
   return (
     <div className={style.container}>
       <div className={style.nav_links}>
@@ -40,7 +54,7 @@ export function Profile() {
         >
           История заказов
         </NavLink>
-        <Link to="/" className={"mb-20 text text_type_main-medium text_color_inactive " + style.link}>
+        <Link onClick={onClick} className={"mb-20 text text_type_main-medium text_color_inactive " + style.link}>
           Выход
         </Link>
         <p className="text text_type_main-default text_color_inactive">В этом разделе вы можете изменить свои персональные данные</p>
