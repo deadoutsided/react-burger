@@ -21,6 +21,15 @@ import {
   SIGN_OUT_REQUEST,
   SIGN_OUT_FAILED,
   SIGN_OUT_SUCCESS,
+  GET_USER_FAILED,
+  SET_USER_REQUEST,
+  GET_USER_REQUEST,
+  SET_USER_FAILED,
+  SET_USER_SUCCESS,
+  GET_USER_SUCCESS,
+  NEW_TOKEN_REQUEST,
+  NEW_TOKEN_FAILED,
+  NEW_TOKEN_SUCCESS
 } from "../actions/index";
 
 const initialState = {
@@ -38,10 +47,17 @@ const initialState = {
   registrationLoading: false,
   registrationError: false,
   authData: {},
+  accessToken: '',
   signInLoading: false,
   signInError: false,
   signOutLoading: false,
   signOutError: false,
+  getUserLoading: false,
+  getUserError: false,
+  setUserLoading: false,
+  setUserError: false,
+  newTokenLoading: false,
+  newTokenError: false,
 };
 
 export const reducers = (state = initialState, action) => {
@@ -169,6 +185,7 @@ export const reducers = (state = initialState, action) => {
         registrationLoading: false,
         registrationError: false,
         authData: action.data,
+        accessToken: action.data.accessToken
       };
     }
     case SIGN_IN_REQUEST: {
@@ -190,7 +207,8 @@ export const reducers = (state = initialState, action) => {
         ...state,
         signInLoading: false,
         signInError: false,
-        authData: action.data
+        authData: action.data,
+        accessToken: action.data.accessToken
       }
     }
     case SIGN_OUT_REQUEST:{
@@ -215,7 +233,80 @@ export const reducers = (state = initialState, action) => {
         ...state,
         signOutError: false,
         signOutLoading: false,
-        authData: {},
+        authData: {
+          user: {
+            name: '',
+            pass: '',
+            email: ''
+          }
+        },
+        accessToken: ''
+      }
+    }
+    case GET_USER_REQUEST: {
+      return {
+        ...state,
+        getUserLoading: true,
+        getUserError: false
+      }
+    }
+    case GET_USER_FAILED: {
+      return {
+        ...state,
+        getUserLoading: false,
+        getUserError: true
+      }
+    }
+    case GET_USER_SUCCESS: {
+      return {
+        ...state,
+        getUserLoading: false,
+        getUserError: false,
+        authData: action.res
+      }
+    }
+    case SET_USER_REQUEST: {
+      return {
+        ...state,
+        setUserLoading: true,
+        setUserError: false
+      }
+    }
+    case SET_USER_FAILED: {
+      return {
+        ...state,
+        setUserLoading: false,
+        setUserError: true
+      }
+    }
+    case SET_USER_SUCCESS: {
+      return {
+        ...state,
+        setUserError: false,
+        setUserLoading: false,
+        authData: action.res,
+      }
+    }
+    case NEW_TOKEN_REQUEST: {
+      return {
+        ...state,
+        newTokenError: false,
+        newTokenLoading: true,
+      }
+    }
+    case NEW_TOKEN_FAILED: {
+      return {
+        ...state,
+        newTokenError: true,
+        newTokenLoading: false
+      }
+    }
+    case NEW_TOKEN_SUCCESS: {
+      return {
+        ...state,
+        newTokenError: false,
+        newTokenLoading: false,
+        accessToken: action.res.accessToken,
       }
     }
     default: {

@@ -23,6 +23,15 @@ export const SIGN_IN_SUCCESS = "SIGN_IN_SUCCESS";
 export const SIGN_OUT_REQUEST = "SIGN_OUT_REQUEST";
 export const SIGN_OUT_FAILED = "SIGN_OUT_FAILED";
 export const SIGN_OUT_SUCCESS = "SIGN_OUT_SUCCESS";
+export const GET_USER_REQUEST = "GET_USER_REQUEST";
+export const GET_USER_FAILED = "GET_USER_FAILED";
+export const GET_USER_SUCCESS = "GET_USER_SUCCESS";
+export const SET_USER_REQUEST = "SET_USER_REQUEST";
+export const SET_USER_FAILED = "SET_USER_FAILED";
+export const SET_USER_SUCCESS = "SET_USER_SUCCESS";
+export const NEW_TOKEN_REQUEST = "NEW_TOKEN_REQUEST";
+export const NEW_TOKEN_FAILED = "NEW_TOKEN_FAILED";
+export const NEW_TOKEN_SUCCESS = "NEW_TOKEN_SUCCESS";
 
 const getIngredientDataRequest = async () => {
   return await request("ingredients");
@@ -94,7 +103,7 @@ export function getRegistrationData(name, email, password) {
           type: REGISTRATION_SUCCESS,
           data: {
             success: res.success,
-            user: res.user,
+            user: { ...res.user, pass: password },
             accessToken: res.accessToken,
           },
         });
@@ -126,7 +135,7 @@ export function getSignInData(email, password) {
           type: SIGN_IN_SUCCESS,
           data: {
             success: res.success,
-            user: res.user,
+            user: { ...res.user, pass: password },
             accessToken: res.accessToken,
           },
         });
@@ -137,7 +146,6 @@ export function getSignInData(email, password) {
 }
 
 const signOutRequest = async () => {
-  console.log(`${getCookie("token")}`)
   return await request("auth/logout", {
     method: "POST",
     headers: {
@@ -154,7 +162,6 @@ export function getSignOutData() {
     dispatch({ type: SIGN_OUT_REQUEST });
     signOutRequest()
       .then((res) => {
-        console.log(res.success);
         if (res.success) {
           dispatch({
             type: SIGN_OUT_SUCCESS,
@@ -163,5 +170,89 @@ export function getSignOutData() {
         }
       })
       .catch(dispatch({ type: SIGN_OUT_FAILED }));
+  };
+}
+
+const getUserRequest = async (token) => {
+  console.log(getCookie("token"));
+  return await request("auth/user", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: token,
+    },
+  });
+};
+
+export function getUserData(token) {
+  return function (dispatch) {
+    dispatch({ type: GET_USER_REQUEST });
+    return getUserRequest(token)
+      .then((res) => {
+        if (res.success) {
+          dispatch({
+            type: GET_USER_SUCCESS,
+            res,
+          });
+        }
+      })
+      .catch(dispatch({ type: GET_USER_FAILED }));
+  };
+}
+
+const setUserRequest = async (name, email, password) => {
+  return await request("auth/user", {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: getCookie("token"),
+    },
+    body: JSON.stringify({
+      name,
+      email,
+      password,
+    }),
+  });
+};
+
+export function setUserData() {
+  return function (dispatch) {
+    dispatch({ type: SET_USER_REQUEST });
+    return setUserRequest()
+      .then((res) => {
+        if (res.success) {
+          dispatch({
+            type: SET_USER_SUCCESS,
+            res,
+          });
+        }
+      })
+      .catch(dispatch({ type: SET_USER_FAILED }));
+  };
+}
+
+const newTokenRequest = async () => {
+  return await request("auth/token", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      token: getCookie("token"),
+    }),
+  });
+};
+
+export function getNewToken() {
+  return function (dispatch) {
+    dispatch({ type: NEW_TOKEN_REQUEST });
+    newTokenRequest()
+      .then((res) => {
+        if (res.success) {
+          setCookie('token', res.refreshToken)
+          dispatch({ type: NEW_TOKEN_SUCCESS, res });
+        }
+      })
+      .catch(dispatch({ type: NEW_TOKEN_FAILED }));
   };
 }

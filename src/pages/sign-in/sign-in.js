@@ -11,7 +11,7 @@ import {
 
 export function SignIn() {
   const dispatch = useDispatch();
-  const { authData } = useSelector((store) => store.root);
+  const { authData, accessToken } = useSelector((store) => store.root);
 
   const [emailValue, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -29,7 +29,7 @@ export function SignIn() {
     dispatch(getSignInData(emailValue, password));
   }
 
-  if (authData.user) {
+  if (accessToken !== '') {
     return <Navigate to="/" />;
   }
 
