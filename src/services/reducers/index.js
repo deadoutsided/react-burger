@@ -29,7 +29,14 @@ import {
   GET_USER_SUCCESS,
   NEW_TOKEN_REQUEST,
   NEW_TOKEN_FAILED,
-  NEW_TOKEN_SUCCESS
+  NEW_TOKEN_SUCCESS,
+  PASSWORD_FORGOT_REQUEST,
+  PASSWORD_FORGOT_FAILED,
+  PASSWORD_FORGOT_SUCCESS,
+  PASSWORD_RESET_REQUEST,
+  PASSWORD_RESET_FAILED,
+  PASSWORD_RESET_SUCCESS,
+  SET_AUTHORIZED,
 } from "../actions/index";
 
 const initialState = {
@@ -46,8 +53,15 @@ const initialState = {
 
   registrationLoading: false,
   registrationError: false,
-  authData: {},
-  accessToken: '',
+  authorized: false,
+  authData: {
+    user: {
+      email: "",
+      name: "",
+      pass: "",
+    },
+  },
+  accessToken: "",
   signInLoading: false,
   signInError: false,
   signOutLoading: false,
@@ -58,6 +72,12 @@ const initialState = {
   setUserError: false,
   newTokenLoading: false,
   newTokenError: false,
+  forgotPasswordLoading: false,
+  forgotPasswordError: false,
+  forgotPasswordSuccess: false,
+  resetPasswordRequest: false,
+  resetPasswordError: false,
+  resetPasswordSuccess: false,
 };
 
 export const reducers = (state = initialState, action) => {
@@ -185,22 +205,22 @@ export const reducers = (state = initialState, action) => {
         registrationLoading: false,
         registrationError: false,
         authData: action.data,
-        accessToken: action.data.accessToken
+        accessToken: action.data.accessToken,
       };
     }
     case SIGN_IN_REQUEST: {
       return {
         ...state,
         signInLoading: true,
-        signInError: false
-      }
+        signInError: false,
+      };
     }
     case SIGN_IN_FAILED: {
       return {
         ...state,
         signInLoading: false,
-        signInError: true
-      }
+        signInError: true,
+      };
     }
     case SIGN_IN_SUCCESS: {
       return {
@@ -208,76 +228,86 @@ export const reducers = (state = initialState, action) => {
         signInLoading: false,
         signInError: false,
         authData: action.data,
-        accessToken: action.data.accessToken
-      }
+        accessToken: action.data.accessToken,
+      };
     }
-    case SIGN_OUT_REQUEST:{
+    case SIGN_OUT_REQUEST: {
       return {
         ...state,
         signOutLoading: true,
-        signOutError: false
-      }
+        signOutError: false,
+      };
     }
     case SIGN_OUT_FAILED: {
       return {
         ...state,
         signOutLoading: false,
-        signOutError: true
-      }
+        signOutError: true,
+      };
     }
     case SIGN_OUT_SUCCESS: {
-      if(action.res.success){
-        deleteCookie('token');
+      if (action.res.success) {
+        deleteCookie("token");
       }
       return {
         ...state,
         signOutError: false,
         signOutLoading: false,
+        resetPasswordSuccess: false,
+        forgotPasswordSuccess: false,
         authData: {
           user: {
-            name: '',
-            pass: '',
-            email: ''
-          }
+            name: "",
+            pass: "",
+            email: "",
+          },
         },
-        accessToken: ''
-      }
+        accessToken: "",
+      };
     }
     case GET_USER_REQUEST: {
       return {
         ...state,
         getUserLoading: true,
-        getUserError: false
-      }
+        getUserError: false,
+      };
     }
     case GET_USER_FAILED: {
       return {
         ...state,
         getUserLoading: false,
-        getUserError: true
-      }
+        getUserError: true,
+      };
     }
     case GET_USER_SUCCESS: {
       return {
         ...state,
         getUserLoading: false,
         getUserError: false,
-        authData: action.res
-      }
+        authData: {
+          success: action.res.success,
+          user: {
+            ...state.authData.user,
+            email: action.res.user.email,
+            name: action.res.user.name,
+          },
+          accessToken: action.res.accessToken,
+        },
+      };
     }
     case SET_USER_REQUEST: {
       return {
         ...state,
         setUserLoading: true,
-        setUserError: false
-      }
+        setUserError: false,
+      };
     }
     case SET_USER_FAILED: {
       return {
         ...state,
         setUserLoading: false,
-        setUserError: true
-      }
+        setUserError: true,
+      };
     }
     case SET_USER_SUCCESS: {
       return {
@@ -285,21 +315,21 @@ export const reducers = (state = initialState, action) => {
         setUserError: false,
         setUserLoading: false,
         authData: action.res,
-      }
+      };
     }
     case NEW_TOKEN_REQUEST: {
       return {
         ...state,
         newTokenError: false,
         newTokenLoading: true,
-      }
+      };
     }
     case NEW_TOKEN_FAILED: {
       return {
         ...state,
         newTokenError: true,
-        newTokenLoading: false
-      }
+        newTokenLoading: false,
+      };
     }
     case NEW_TOKEN_SUCCESS: {
       return {
@@ -307,7 +337,63 @@ export const reducers = (state = initialState, action) => {
         newTokenError: false,
         newTokenLoading: false,
         accessToken: action.res.accessToken,
-      }
+      };
+    }
+    case PASSWORD_FORGOT_REQUEST: {
+      return {
+        ...state,
+        forgotPasswordLoading: true,
+        forgotPasswordError: false,
+      };
+    }
+    case PASSWORD_FORGOT_FAILED: {
+      return {
+        ...state,
+        forgotPasswordLoading: false,
+        forgotPasswordError: true,
+      };
+    }
+    case PASSWORD_FORGOT_SUCCESS: {
+      return {
+        ...state,
+        forgotPasswordLoading: false,
+        forgotPasswordError: false,
+        forgotPasswordSuccess: action.res.success,
+      };
+    }
+    case PASSWORD_RESET_REQUEST: {
+      return {
+        ...state,
+        resetPasswordRequest: true,
+        resetPasswordError: false,
+      };
+    }
+    case PASSWORD_RESET_FAILED: {
+      return {
+        ...state,
+        resetPasswordRequest: false,
+        resetPasswordError: true,
+      };
+    }
+    case PASSWORD_RESET_SUCCESS: {
+      return {
+        ...state,
+        resetPasswordRequest: false,
+        resetPasswordError: false,
+        resetPasswordSuccess: true,
+        authData: {
+          user: {
+            ...state.authData.user,
+            pass: action.password,
+          },
+        },
+      };
+    }
+    case SET_AUTHORIZED: {
+      return {
+        ...state,
+        authorized: action.bool,
+      };
     }
     default: {
       return state;

@@ -1,24 +1,28 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { NavLink, Link, Navigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   EmailInput,
   PasswordInput,
   Input,
+  Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import style from "./profile.module.css";
 import {
   getSignOutData,
   getUserData,
   getNewToken,
+  setUserData,
 } from "../../services/actions";
 import { getCookie } from "../../utils/cookie";
 
 export function Profile() {
   const dispatch = useDispatch();
-  const { authData, getUserError, accessToken } = useSelector(
+  const { authData, getUserError, accessToken, setUserError } = useSelector(
     (store) => store.root
   );
+
+  const nameInputRef = useRef(null);
 
   useEffect(() => {
     dispatch(getUserData(accessToken));
@@ -29,14 +33,16 @@ export function Profile() {
   }, []);
 
   const [emailValue, setEmail] = useState(
-    authData.user === undefined ? authData.user.email : ""
+    authData.user.email !== undefined ? authData.user.email : ""
   );
   const [password, setPassword] = useState(
-    authData.user ? authData.user.pass : ""
+    authData.user.pass !== undefined ? authData.user.pass : ""
   );
   const [nameValue, setName] = useState(
-    authData.user ? authData.user.name : ""
+    authData.user.name !== undefined ? authData.user.name : ""
   );
+
+  const [inputDisabled, setInputDisabled] = useState(true);
 
   useEffect(() => {
     if (authData.user) {
@@ -63,7 +69,39 @@ export function Profile() {
     console.log(getCookie("token"));
   };
 
-  if (accessToken === '') {
+  const onIconClick = (e) => {
+    setInputDisabled(false);
+    setTimeout(() => nameInputRef.current?.focus(), 0);
+  };
+
+  const onBlur = () => {
+    setInputDisabled(true);
+  };
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+    dispatch(setUserData(nameValue, emailValue, password, accessToken))
+    if(!setUserError){
+      dispatch(getNewToken());
+      dispatch(setUserData(nameValue, emailValue, password, accessToken))
+    }
+  }
+
+  const onReset = (e) => {
+    e.preventDefault();
+    setEmail(authData.user.email);
+    setPassword(authData.user.pass);
+    setName(authData.user.name);
+  }
+
+  const buttons = (
+    <div className={style.buttonCont + ' mt-10'}>
+      <Button type="secondary" htmlType="reset" size="medium">Отмена</Button>
+      <Button type="primary" htmlType="submit" size="medium" >Сохранить</Button>
+    </div>
+  );
+
+  if (accessToken === "") {
     return <Navigate to="/sign-in" />;
   }
 
@@ -109,20 +147,24 @@ export function Profile() {
           В этом разделе вы можете изменить свои персональные данные
         </p>
       </div>
-      <form>
+      <form onSubmit={onSubmit} onReset={onReset}>
         <Input
           extraClass={"mb-6"}
           onChange={changeName}
-          value={nameValue}
+          value={nameValue ? nameValue : ""}
           icon={"EditIcon"}
           placeholder="Имя"
-          disabled={true}
+          disabled={inputDisabled}
+          type="text"
+          onIconClick={onIconClick}
+          ref={nameInputRef}
+          onBlur={onBlur}
         />
         <EmailInput
           extraClass="mb-6"
           name="email"
           placeholder="Логин"
-          value={emailValue}
+          value={emailValue ? emailValue : ""}
           isIcon={true}
           onChange={changeEmail}
         />
@@ -131,8 +173,9 @@ export function Profile() {
           extraClass=""
           onChange={changePassword}
           name="password"
-          value={password}
+          value={password ? password : ""}
         />
+        {(nameValue !== authData.user.name || emailValue !== authData.user.email || password !== authData.user.pass) && buttons}
       </form>
     </div>
   );

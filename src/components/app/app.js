@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import thunk from "redux-thunk";
 import logo from "../../logo.svg";
 import AppHeader from "../app-header/app-header";
@@ -17,13 +17,22 @@ import { Register } from "../../pages/register/register";
 import { ForgotPassword } from "../../pages/forgot-password/forgot-password";
 import { ResetPassword } from "../../pages/reset-password/reset-password";
 import { Profile } from "../../pages/profile/profile";
+import { getCookie } from "../../utils/cookie";
+import { useDispatch, useSelector } from "react-redux";
+import { SET_AUTHORIZED } from "../../services/actions";
 
 function App() {
-  const [orderState, setOrderState] = React.useState({
-    loading: false,
-    error: false,
-    orderData: {},
-  });
+  const dispatch = useDispatch();
+  const { authData } = useSelector((store) => store.root);
+
+  useEffect(() => {
+    if (getCookie("token") !== undefined) {
+      dispatch({ type: SET_AUTHORIZED, bool: true });
+      console.log(getCookie("token"));
+    }else{
+      dispatch({type: SET_AUTHORIZED, bool: false})
+    }
+  }, [authData]);
 
   return (
     <div className={style.App}>
@@ -33,34 +42,59 @@ function App() {
             path="/"
             element={
               <>
-              <AppHeader />
-              <DndProvider backend={HTML5Backend}>
-                <BurgerIngredients />
-                <BurgerConstructor />
-              </DndProvider>
+                <AppHeader />
+                <DndProvider backend={HTML5Backend}>
+                  <BurgerIngredients />
+                  <BurgerConstructor />
+                </DndProvider>
               </>
             }
           ></Route>
-          <Route path="/sign-in" element={ <>
-              <AppHeader />
-              <SignIn />
-              </>} />
-          <Route path="/register" element={ <>
-              <AppHeader />
-              <Register />
-              </>} />
-          <Route path="/forgot-password" element={ <>
-              <AppHeader />
-              <ForgotPassword />
-              </> } />
-          <Route path="/reset-password" element={ <>
-              <AppHeader />
-              <ResetPassword />
-              </> } />
-          <Route path="/profile" element ={ <>
-              <AppHeader />
-              <Profile />
-              </> } />
+          <Route
+            path="/sign-in"
+            element={
+              <>
+                <AppHeader />
+                <SignIn />
+              </>
+            }
+          />
+          <Route
+            path="/register"
+            element={
+              <>
+                <AppHeader />
+                <Register />
+              </>
+            }
+          />
+          <Route
+            path="/forgot-password"
+            element={
+              <>
+                <AppHeader />
+                <ForgotPassword />
+              </>
+            }
+          />
+          <Route
+            path="/reset-password"
+            element={
+              <>
+                <AppHeader />
+                <ResetPassword />
+              </>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <>
+                <AppHeader />
+                <Profile />
+              </>
+            }
+          />
         </Routes>
       </BrowserRouter>
     </div>

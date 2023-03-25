@@ -2,7 +2,6 @@
   display: flex;
   column-gap: 60px;
   flex-direction: row;
-  align-items: center;
   margin: 10% 0 0;
 }
 
@@ -18,4 +17,9 @@
 
 .activeLink{
   color: #fff;
+}
+
+.buttonCont{
+  display: flex;
+  justify-content: flex-end;
 }

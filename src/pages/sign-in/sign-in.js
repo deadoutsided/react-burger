@@ -8,10 +8,11 @@ import {
   PasswordInput,
   Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
+import { getCookie } from "../../utils/cookie";
 
 export function SignIn() {
   const dispatch = useDispatch();
-  const { authData, accessToken } = useSelector((store) => store.root);
+  const { authData, authorized } = useSelector((store) => store.root);
 
   const [emailValue, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -29,7 +30,8 @@ export function SignIn() {
     dispatch(getSignInData(emailValue, password));
   }
 
-  if (accessToken !== '') {
+  if (authorized) {
+    console.log(getCookie('token'));
     return <Navigate to="/" />;
   }
 
@@ -75,6 +77,7 @@ export function SignIn() {
           Восстановить пароль
         </Link>
       </p>
+      <p>{getCookie('token')}</p>
     </form>
   );
 }

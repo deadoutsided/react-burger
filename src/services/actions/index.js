@@ -32,6 +32,13 @@ export const SET_USER_SUCCESS = "SET_USER_SUCCESS";
 export const NEW_TOKEN_REQUEST = "NEW_TOKEN_REQUEST";
 export const NEW_TOKEN_FAILED = "NEW_TOKEN_FAILED";
 export const NEW_TOKEN_SUCCESS = "NEW_TOKEN_SUCCESS";
+export const PASSWORD_FORGOT_REQUEST = "PASSWORD_FORGOT_REQUEST";
+export const PASSWORD_FORGOT_FAILED = "PASSWORD_FORGOT_FAILED";
+export const PASSWORD_FORGOT_SUCCESS = "PASSWORD_FORGOT_SUCCESS";
+export const PASSWORD_RESET_REQUEST = "PASSWORD_RESET_REQUEST";
+export const PASSWORD_RESET_FAILED = "PASSWORD_RESET_FAILED";
+export const PASSWORD_RESET_SUCCESS = "PASSWORD_RESET_SUCCESS";
+export const SET_AUTHORIZED = "SET_AUTHORIZED";
 
 const getIngredientDataRequest = async () => {
   return await request("ingredients");
@@ -200,12 +207,12 @@ export function getUserData(token) {
   };
 }
 
-const setUserRequest = async (name, email, password) => {
+const setUserRequest = async (name, email, password, token) => {
   return await request("auth/user", {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
-      Authorization: getCookie("token"),
+      Authorization: token,
     },
     body: JSON.stringify({
       name,
@@ -215,10 +222,10 @@ const setUserRequest = async (name, email, password) => {
   });
 };
 
-export function setUserData() {
+export function setUserData(name, email, password, token) {
   return function (dispatch) {
     dispatch({ type: SET_USER_REQUEST });
-    return setUserRequest()
+    return setUserRequest(name, email, password, token)
       .then((res) => {
         if (res.success) {
           dispatch({
@@ -249,10 +256,61 @@ export function getNewToken() {
     newTokenRequest()
       .then((res) => {
         if (res.success) {
-          setCookie('token', res.refreshToken)
+          setCookie("token", res.refreshToken);
           dispatch({ type: NEW_TOKEN_SUCCESS, res });
         }
       })
       .catch(dispatch({ type: NEW_TOKEN_FAILED }));
+  };
+}
+
+const forgotPasswordRequest = async (email) => {
+  return await request("password-reset", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      email: email,
+    }),
+  });
+};
+
+export function forgotPassword(email) {
+  return function (dispatch) {
+    dispatch({ type: PASSWORD_FORGOT_REQUEST });
+    forgotPasswordRequest(email)
+      .then((res) => {
+        if (res.success) {
+          dispatch({ type: PASSWORD_FORGOT_SUCCESS, res });
+        }
+      })
+      .catch(dispatch({ type: PASSWORD_FORGOT_FAILED }));
+  };
+}
+
+const resetPasswordRequest = async (password, token) => {
+  return request("password-reset/reset", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      password: password,
+      token: token,
+    }),
+  });
+};
+
+export function resetPassword(password, token) {
+  return function (dispatch) {
+    dispatch({ type: PASSWORD_RESET_REQUEST });
+    resetPasswordRequest(password, token)
+      .then((res) => {
+        if (res.success) {
+          dispatch({ type: PASSWORD_RESET_SUCCESS, res, password });
+        }
+      })
+      .catch(dispatch({ type: PASSWORD_RESET_FAILED }));
   };
 }
