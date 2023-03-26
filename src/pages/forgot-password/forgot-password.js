@@ -10,7 +10,7 @@ import { forgotPassword } from "../../services/actions";
 
 export function ForgotPassword() {
   const dispatch = useDispatch();
-  const { forgotPasswordSuccess } = useSelector((store) => store.root);
+  const { forgotPasswordSuccess, authorized } = useSelector((store) => store.root);
   const [email, setEmail] = useState("");
 
   const changeEmail = (e) => {
@@ -21,9 +21,13 @@ export function ForgotPassword() {
     e.preventDefault();
     dispatch(forgotPassword(email));
   };
+
+  if (authorized) {
+    return <Navigate to="/" replace={true}/>;
+  }
   
   if (forgotPasswordSuccess) {
-    return <Navigate to="/reset-password" />;
+    return <Navigate to="/reset-password" replace={true} />;
   }
 
   return (

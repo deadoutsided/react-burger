@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { NavLink, Link, Navigate } from "react-router-dom";
+import { NavLink, Link, Navigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   EmailInput,
@@ -18,7 +18,8 @@ import { getCookie } from "../../utils/cookie";
 
 export function Profile() {
   const dispatch = useDispatch();
-  const { authData, getUserError, accessToken, setUserError } = useSelector(
+  const {state, pathname} = useLocation();
+  const { authData, getUserError, newTokenLoading, newTokenSuccess, accessToken, setUserError, authorized } = useSelector(
     (store) => store.root
   );
 
@@ -26,11 +27,11 @@ export function Profile() {
 
   useEffect(() => {
     dispatch(getUserData(accessToken));
-    if (!getUserError) {
+    if (getUserError && !newTokenSuccess) {
       dispatch(getNewToken());
-      dispatch(getUserData(accessToken));
+      if(newTokenSuccess) dispatch(getUserData(accessToken));
     }
-  }, []);
+  }, [getUserError]);
 
   const [emailValue, setEmail] = useState(
     authData.user.email !== undefined ? authData.user.email : ""
@@ -101,9 +102,9 @@ export function Profile() {
     </div>
   );
 
-  if (accessToken === "") {
+  /*if (authorized === false) {
     return <Navigate to="/sign-in" />;
-  }
+  }*/
 
   return (
     <div className={style.container}>

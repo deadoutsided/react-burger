@@ -37,6 +37,7 @@ import {
   PASSWORD_RESET_FAILED,
   PASSWORD_RESET_SUCCESS,
   SET_AUTHORIZED,
+  SET_MODAL_STATE,
 } from "../actions/index";
 
 const initialState = {
@@ -72,12 +73,14 @@ const initialState = {
   setUserError: false,
   newTokenLoading: false,
   newTokenError: false,
+  newTokenSuccess: false,
   forgotPasswordLoading: false,
   forgotPasswordError: false,
   forgotPasswordSuccess: false,
   resetPasswordRequest: false,
   resetPasswordError: false,
   resetPasswordSuccess: false,
+  modalState: true,
 };
 
 export const reducers = (state = initialState, action) => {
@@ -336,6 +339,7 @@ export const reducers = (state = initialState, action) => {
         ...state,
         newTokenError: false,
         newTokenLoading: false,
+        newTokenSuccess: true,
         accessToken: action.res.accessToken,
       };
     }
@@ -394,6 +398,12 @@ export const reducers = (state = initialState, action) => {
         ...state,
         authorized: action.bool,
       };
+    }
+    case SET_MODAL_STATE: {
+      return {
+        ...state,
+        modalState: action.bool,
+      }
     }
     default: {
       return state;

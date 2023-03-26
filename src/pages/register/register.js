@@ -12,7 +12,7 @@ import { getRegistrationData } from "../../services/actions";
 
 export function Register() {
   const dispatch = useDispatch();
-  const { authData } = useSelector((store) => store.root);
+  const { authData, authorized } = useSelector((store) => store.root);
 
   const [emailValue, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -35,8 +35,8 @@ export function Register() {
     dispatch(getRegistrationData(nameValue, emailValue, password));
   };
 
-  if (authData.user) {
-    return <Navigate to="/" />;
+  if (authorized) {
+    return <Navigate to="/" replace={true}/>;
   }
 
   return (

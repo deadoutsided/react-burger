@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Link, Navigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, Navigate, useLocation } from "react-router-dom";
 import style from "./sign-in.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { getSignInData } from "../../services/actions";
@@ -12,10 +12,14 @@ import { getCookie } from "../../utils/cookie";
 
 export function SignIn() {
   const dispatch = useDispatch();
-  const { authData, authorized } = useSelector((store) => store.root);
-
+  const { authorized } = useSelector((store) => store.root);
+  const { state } = useLocation();
   const [emailValue, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  useEffect(() => {
+    console.log(state);
+  });
 
   const changeEmail = (e) => {
     setEmail(e.target.value);
@@ -30,9 +34,13 @@ export function SignIn() {
     dispatch(getSignInData(emailValue, password));
   }
 
+  if(state && authorized){
+    return <Navigate to={state.path} replace />
+  }
+
   if (authorized) {
     console.log(getCookie('token'));
-    return <Navigate to="/" />;
+    return <Navigate to="/" replace={true} />;
   }
 
   return (

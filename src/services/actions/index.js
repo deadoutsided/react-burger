@@ -39,6 +39,7 @@ export const PASSWORD_RESET_REQUEST = "PASSWORD_RESET_REQUEST";
 export const PASSWORD_RESET_FAILED = "PASSWORD_RESET_FAILED";
 export const PASSWORD_RESET_SUCCESS = "PASSWORD_RESET_SUCCESS";
 export const SET_AUTHORIZED = "SET_AUTHORIZED";
+export const SET_MODAL_STATE = "SET_MODAL_STATE";
 
 const getIngredientDataRequest = async () => {
   return await request("ingredients");

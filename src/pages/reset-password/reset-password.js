@@ -7,7 +7,7 @@ import { resetPassword } from '../../services/actions';
 
 export function ResetPassword(){
   const dispatch = useDispatch();
-  const { resetPasswordSuccess } = useSelector((store) => store.root);
+  const { resetPasswordSuccess, authorized, forgotPasswordSuccess } = useSelector((store) => store.root);
   const [newPassword, setNewPassword] = useState('');
   const [emailToken, setEmailToken] = useState('');
 
@@ -24,8 +24,16 @@ export function ResetPassword(){
     dispatch(resetPassword(newPassword, emailToken));
   }
 
+  if (authorized) {
+    return <Navigate to="/" replace={true}/>;
+  }
+
+  if(!forgotPasswordSuccess){
+    return <Navigate to="/forgot-password" replace={true} />;
+  }
+
   if(resetPasswordSuccess){
-    return <Navigate to='/sign-in' />
+    return <Navigate to='/sign-in' replace={true} />
   }
 
   return (

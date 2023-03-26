@@ -18,3 +18,11 @@
   align-items: center;
   justify-content: center;
 }
+
+.link{
+  text-decoration: none;
+}
+
+.activeLink{
+  color: #FFF;
+}

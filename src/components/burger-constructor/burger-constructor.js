@@ -1,6 +1,6 @@
 import React, { useState, useTransition, useRef, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { v4 as uuidv4 } from 'uuid';  
+import { v4 as uuidv4 } from "uuid";
 import {
   ConstructorElement,
   CurrencyIcon,
@@ -10,63 +10,79 @@ import {
 import Modal from "../modal/modal";
 import style from "../burger-constructor/burger-constructor.module.css";
 import OrderDetails from "../order-details/order-details";
-import { ADD_CONSTRUCTED_INGREDIENT, DELETE_CONSTRUCTED_INGREDIENT, MOVE_CONSTRUCTED_INGREDIENT, ORDER_RESET } from "../../services/actions";
+import {
+  ADD_CONSTRUCTED_INGREDIENT,
+  DELETE_CONSTRUCTED_INGREDIENT,
+  MOVE_CONSTRUCTED_INGREDIENT,
+  ORDER_RESET,
+} from "../../services/actions";
 import { getOrderData } from "../../services/actions/index.js";
 import { useDrop } from "react-dnd/dist/hooks/useDrop";
 import { MovableConstructorElement } from "../movable-constructor-element/movable-constructor-element";
+import { useNavigate } from "react-router-dom";
 
 function BurgerConstructor(props) {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const { ingredientData, constructorIngredients } = useSelector(
+  const { authorized, constructorIngredients } = useSelector(
     (store) => store.root
   );
 
   const addItem = (item, id) => {
     dispatch({
       type: ADD_CONSTRUCTED_INGREDIENT,
-      item: { ...item,
-        uuid: uuidv4(),
-        id: id
-       }
-    })
-  }
-  const [{isHover}, dropTarget] = useDrop({
-    accept: 'ingredient',
-    drop(item){
-      addItem(item, constructorIngredients.length)
-    }
+      item: { ...item, uuid: uuidv4(), id: id },
+    });
+  };
+  const [{ isHover }, dropTarget] = useDrop({
+    accept: "ingredient",
+    drop(item) {
+      addItem(item, constructorIngredients.length);
+    },
   });
 
-  const  moveIngredient = useCallback((dragIndex, hoverIndex) => {
+  const moveIngredient = useCallback((dragIndex, hoverIndex) => {
     //console.log(ingredient);
     //console.log(index)
-    dispatch({ type: MOVE_CONSTRUCTED_INGREDIENT, dragIndex: dragIndex, hoverIndex: hoverIndex, ingredient: constructorIngredients[dragIndex]})
-  }, [])
+    dispatch({
+      type: MOVE_CONSTRUCTED_INGREDIENT,
+      dragIndex: dragIndex,
+      hoverIndex: hoverIndex,
+      ingredient: constructorIngredients[dragIndex],
+    });
+  }, []);
 
-  const [{},constrTar] = useDrop(() => ({
-    accept: 'constrIngr'
-  }))
+  const [{}, constrTar] = useDrop(() => ({
+    accept: "constrIngr",
+  }));
 
   const [isHidden, setHidden] = useState(true);
   const [isPending, startTransition] = useTransition();
   const delTarg = useRef(null);
 
   const handleBtnClick = (e) => {
-    dispatch(getOrderData(constructorIngredients));
-    setHidden(false);
+    if (!authorized) {
+      navigate("/sign-in");
+    } else {
+      dispatch(getOrderData(constructorIngredients));
+      setHidden(false);
+    }
   };
 
   const handleClose = (e) => {
-    startTransition(() => { setHidden(true); dispatch({ type: ORDER_RESET }) });
+    startTransition(() => {
+      setHidden(true);
+      dispatch({ type: ORDER_RESET });
+    });
   };
   const handleDelete = (e) => {
     delTarg.current.childNodes.forEach((el, i) => {
-      if(el === e.currentTarget.closest('.constructor-element').parentNode){
-        dispatch({type: DELETE_CONSTRUCTED_INGREDIENT, index: i + 1})
+      if (el === e.currentTarget.closest(".constructor-element").parentNode) {
+        dispatch({ type: DELETE_CONSTRUCTED_INGREDIENT, index: i + 1 });
       }
-    })
-  }
+    });
+  };
 
   const modal = (
     <Modal title="" handleClose={handleClose}>
@@ -76,7 +92,10 @@ function BurgerConstructor(props) {
 
   const dragHere = (
     <div>
-      <p className="text text_type_main-default">Перенесите ингредиенты вашего бургера в эту область, чтобы сформировать заказ.</p>
+      <p className="text text_type_main-default">
+        Перенесите ингредиенты вашего бургера в эту область, чтобы сформировать
+        заказ.
+      </p>
     </div>
   );
 
@@ -98,23 +117,34 @@ function BurgerConstructor(props) {
             />
           );
       })}
-      <div ref={(el) => delTarg.current = el && constrTar(el)} className={"mt-4 mb-4 " + style.scrollable}>
-        {constructedEmpty && dragHere || !constructedEmpty && constructorIngredients.map((element, i) => {
-          if (element.type !== "bun") {
-            return (
-              <MovableConstructorElement extraClass={style.constructorCont} key={element.uuid} index={i} id={element.id} moveIngredient={moveIngredient}>
-                <DragIcon type="primary" />
-                <ConstructorElement
-                  isLocked={false}
-                  text={element.name}
-                  price={element.price}
-                  thumbnail={element.image}
-                  handleClose={handleDelete}
-                />
-              </MovableConstructorElement>
-            );
-          }
-        })}
+      <div
+        ref={(el) => (delTarg.current = el && constrTar(el))}
+        className={"mt-4 mb-4 " + style.scrollable}
+      >
+        {(constructedEmpty && dragHere) ||
+          (!constructedEmpty &&
+            constructorIngredients.map((element, i) => {
+              if (element.type !== "bun") {
+                return (
+                  <MovableConstructorElement
+                    extraClass={style.constructorCont}
+                    key={element.uuid}
+                    index={i}
+                    id={element.id}
+                    moveIngredient={moveIngredient}
+                  >
+                    <DragIcon type="primary" />
+                    <ConstructorElement
+                      isLocked={false}
+                      text={element.name}
+                      price={element.price}
+                      thumbnail={element.image}
+                      handleClose={handleDelete}
+                    />
+                  </MovableConstructorElement>
+                );
+              }
+            }))}
       </div>
       {constructorIngredients.map((element, i) => {
         if (element.type === "bun")
