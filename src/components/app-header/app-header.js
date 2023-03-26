@@ -62,7 +62,7 @@ function AppHeader(props) {
               ? "text text_type_main-medium text_color_inactive " +
                 header.link +
                 " " +
-                header.activeLink
+                header.activeLink + ' ' + header.contacts
               : "text text_type_main-medium text_color_inactive " + header.link
           }
         >
