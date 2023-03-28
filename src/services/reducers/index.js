@@ -108,7 +108,10 @@ export const reducers = (state = initialState, action) => {
       };
     }
     case ADD_CONSTRUCTED_INGREDIENT: {
-      if (state.constructorIngredients !== []) {
+      if(state.constructorIngredients === null){
+        state.constructorIngredients = [];
+      }
+      if (!!state.constructorIngredients ?? []) {
         if (
           state.constructorIngredients.some((el) => {
             return el.type === "bun" && el.type === action.item.type;

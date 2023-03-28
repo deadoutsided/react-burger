@@ -10,7 +10,7 @@ export default function OrderDetails(props){
 
   return (
     <div className={style.container}>
-      <p className={'text text_type_digits-large mb-8 ' + style.number}>{!orderLoading && orderData.order && orderData.order.number}</p>
+      <p className={'text text_type_digits-large mb-8 ' + style.number}>{!orderLoading && orderData && orderData.order && orderData.order.number}</p>
       <p className={'text text_type_main-medium mb-15 '}>{status}</p>
       <div className={style.checkMark} />
       <p className={'text text_type_main-default mt-15'}>{!orderLoading && 'Ваш заказ начали готовить'}</p>

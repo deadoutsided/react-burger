@@ -99,7 +99,7 @@ function BurgerConstructor(props) {
     </div>
   );
 
-  const constructedEmpty = constructorIngredients?.length === 0 ? true : false;
+  const constructedEmpty = !!constructorIngredients?.length ?? 0 ? false : true;
 
   return (
     <section ref={dropTarget} className="mt-25 ml-5 pl-4 pr-4">

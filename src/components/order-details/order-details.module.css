@@ -11,4 +11,6 @@
 
 .checkMark {
   background-image: url(/public/graphics.svg);
+  width: 107px;
+  height: 102px;
 }
