@@ -34,13 +34,13 @@ export function Profile() {
   }, [getUserError]);
 
   const [emailValue, setEmail] = useState(
-    authData.user.email !== undefined ? authData.user.email : ""
+    authData.user.email ?? "" ? authData.user.email : ""
   );
   const [password, setPassword] = useState(
-    authData.user.pass !== undefined ? authData.user.pass : ""
+    authData.user.pass ?? "" ? authData.user.pass : ""
   );
   const [nameValue, setName] = useState(
-    authData.user.name !== undefined ? authData.user.name : ""
+    authData.user.name ?? "" ? authData.user.name : ""
   );
 
   const [inputDisabled, setInputDisabled] = useState(true);

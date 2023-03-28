@@ -28,18 +28,15 @@ function BurgerIngredients() {
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
-  const ingredient =
-    state && ingredientData ? null : ingredientData.find((el) => el._id === id);
+  const ingredient = 
+    state && ingredientData ? {} : ingredientData?.find((el) => el._id === id);
 
   useEffect(() => {
     dispatch(getIngredientData());
-    console.log(state);
     if(!state && !id){
-      console.log('bull')
       navigate('', {state: {path: 'asdasd'}});
     }
     dispatch({type: SET_MODAL_STATE, bool: !id ? true : false})
-    //console.log(id);
   }, [dispatch]);
 
   const handleCardClick = (e) => {
@@ -54,7 +51,7 @@ function BurgerIngredients() {
 
   const modal = state ? (
     <Modal handleClose={handleClose} title="Детали ингредиента">
-      <IngredientDetails ingredient={currentIngredient} />
+      <IngredientDetails ingredient={currentIngredient ? currentIngredient : {}} />
     </Modal>
   ) : (
     <IngredientDetails ingredient={ingredient ? ingredient : {}} />
@@ -88,13 +85,13 @@ function BurgerIngredients() {
           >
             <p className="text text_type_main-medium mt-10">Булки</p>
             <div ref={buns} className={"pt-6 " + style.ingredientCont}>
-              {ingredientData.map((element) => {
+              {ingredientData?.map((element) => {
                 if (element.type === "bun")
                   return (
                     <CardIngredient
                       id={element._id}
                       handleCardClick={handleCardClick}
-                      ingredient={element}
+                      ingredient={element ? element : {}}
                       key={element._id}
                     />
                   );
@@ -102,13 +99,13 @@ function BurgerIngredients() {
             </div>
             <p className="text text_type_main-medium mt-2">Соусы</p>
             <div ref={sauces} className={style.ingredientCont}>
-              {ingredientData.map((element) => {
+              {ingredientData?.map((element) => {
                 if (element.type === "sauce")
                   return (
                     <CardIngredient
                       id={element._id}
                       handleCardClick={handleCardClick}
-                      ingredient={element}
+                      ingredient={element ? element : {}}
                       key={element._id}
                     />
                   );
@@ -116,13 +113,13 @@ function BurgerIngredients() {
             </div>
             <p className="text text_type_main-medium mt-2">Начинка</p>
             <div ref={mains} className={style.ingredientCont}>
-              {ingredientData.map((element) => {
+              {ingredientData?.map((element) => {
                 if (element.type === "main")
                   return (
                     <CardIngredient
                       id={element._id}
                       handleCardClick={handleCardClick}
-                      ingredient={element}
+                      ingredient={element ? element : {}}
                       key={element._id}
                     />
                   );

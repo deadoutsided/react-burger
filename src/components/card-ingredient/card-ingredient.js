@@ -27,14 +27,14 @@ function CardIngredient(props) {
   });
 
   useEffect(() => {
-    constructorIngredients.reduce((acc, el) => {
+    constructorIngredients?.reduce((acc, el) => {
       if (el._id === id) {
         acc += 1;
       }
       setCount(acc);
       return acc;
     }, 0);
-    if (!constructorIngredients.length) {
+    if (!constructorIngredients?.length) {
       setCount(0);
     }
   });

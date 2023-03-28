@@ -36,7 +36,7 @@ export function ForgotPassword() {
       <EmailInput
         extraClass={"mb-6 "}
         name="email"
-        placeholder="Login"
+        placeholder="Укажите e-mail"
         value={email}
         isIcon={false}
         onChange={changeEmail}

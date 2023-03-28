@@ -27,12 +27,7 @@ function App() {
   const { authData, modalState } = useSelector((store) => store.root);
 
   useEffect(() => {
-    if (getCookie("token") !== undefined) {
-      dispatch({ type: SET_AUTHORIZED, bool: true });
-      console.log(getCookie("token"));
-    } else {
-      dispatch({ type: SET_AUTHORIZED, bool: false });
-    }
+    dispatch({ type: SET_AUTHORIZED, bool: !!getCookie("token") });
   }, [authData]);
 
   return (
@@ -47,7 +42,7 @@ function App() {
                 {/*<AppHeader />*/}
                 <DndProvider backend={HTML5Backend}>
                   <BurgerIngredients />
-                  {modalState && (<BurgerConstructor />)}
+                  {modalState && <BurgerConstructor />}
                 </DndProvider>
               </>
             }

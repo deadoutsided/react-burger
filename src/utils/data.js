@@ -14,8 +14,8 @@ const checkSuccess = (res) => {
   return Promise.reject(`Ошибка ${res.status}`);
 }
 
-function request(endpoint, options){
-  return fetch(`${BASE_URL + endpoint}`, options).then(checkResponse).then(checkSuccess);
+async function request(endpoint, options){
+  return await fetch(`${BASE_URL + endpoint}`, options).then(checkResponse).then(checkSuccess);
 }
 
 export default request;

@@ -38,7 +38,7 @@ function BurgerConstructor(props) {
   const [{ isHover }, dropTarget] = useDrop({
     accept: "ingredient",
     drop(item) {
-      addItem(item, constructorIngredients.length);
+      addItem(item, constructorIngredients?.length);
     },
   });
 
@@ -99,11 +99,11 @@ function BurgerConstructor(props) {
     </div>
   );
 
-  const constructedEmpty = constructorIngredients.length === 0 ? true : false;
+  const constructedEmpty = constructorIngredients?.length === 0 ? true : false;
 
   return (
     <section ref={dropTarget} className="mt-25 ml-5 pl-4 pr-4">
-      {constructorIngredients.map((element, i) => {
+      {constructorIngredients?.map((element, i) => {
         if (element.type === "bun")
           return (
             <ConstructorElement
@@ -123,7 +123,7 @@ function BurgerConstructor(props) {
       >
         {(constructedEmpty && dragHere) ||
           (!constructedEmpty &&
-            constructorIngredients.map((element, i) => {
+            constructorIngredients?.map((element, i) => {
               if (element.type !== "bun") {
                 return (
                   <MovableConstructorElement
@@ -146,7 +146,7 @@ function BurgerConstructor(props) {
               }
             }))}
       </div>
-      {constructorIngredients.map((element, i) => {
+      {constructorIngredients?.map((element, i) => {
         if (element.type === "bun")
           return (
             <ConstructorElement
@@ -163,7 +163,7 @@ function BurgerConstructor(props) {
       <div className={style.info}>
         <div className={style.pricecont}>
           <p className="text text_type_main-large mr-2">
-            {constructorIngredients.reduce((totalPrice, currItem) => {
+            {constructorIngredients?.reduce((totalPrice, currItem) => {
               if (currItem.type === "bun") {
                 return totalPrice + currItem.price * 2;
               } else {

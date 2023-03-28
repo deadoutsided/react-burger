@@ -17,10 +17,6 @@ export function SignIn() {
   const [emailValue, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  useEffect(() => {
-    console.log(state);
-  });
-
   const changeEmail = (e) => {
     setEmail(e.target.value);
   };

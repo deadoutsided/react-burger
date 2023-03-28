@@ -181,8 +181,33 @@ export function getSignOutData() {
   };
 }
 
+const newTokenRequest = async () => {
+  return await request("auth/token", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      token: getCookie("token"),
+    }),
+  });
+};
+
+export function getNewToken() {
+  return function (dispatch) {
+    dispatch({ type: NEW_TOKEN_REQUEST });
+    newTokenRequest()
+      .then((res) => {
+        if (res.success) {
+          setCookie("token", res.refreshToken);
+          dispatch({ type: NEW_TOKEN_SUCCESS, res });
+        }
+      })
+      .catch(dispatch({ type: NEW_TOKEN_FAILED }));
+  };
+}
+
 const getUserRequest = async (token) => {
-  console.log(getCookie("token"));
   return await request("auth/user", {
     method: "GET",
     headers: {
@@ -236,32 +261,6 @@ export function setUserData(name, email, password, token) {
         }
       })
       .catch(dispatch({ type: SET_USER_FAILED }));
-  };
-}
-
-const newTokenRequest = async () => {
-  return await request("auth/token", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      token: getCookie("token"),
-    }),
-  });
-};
-
-export function getNewToken() {
-  return function (dispatch) {
-    dispatch({ type: NEW_TOKEN_REQUEST });
-    newTokenRequest()
-      .then((res) => {
-        if (res.success) {
-          setCookie("token", res.refreshToken);
-          dispatch({ type: NEW_TOKEN_SUCCESS, res });
-        }
-      })
-      .catch(dispatch({ type: NEW_TOKEN_FAILED }));
   };
 }
 

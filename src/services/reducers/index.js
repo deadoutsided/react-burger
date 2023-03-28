@@ -41,16 +41,16 @@ import {
 } from "../actions/index";
 
 const initialState = {
-  ingredientData: [],
+  ingredientData: null,
   ingredientLoading: false,
   ingredientError: false,
 
   orderLoading: false,
   orderError: false,
-  orderData: {},
+  orderData: null,
 
-  currentIngredient: {},
-  constructorIngredients: [],
+  currentIngredient: null,
+  constructorIngredients: null,
 
   registrationLoading: false,
   registrationError: false,
