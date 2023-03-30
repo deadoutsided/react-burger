@@ -13,6 +13,7 @@ import {
   getUserData,
   getNewToken,
   setUserData,
+  requestWithRefresh,
 } from "../../services/actions";
 import { getCookie } from "../../utils/cookie";
 
@@ -26,12 +27,8 @@ export function Profile() {
   const nameInputRef = useRef(null);
 
   useEffect(() => {
-    dispatch(getUserData(accessToken));
-    if (getUserError && !newTokenSuccess) {
-      dispatch(getNewToken());
-      if(newTokenSuccess) dispatch(getUserData(accessToken));
-    }
-  }, [getUserError]);
+    dispatch(getUserData());
+  }, []);
 
   const [emailValue, setEmail] = useState(
     authData.user.email ?? "" ? authData.user.email : ""
@@ -81,11 +78,7 @@ export function Profile() {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    dispatch(setUserData(nameValue, emailValue, password, accessToken))
-    if(!setUserError){
-      dispatch(getNewToken());
-      dispatch(setUserData(nameValue, emailValue, password, accessToken))
-    }
+    dispatch(setUserData(nameValue, emailValue, password));
   }
 
   const onReset = (e) => {

@@ -254,6 +254,7 @@ export const reducers = (state = initialState, action) => {
     case SIGN_OUT_SUCCESS: {
       if (action.res.success) {
         deleteCookie("token");
+        deleteCookie('accessToken');
       }
       return {
         ...state,

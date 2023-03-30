@@ -1,6 +1,6 @@
-import request from "../../utils/data";
+import request, { checkResponse } from "../../utils/data";
 import { useSelector } from "react-redux";
-import { getCookie, setCookie } from "../../utils/cookie";
+import { deleteCookie, getCookie, setCookie } from "../../utils/cookie";
 
 export const INGREDIENT_REQUEST = "INGREDIENT_REQUEST";
 export const INGREDIENT_SUCCESS = "INGREDIENT_SUCCESS";
@@ -115,7 +115,9 @@ export function getRegistrationData(name, email, password) {
             accessToken: res.accessToken,
           },
         });
-        if (res.refreshToken) setCookie("token", res.refreshToken);
+        if (res) {
+          setCookie("accessToken", res.accessToken);
+          setCookie("token", res.refreshToken)};
       })
       .catch(dispatch({ type: REGISTRATION_FAILED }));
   };
@@ -147,7 +149,9 @@ export function getSignInData(email, password) {
             accessToken: res.accessToken,
           },
         });
-        if (res.refreshToken) setCookie("token", res.refreshToken);
+        if (res) {
+          setCookie('accessToken', res.accessToken);
+          setCookie("token", res.refreshToken)};
       })
       .catch(dispatch({ type: SIGN_IN_FAILED }));
   };
@@ -190,6 +194,8 @@ const newTokenRequest = async () => {
     body: JSON.stringify({
       token: getCookie("token"),
     }),
+  }).then((res) => {
+    return res;
   });
 };
 
@@ -207,20 +213,20 @@ export function getNewToken() {
   };
 }
 
-const getUserRequest = async (token) => {
-  return await request("auth/user", {
+const getUserRequest = async () => {
+  return await requestWithRefresh("auth/user", {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      Authorization: token,
+      Authorization:  getCookie('accessToken'),
     },
   });
 };
 
-export function getUserData(token) {
+export function getUserData() {
   return function (dispatch) {
     dispatch({ type: GET_USER_REQUEST });
-    return getUserRequest(token)
+    return getUserRequest()
       .then((res) => {
         if (res.success) {
           dispatch({
@@ -231,14 +237,38 @@ export function getUserData(token) {
       })
       .catch(dispatch({ type: GET_USER_FAILED }));
   };
+};
+
+export const requestWithRefresh = async (url, options) => {
+  try{
+    const res = await fetch(`https://norma.nomoreparties.space/api/${url}`, options);
+    return await checkResponse(res);
+  } catch (err) {
+    if(err === 'Ошибка 401' || err === "Ошибка 403"){
+      const refreshData = await newTokenRequest();
+      if(!refreshData.success){
+        Promise.reject(refreshData);
+      }
+      console.log(refreshData);
+      deleteCookie('accessToken');
+      deleteCookie('token');
+      setCookie('token', refreshData.refreshToken);
+      setCookie('accessToken', refreshData.accessToken);
+      options.headers.authorization = refreshData.accessToken;
+      const res = await fetch(`https://norma.nomoreparties.space/api/${url}`,options);
+      return await checkResponse(res);
+    } else {
+      return Promise.reject(err);
+    }
+  }
 }
 
-const setUserRequest = async (name, email, password, token) => {
-  return await request("auth/user", {
+const setUserRequest = async (name, email, password) => {
+  return await requestWithRefresh("auth/user", {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
-      Authorization: token,
+      Authorization: getCookie('accessToken'),
     },
     body: JSON.stringify({
       name,
@@ -248,10 +278,10 @@ const setUserRequest = async (name, email, password, token) => {
   });
 };
 
-export function setUserData(name, email, password, token) {
+export function setUserData(name, email, password) {
   return function (dispatch) {
     dispatch({ type: SET_USER_REQUEST });
-    return setUserRequest(name, email, password, token)
+    return setUserRequest(name, email, password)
       .then((res) => {
         if (res.success) {
           dispatch({
