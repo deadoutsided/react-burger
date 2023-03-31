@@ -35,7 +35,7 @@ function AppHeader(props) {
         </div>
         <Logo />
         <NavigationLink to="/profile" text="Личный кабинет" flex={false}>
-          <ProfileIcon type={pathname === '/profile' ? "primary" : "secondary"} onClick={undefined} />
+          <ProfileIcon type={pathname.includes('/profile') ? "primary" : "secondary"} onClick={undefined} />
         </NavigationLink>
       </nav>
     </header>

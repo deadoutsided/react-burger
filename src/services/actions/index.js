@@ -66,6 +66,8 @@ export function getIngredientData() {
 }
 
 const orderRequest = async (constructorIngredients) => {
+  const ingredsId = constructorIngredients.map((item) => item._id);
+  ingredsId.push(ingredsId[0]);
   return await requestWithRefresh("orders", {
     method: "POST",
     headers: {
@@ -73,7 +75,7 @@ const orderRequest = async (constructorIngredients) => {
       authorization: getCookie('accessToken')
     },
     body: JSON.stringify({
-      ingredients: constructorIngredients.map((item) => item._id),
+      ingredients: ingredsId,
     }),
   });
 };
@@ -250,7 +252,6 @@ export const requestWithRefresh = async (url, options) => {
       if(!refreshData.success){
         Promise.reject(refreshData);
       }
-      console.log(refreshData);
       deleteCookie('accessToken');
       deleteCookie('token');
       setCookie('token', refreshData.refreshToken);

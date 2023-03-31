@@ -64,7 +64,6 @@ export function Profile() {
 
   const onClick = (e) => {
     dispatch(getSignOutData());
-    console.log(getCookie("token"));
   };
 
   const onIconClick = (e) => {
@@ -95,6 +94,43 @@ export function Profile() {
     </div>
   );
 
+  const profileFrom = (<form onSubmit={onSubmit} onReset={onReset}>
+    <Input
+      extraClass={"mb-6"}
+      onChange={changeName}
+      value={nameValue ? nameValue : ""}
+      icon={"EditIcon"}
+      placeholder="Имя"
+      disabled={inputDisabled}
+      type="text"
+      onIconClick={onIconClick}
+      ref={nameInputRef}
+      onBlur={onBlur}
+    />
+    <EmailInput
+      extraClass="mb-6"
+      name="email"
+      placeholder="Логин"
+      value={emailValue ? emailValue : ""}
+      isIcon={true}
+      onChange={changeEmail}
+    />
+    <PasswordInput
+      icon="EditIcon"
+      extraClass=""
+      onChange={changePassword}
+      name="password"
+      value={password ? password : ""}
+    />
+    {(nameValue !== authData.user.name || emailValue !== authData.user.email || password !== authData.user.pass) && buttons}
+  </form>);
+
+  const orders = (
+    <div>
+      <p className="text text_type_main-large">Nothing there yet</p>
+    </div>
+  )
+
   /*if (authorized === false) {
     return <Navigate to="/sign-in" />;
   }*/
@@ -103,7 +139,7 @@ export function Profile() {
     <div className={style.container}>
       <div className={style.nav_links}>
         <NavLink
-          to="/profile"
+          to="/profile/"
           className={({ isActive }) =>
             isActive
               ? "text text_type_main-medium text_color_inactive " +
@@ -141,7 +177,8 @@ export function Profile() {
           В этом разделе вы можете изменить свои персональные данные
         </p>
       </div>
-      <form onSubmit={onSubmit} onReset={onReset}>
+      {pathname === '/profile/' ? profileFrom : orders}
+      {/* <form onSubmit={onSubmit} onReset={onReset}>
         <Input
           extraClass={"mb-6"}
           onChange={changeName}
@@ -170,7 +207,7 @@ export function Profile() {
           value={password ? password : ""}
         />
         {(nameValue !== authData.user.name || emailValue !== authData.user.email || password !== authData.user.pass) && buttons}
-      </form>
+      </form> */}
     </div>
   );
 }

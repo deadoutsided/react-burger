@@ -35,7 +35,6 @@ export function SignIn() {
   }
 
   if (authorized) {
-    console.log(getCookie('token'));
     return <Navigate to="/" replace={true} />;
   }
 

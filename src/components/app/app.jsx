@@ -39,7 +39,6 @@ function App() {
             path="/ingredients?/:id?"
             element={
               <>
-                {/*<AppHeader />*/}
                 <DndProvider backend={HTML5Backend}>
                   <BurgerIngredients />
                   {modalState && <BurgerConstructor />}
@@ -47,12 +46,10 @@ function App() {
               </>
             }
           ></Route>
-          {/*<Route path="/ingredients/:id" element={} />*/}
           <Route
             path="/login"
             element={
               <>
-                {/*<AppHeader />*/}
                 <SignIn />
               </>
             }
@@ -61,7 +58,6 @@ function App() {
             path="/register"
             element={
               <>
-                {/*<AppHeader />*/}
                 <Register />
               </>
             }
@@ -70,7 +66,6 @@ function App() {
             path="/forgot-password"
             element={
               <>
-                {/*<AppHeader />*/}
                 <ForgotPassword />
               </>
             }
@@ -79,7 +74,6 @@ function App() {
             path="/reset-password"
             element={
               <>
-                {/*<AppHeader />*/}
                 <ResetPassword />
               </>
             }
@@ -90,12 +84,20 @@ function App() {
               <ProtectedRouteElement
                 element={
                   <>
-                    {/*  <AppHeader />*/}
                     <Profile />
                   </>
                 }
               ></ProtectedRouteElement>
             }
+          />
+          <Route path="/profile/orders" element={
+              <ProtectedRouteElement
+                element={
+                  <>
+                    <Profile />
+                  </>
+                }
+              ></ProtectedRouteElement>} 
           />
         </Routes>
       </BrowserRouter>
