@@ -66,10 +66,11 @@ export function getIngredientData() {
 }
 
 const orderRequest = async (constructorIngredients) => {
-  return await request("orders", {
+  return await requestWithRefresh("orders", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      authorization: getCookie('accessToken')
     },
     body: JSON.stringify({
       ingredients: constructorIngredients.map((item) => item._id),

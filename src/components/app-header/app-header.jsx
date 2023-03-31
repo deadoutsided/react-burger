@@ -7,12 +7,12 @@ import {
   Typography,
   Box,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { useNavigate, NavLink } from "react-router-dom";
+import { useLocation, NavLink } from "react-router-dom";
 import header from "./app-header.module.css";
 import NavigationLink from "../navigation-link/navigation-link";
 
 function AppHeader(props) {
-  const navigate = useNavigate();
+  const { pathname } = useLocation();
 
   /*const clickProfile = () => {
     navigate("/profile");
@@ -27,15 +27,15 @@ function AppHeader(props) {
             text="Конструктор"
             flex={true}
           >
-            <BurgerIcon type="primary" onClick={undefined} />
+            <BurgerIcon type={pathname === '/' ? "primary" : "secondary"} onClick={undefined} />
           </NavigationLink>
           <NavigationLink to="/order-list" text="Лента заказов" flex={true}>
-            <ListIcon type="primary" onClick={undefined} />
+            <ListIcon type={pathname === '/order-list' ? "primary" : "secondary"} onClick={undefined} />
           </NavigationLink>
         </div>
         <Logo />
         <NavigationLink to="/profile" text="Личный кабинет" flex={false}>
-          <ProfileIcon type="primary" onClick={undefined} />
+          <ProfileIcon type={pathname === '/profile' ? "primary" : "secondary"} onClick={undefined} />
         </NavigationLink>
       </nav>
     </header>

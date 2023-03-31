@@ -49,7 +49,7 @@ function App() {
           ></Route>
           {/*<Route path="/ingredients/:id" element={} />*/}
           <Route
-            path="/sign-in"
+            path="/login"
             element={
               <>
                 {/*<AppHeader />*/}

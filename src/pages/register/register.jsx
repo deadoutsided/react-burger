@@ -72,7 +72,7 @@ export function Register() {
       <p className={"text text_type_main-default text_color_inactive"}>
         Уже зарегистрированы?{" "}
         <Link
-          to="/sign-in"
+          to="/login"
           className={"text text_type_main-default " + style.link}
         >
           Войти
