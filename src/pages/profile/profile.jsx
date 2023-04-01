@@ -131,10 +131,6 @@ export function Profile() {
     </div>
   )
 
-  /*if (authorized === false) {
-    return <Navigate to="/sign-in" />;
-  }*/
-
   return (
     <div className={style.container}>
       <div className={style.nav_links}>
@@ -178,36 +174,6 @@ export function Profile() {
         </p>
       </div>
       {pathname === '/profile/' ? profileFrom : orders}
-      {/* <form onSubmit={onSubmit} onReset={onReset}>
-        <Input
-          extraClass={"mb-6"}
-          onChange={changeName}
-          value={nameValue ? nameValue : ""}
-          icon={"EditIcon"}
-          placeholder="Имя"
-          disabled={inputDisabled}
-          type="text"
-          onIconClick={onIconClick}
-          ref={nameInputRef}
-          onBlur={onBlur}
-        />
-        <EmailInput
-          extraClass="mb-6"
-          name="email"
-          placeholder="Логин"
-          value={emailValue ? emailValue : ""}
-          isIcon={true}
-          onChange={changeEmail}
-        />
-        <PasswordInput
-          icon="EditIcon"
-          extraClass=""
-          onChange={changePassword}
-          name="password"
-          value={password ? password : ""}
-        />
-        {(nameValue !== authData.user.name || emailValue !== authData.user.email || password !== authData.user.pass) && buttons}
-      </form> */}
     </div>
   );
 }

@@ -1,17 +1,5 @@
 import { deleteCookie } from "../../utils/cookie";
 import {
-  INGREDIENT_REQUEST,
-  INGREDIENT_SUCCESS,
-  INGREDIENT_FAILED,
-  ORDER_REQUEST,
-  ORDER_SUCCESS,
-  ORDER_FAILED,
-  ORDER_RESET,
-  SET_CURRENT_INGREDIENT,
-  DELETE_CURRENT_INGREDIENT,
-  ADD_CONSTRUCTED_INGREDIENT,
-  DELETE_CONSTRUCTED_INGREDIENT,
-  MOVE_CONSTRUCTED_INGREDIENT,
   REGISTRATION_REQUEST,
   REGISTRATION_FAILED,
   REGISTRATION_SUCCESS,
@@ -37,20 +25,19 @@ import {
   PASSWORD_RESET_FAILED,
   PASSWORD_RESET_SUCCESS,
   SET_AUTHORIZED,
-  SET_MODAL_STATE,
 } from "../actions/index";
 
-const initialState = {
+const initialState = {/* 
   ingredientData: null,
   ingredientLoading: false,
-  ingredientError: false,
+  ingredientError: false, */
 
-  orderLoading: false,
+/*   orderLoading: false,
   orderError: false,
-  orderData: null,
+  orderData: null, */
 
-  currentIngredient: null,
-  constructorIngredients: null,
+//  currentIngredient: null,
+  //  constructorIngredients: null,
 
   registrationLoading: false,
   registrationError: false,
@@ -80,12 +67,12 @@ const initialState = {
   resetPasswordRequest: false,
   resetPasswordError: false,
   resetPasswordSuccess: false,
-  modalState: true,
+//  modalState: true,
 };
 
 export const reducers = (state = initialState, action) => {
   switch (action.type) {
-    case INGREDIENT_REQUEST: {
+    /* case INGREDIENT_REQUEST: {
       return {
         ...state,
         ingredientLoading: true,
@@ -106,8 +93,8 @@ export const reducers = (state = initialState, action) => {
         ingredientLoading: false,
         ingredientError: true,
       };
-    }
-    case ADD_CONSTRUCTED_INGREDIENT: {
+    } */
+    /* case ADD_CONSTRUCTED_INGREDIENT: {
       if(state.constructorIngredients === null){
         state.constructorIngredients = [];
       }
@@ -149,8 +136,8 @@ export const reducers = (state = initialState, action) => {
         ...state,
         constructorIngredients: state.constructorIngredients,
       };
-    }
-    case ORDER_REQUEST: {
+    } */
+    /* case ORDER_REQUEST: {
       return {
         ...state,
         orderLoading: true,
@@ -178,8 +165,8 @@ export const reducers = (state = initialState, action) => {
         ...state,
         orderData: {},
       };
-    }
-    case SET_CURRENT_INGREDIENT: {
+    } */
+    /* case SET_CURRENT_INGREDIENT: {
       return {
         ...state,
         currentIngredient: action.ingredient,
@@ -190,7 +177,7 @@ export const reducers = (state = initialState, action) => {
         ...state,
         currentIngredient: {},
       };
-    }
+    } */
     case REGISTRATION_REQUEST: {
       return {
         ...state,
@@ -254,7 +241,7 @@ export const reducers = (state = initialState, action) => {
     case SIGN_OUT_SUCCESS: {
       if (action.res.success) {
         deleteCookie("token");
-        deleteCookie('accessToken');
+        deleteCookie("accessToken");
       }
       return {
         ...state,
@@ -403,12 +390,12 @@ export const reducers = (state = initialState, action) => {
         authorized: action.bool,
       };
     }
-    case SET_MODAL_STATE: {
+    /* case SET_MODAL_STATE: {
       return {
         ...state,
         modalState: action.bool,
-      }
-    }
+      };
+    } */
     default: {
       return state;
     }

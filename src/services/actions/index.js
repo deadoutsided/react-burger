@@ -2,18 +2,6 @@ import request, { checkResponse } from "../../utils/data";
 import { useSelector } from "react-redux";
 import { deleteCookie, getCookie, setCookie } from "../../utils/cookie";
 
-export const INGREDIENT_REQUEST = "INGREDIENT_REQUEST";
-export const INGREDIENT_SUCCESS = "INGREDIENT_SUCCESS";
-export const INGREDIENT_FAILED = "INGREDIENT_FAILED";
-export const ORDER_REQUEST = "ORDER_REQUEST";
-export const ORDER_SUCCESS = "ORDER_SUCCES";
-export const ORDER_FAILED = "ORDER_FAILED";
-export const ORDER_RESET = "ORDER_RESET";
-export const SET_CURRENT_INGREDIENT = "SET_CURRENT_INGREDIENT";
-export const DELETE_CURRENT_INGREDIENT = "DELETE_CURRENT_INGREDIENT";
-export const ADD_CONSTRUCTED_INGREDIENT = "ADD_CONSTRUCTED_INGREDIENT";
-export const DELETE_CONSTRUCTED_INGREDIENT = "DELETE_CONSTRUCTED_INGREDIENT";
-export const MOVE_CONSTRUCTED_INGREDIENT = "MOVE_CONSTRUCTED_INGREDIENT";
 export const REGISTRATION_REQUEST = "REGISTRATION_REQUEST";
 export const REGISTRATION_FAILED = "REGISTRATION_FAILED";
 export const REGISTRATION_SUCCESS = "REGISTRATION_SUCCESS";
@@ -39,57 +27,6 @@ export const PASSWORD_RESET_REQUEST = "PASSWORD_RESET_REQUEST";
 export const PASSWORD_RESET_FAILED = "PASSWORD_RESET_FAILED";
 export const PASSWORD_RESET_SUCCESS = "PASSWORD_RESET_SUCCESS";
 export const SET_AUTHORIZED = "SET_AUTHORIZED";
-export const SET_MODAL_STATE = "SET_MODAL_STATE";
-
-const getIngredientDataRequest = async () => {
-  return await request("ingredients");
-};
-
-export function getIngredientData() {
-  return function (dispatch) {
-    dispatch({
-      type: INGREDIENT_REQUEST,
-    });
-    getIngredientDataRequest()
-      .then((res) => {
-        dispatch({
-          type: INGREDIENT_SUCCESS,
-          value: res.data,
-        });
-      })
-      .catch(
-        dispatch({
-          type: INGREDIENT_FAILED,
-        })
-      );
-  };
-}
-
-const orderRequest = async (constructorIngredients) => {
-  const ingredsId = constructorIngredients.map((item) => item._id);
-  ingredsId.push(ingredsId[0]);
-  return await requestWithRefresh("orders", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      authorization: getCookie('accessToken')
-    },
-    body: JSON.stringify({
-      ingredients: ingredsId,
-    }),
-  });
-};
-
-export function getOrderData(constructorIngredients) {
-  return function (dispatch) {
-    dispatch({ type: ORDER_REQUEST });
-    orderRequest(constructorIngredients)
-      .then((res) => {
-        dispatch({ type: ORDER_SUCCESS, order: res });
-      })
-      .catch(dispatch({ type: ORDER_FAILED }));
-  };
-}
 
 const registrationRequest = async (name, email, password) => {
   return await request("auth/register", {

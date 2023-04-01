@@ -5,17 +5,19 @@ import CardIngredient from "../card-ingredient/card-ingredient";
 import { useSelector, useDispatch } from "react-redux";
 import {
   DELETE_CURRENT_INGREDIENT,
-  getIngredientData,
   SET_MODAL_STATE,
-} from "../../services/actions";
+} from "../../services/actions/modal";
+import { getIngredientData } from "../../services/actions/ingredients";
 import IngredientDetails from "../ingredient-details/ingredient-details";
 import Modal from "../modal/modal";
 import { useLocation, useParams, useNavigate } from "react-router-dom";
 
 function BurgerIngredients() {
-  const { ingredientData, currentIngredient } = useSelector(
-    (store) => store.root
+  const { ingredientData } = useSelector(
+    (store) => store.ingredients
   );
+
+  const { currentIngredient } = useSelector((store) => store.modal);
 
   const { state } = useLocation();
   const [isHidden, setHidden] = useState(true);
@@ -37,7 +39,7 @@ function BurgerIngredients() {
       navigate('', {state: {path: 'asdasd'}});
     }
     dispatch({type: SET_MODAL_STATE, bool: !id ? true : false})
-  }, [dispatch]);
+  }, [dispatch, state]);
 
   const handleCardClick = (e) => {
     setHidden(false);

@@ -24,7 +24,8 @@ import { ProtectedRouteElement } from "../protected-route-element/protected-rout
 
 function App() {
   const dispatch = useDispatch();
-  const { authData, modalState } = useSelector((store) => store.root);
+  const { authData } = useSelector((store) => store.root);
+  const { modalState } = useSelector((store) => store.modal);
 
   useEffect(() => {
     dispatch({ type: SET_AUTHORIZED, bool: !!getCookie("token") });

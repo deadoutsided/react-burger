@@ -4,7 +4,7 @@ import style from './order-details.module.css';
 import { CheckMarkIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 
 export default function OrderDetails(props){
-  const { orderData, orderLoading } = useSelector(store => store.root)
+  const { orderData, orderLoading } = useSelector(store => store.order)
 
   const status = orderLoading === true ? 'Загрузка...' : 'идентификатор заказа'
 

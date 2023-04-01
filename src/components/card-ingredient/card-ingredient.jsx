@@ -8,15 +8,16 @@ import {
   CurrencyIcon,
   Counter,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { SET_CURRENT_INGREDIENT } from "../../services/actions";
+import { SET_CURRENT_INGREDIENT } from "../../services/actions/modal";
 import { useDrag } from "react-dnd/dist/hooks";
 
 function CardIngredient(props) {
   const { id, ingredient } = props;
   const dispatch = useDispatch();
-  const { ingredientData, constructorIngredients, orderData } = useSelector(
-    (store) => store.root
+  const { ingredientData } = useSelector(
+    (store) => store.ingredients
   );
+  const { constructorIngredients } = useSelector((store) => store.construct);
   const [count, setCount] = useState(0);
   const { pathname } = useLocation();
   const url = window.location.href;

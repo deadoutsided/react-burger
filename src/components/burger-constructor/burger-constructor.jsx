@@ -1,4 +1,4 @@
-import React, { useState, useTransition, useRef, useCallback } from "react";
+import React, { useState, useTransition, useRef, useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { v4 as uuidv4 } from "uuid";
 import {
@@ -10,13 +10,8 @@ import {
 import Modal from "../modal/modal";
 import style from "../burger-constructor/burger-constructor.module.css";
 import OrderDetails from "../order-details/order-details";
-import {
-  ADD_CONSTRUCTED_INGREDIENT,
-  DELETE_CONSTRUCTED_INGREDIENT,
-  MOVE_CONSTRUCTED_INGREDIENT,
-  ORDER_RESET,
-} from "../../services/actions";
-import { getOrderData } from "../../services/actions/index.js";
+import { ADD_CONSTRUCTED_INGREDIENT, DELETE_CONSTRUCTED_INGREDIENT, MOVE_CONSTRUCTED_INGREDIENT, RESET_CONSTRUCTED_INGREDIENTS } from "../../services/actions/constructor";
+import { ORDER_RESET, getOrderData } from "../../services/actions/order";
 import { useDrop } from "react-dnd/dist/hooks/useDrop";
 import { MovableConstructorElement } from "../movable-constructor-element/movable-constructor-element";
 import { useNavigate } from "react-router-dom";
@@ -25,9 +20,12 @@ function BurgerConstructor(props) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { authorized, constructorIngredients } = useSelector(
+  const { authorized } = useSelector(
     (store) => store.root
   );
+
+  const { constructorIngredients } = useSelector((store) => store.construct);
+  const { orderData } = useSelector((store) => store.order);
 
   const addItem = (item, id) => {
     dispatch({
@@ -53,7 +51,7 @@ function BurgerConstructor(props) {
     });
   }, []);
 
-  const [{}, constrTar] = useDrop(() => ({
+  const [{ }, constrTar] = useDrop(() => ({
     accept: "constrIngr",
   }));
 
@@ -84,6 +82,10 @@ function BurgerConstructor(props) {
     });
   };
 
+  useEffect(() => {
+    dispatch({type: RESET_CONSTRUCTED_INGREDIENTS})
+  }, [orderData])
+
   const modal = (
     <Modal title="" handleClose={handleClose}>
       <OrderDetails />
@@ -99,7 +101,7 @@ function BurgerConstructor(props) {
     </div>
   );
 
-  const constructedEmpty = !!constructorIngredients?.length ?? 0 ? false : true;
+  const constructedEmpty = (!!constructorIngredients?.length ?? 0) || constructorIngredients === null ? false : true;
 
   return (
     <section ref={dropTarget} className="mt-25 ml-5 pl-4 pr-4">
