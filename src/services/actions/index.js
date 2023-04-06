@@ -145,7 +145,10 @@ export function getNewToken() {
     newTokenRequest()
       .then((res) => {
         if (res.success) {
+          deleteCookie('accessToken');
+          deleteCookie('token');
           setCookie("token", res.refreshToken);
+          setCookie("accessToken", res.accessToken);
           dispatch({ type: NEW_TOKEN_SUCCESS, res });
         }
       })

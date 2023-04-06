@@ -34,7 +34,6 @@ function BurgerIngredients() {
     state && ingredientData ? {} : ingredientData?.find((el) => el._id === id);
 
   useEffect(() => {
-    dispatch(getIngredientData());
     if(!state && !id){
       navigate('', {state: {path: 'asdasd'}});
     }

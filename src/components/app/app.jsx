@@ -19,13 +19,21 @@ import { ResetPassword } from "../../pages/reset-password/reset-password";
 import { Profile } from "../../pages/profile/profile";
 import { getCookie } from "../../utils/cookie";
 import { useDispatch, useSelector } from "react-redux";
-import { SET_AUTHORIZED } from "../../services/actions";
+import { getUserData, SET_AUTHORIZED } from "../../services/actions";
 import { ProtectedRouteElement } from "../protected-route-element/protected-route-element";
+import { Feed } from "../../pages/feed/feed";
+import { FeedFull } from "../../pages/feed-full/feed-full";
+import { getIngredientData } from "../../services/actions/ingredients";
 
 function App() {
   const dispatch = useDispatch();
   const { authData } = useSelector((store) => store.root);
   const { modalState } = useSelector((store) => store.modal);
+
+  useEffect(() => {
+    dispatch(getUserData());
+    dispatch(getIngredientData());
+  }, [dispatch])
 
   useEffect(() => {
     dispatch({ type: SET_AUTHORIZED, bool: !!getCookie("token") });
@@ -90,7 +98,7 @@ function App() {
                 }
               ></ProtectedRouteElement>
             }
-          />
+          >
           <Route path="/profile/orders" element={
               <ProtectedRouteElement
                 element={
@@ -99,7 +107,10 @@ function App() {
                   </>
                 }
               ></ProtectedRouteElement>} 
-          />
+          /></Route>
+          <Route path="/profile/orders/:id" element={<FeedFull />} />
+          <Route path="/feed" element={<Feed />} />
+          <Route path="/feed/:id" element={<FeedFull />}/>
         </Routes>
       </BrowserRouter>
     </div>

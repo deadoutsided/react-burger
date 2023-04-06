@@ -80,7 +80,6 @@ export function SignIn() {
           Восстановить пароль
         </Link>
       </p>
-      <p>{getCookie('token')}</p>
     </form>
   );
 }

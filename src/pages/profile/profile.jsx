@@ -16,6 +16,8 @@ import {
   requestWithRefresh,
 } from "../../services/actions";
 import { getCookie } from "../../utils/cookie";
+import { OrderCard } from "../../components/order-card/order-card";
+import { wsConnectionClose, wsConnectionStart } from "../../services/actions/ws";
 
 export function Profile() {
   const dispatch = useDispatch();
@@ -24,11 +26,9 @@ export function Profile() {
     (store) => store.root
   );
 
-  const nameInputRef = useRef(null);
+  const { wsConnected } = useSelector((store) => store.ws)
 
-  useEffect(() => {
-    dispatch(getUserData());
-  }, []);
+  const nameInputRef = useRef(null);
 
   const [emailValue, setEmail] = useState(
     authData.user.email ?? "" ? authData.user.email : ""
@@ -87,6 +87,17 @@ export function Profile() {
     setName(authData.user.name);
   }
 
+  useEffect(() => {
+    //if(pathname === '/profile'){
+      console.log('open')
+    dispatch(wsConnectionStart(getCookie('accessToken').split('Bearer ')[1]));
+  // } else  if(pathname !== '/feed' && wsConnected) { console.log('WHYYYY'); dispatch(wsConnectionClose())}
+    return () => {
+      console.log('WHYYYY');
+      dispatch(wsConnectionClose())
+    }
+  }, [dispatch/* , pathname */])
+
   const buttons = (
     <div className={style.buttonCont + ' mt-10'}>
       <Button type="secondary" htmlType="reset" size="medium">Отмена</Button>
@@ -126,8 +137,14 @@ export function Profile() {
   </form>);
 
   const orders = (
-    <div>
-      <p className="text text_type_main-large">Nothing there yet</p>
+    <div className={style.orders + ' pr-2'}>
+      {/* <OrderCard to="/profile/orders/:id" />
+      <OrderCard />
+      <OrderCard />
+      <OrderCard />
+      <OrderCard />
+      <OrderCard />
+      <OrderCard /> */}
     </div>
   )
 
@@ -135,7 +152,7 @@ export function Profile() {
     <div className={style.container}>
       <div className={style.nav_links}>
         <NavLink
-          to="/profile/"
+          to="/profile"
           className={({ isActive }) =>
             isActive
               ? "text text_type_main-medium text_color_inactive " +
@@ -144,6 +161,7 @@ export function Profile() {
                 style.activeLink
               : "text text_type_main-medium text_color_inactive " + style.link
           }
+          end
         >
           Профиль
         </NavLink>
@@ -170,10 +188,10 @@ export function Profile() {
           Выход
         </Link>
         <p className="text text_type_main-default text_color_inactive">
-          В этом разделе вы можете изменить свои персональные данные
+          {pathname === '/profile' ? 'В этом разделе вы можете изменить свои персональные данные' : 'В этом разделе вы можете просмотреть свою историю заказов'}
         </p>
       </div>
-      {pathname === '/profile/' ? profileFrom : orders}
+      {pathname === '/profile' ? profileFrom : orders}
     </div>
   );
 }

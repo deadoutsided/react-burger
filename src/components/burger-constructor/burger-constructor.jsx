@@ -15,6 +15,7 @@ import { ORDER_RESET, getOrderData } from "../../services/actions/order";
 import { useDrop } from "react-dnd/dist/hooks/useDrop";
 import { MovableConstructorElement } from "../movable-constructor-element/movable-constructor-element";
 import { useNavigate } from "react-router-dom";
+import { OrderCard } from "../order-card/order-card";
 
 function BurgerConstructor(props) {
   const dispatch = useDispatch();
@@ -41,8 +42,6 @@ function BurgerConstructor(props) {
   });
 
   const moveIngredient = useCallback((dragIndex, hoverIndex) => {
-    //console.log(ingredient);
-    //console.log(index)
     dispatch({
       type: MOVE_CONSTRUCTED_INGREDIENT,
       dragIndex: dragIndex,
@@ -101,11 +100,11 @@ function BurgerConstructor(props) {
     </div>
   );
 
-  const constructedEmpty = (!!constructorIngredients?.length ?? 0) || constructorIngredients === null ? false : true;
+  const constructedEmpty = (!!constructorIngredients?.length ?? 0) ? false : true;
 
   return (
     <section ref={dropTarget} className="mt-25 ml-5 pl-4 pr-4">
-      {constructorIngredients?.map((element, i) => {
+      {constructorIngredients?.map((element) => {
         if (element.type === "bun")
           return (
             <ConstructorElement
