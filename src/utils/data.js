@@ -1,5 +1,7 @@
 export const BASE_URL = "https://norma.nomoreparties.space/api/";
 
+export const wsUrl = "wss://norma.nomoreparties.space/orders";
+
 export const checkResponse = (res) => {
   if(res.ok){
     return res.json();
@@ -17,5 +19,9 @@ const checkSuccess = (res) => {
 async function request(endpoint, options){
   return await fetch(`${BASE_URL + endpoint}`, options).then(checkResponse).then(checkSuccess);
 }
+
+export const maxOrdersInColumn = 10;
+export const maxOrdersInList = 20;
+export const edgeOrderNumber = 9;
 
 export default request;

@@ -8,19 +8,13 @@ import {
   Box,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useLocation } from "react-router-dom";
-import { wsConnectionClose } from "../../services/actions/ws";
+import { wsConnectionClose } from "../../services/actions/ws-public";
 import { useDispatch, useSelector } from "react-redux";
 import header from "./app-header.module.css";
 import NavigationLink from "../navigation-link/navigation-link";
 
 function AppHeader(props) {
   const { pathname } = useLocation();
-  const dispatch = useDispatch();
-  const { wsConnected } = useSelector((store) => store.ws)
-
-  const onClick = () => {
-    //if(wsConnected) dispatch(wsConnectionClose())
-  }
   
   return (
     <header className={header.header}>
@@ -32,15 +26,15 @@ function AppHeader(props) {
             text="Конструктор"
             flex={true}
           >
-            <BurgerIcon type={pathname === '/' ? "primary" : "secondary"} onClick={onClick} />
+            <BurgerIcon type={pathname === '/' ? "primary" : "secondary"} />
           </NavigationLink>
           <NavigationLink to="/feed" text="Лента заказов" flex={true}>
-            <ListIcon type={pathname.includes('/feed') ? "primary" : "secondary"} onClick={onClick} />
+            <ListIcon type={pathname.includes('/feed') ? "primary" : "secondary"} />
           </NavigationLink>
         </div>
         <Logo />
         <NavigationLink to="/profile" text="Личный кабинет" flex={false}>
-          <ProfileIcon type={pathname.includes('/profile') ? "primary" : "secondary"} onClick={onClick} />
+          <ProfileIcon type={pathname.includes('/profile') ? "primary" : "secondary"} />
         </NavigationLink>
       </nav>
     </header>

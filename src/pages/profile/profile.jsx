@@ -17,7 +17,7 @@ import {
 } from "../../services/actions";
 import { getCookie } from "../../utils/cookie";
 import { OrderCard } from "../../components/order-card/order-card";
-import { wsConnectionClose, wsConnectionStart } from "../../services/actions/ws";
+import { wsPersonalConnectionClose, wsPersonalConnectionStart } from "../../services/actions/ws-personal";
 
 export function Profile() {
   const dispatch = useDispatch();
@@ -26,7 +26,7 @@ export function Profile() {
     (store) => store.root
   );
 
-  const { wsConnected } = useSelector((store) => store.ws)
+  const { ordersPersonalData } = useSelector((store) => store.wsPersonal)
 
   const nameInputRef = useRef(null);
 
@@ -88,15 +88,11 @@ export function Profile() {
   }
 
   useEffect(() => {
-    //if(pathname === '/profile'){
-      console.log('open')
-    dispatch(wsConnectionStart(getCookie('accessToken').split('Bearer ')[1]));
-  // } else  if(pathname !== '/feed' && wsConnected) { console.log('WHYYYY'); dispatch(wsConnectionClose())}
+    dispatch(wsPersonalConnectionStart(getCookie('accessToken').split('Bearer ')[1]));
     return () => {
-      console.log('WHYYYY');
-      dispatch(wsConnectionClose())
+      dispatch(wsPersonalConnectionClose())
     }
-  }, [dispatch/* , pathname */])
+  }, [dispatch])
 
   const buttons = (
     <div className={style.buttonCont + ' mt-10'}>
@@ -138,15 +134,14 @@ export function Profile() {
 
   const orders = (
     <div className={style.orders + ' pr-2'}>
-      {/* <OrderCard to="/profile/orders/:id" />
-      <OrderCard />
-      <OrderCard />
-      <OrderCard />
-      <OrderCard />
-      <OrderCard />
-      <OrderCard /> */}
+      {ordersPersonalData?.orders?.map((el) => {
+        return (
+          <OrderCard key={el.number} order={el} />
+        )
+      })}
     </div>
   )
+  if(state !== 'notRefreshed' && pathname === '/profile/orders') return <Navigate to='/profile' state="refreshed"/>
 
   return (
     <div className={style.container}>
@@ -176,6 +171,7 @@ export function Profile() {
               : "text text_type_main-medium text_color_inactive  mb-4 mt-4 " +
                 style.link
           }
+          state={'notRefreshed'}
         >
           История заказов
         </NavLink>

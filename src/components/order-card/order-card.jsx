@@ -1,15 +1,23 @@
 import React, { useEffect, useState } from "react";
+import { propTypes } from 'prop-types'
 import { CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useSelector } from 'react-redux';
 import { Link, useLocation } from "react-router-dom";
 import { FormattedDate } from "@ya.praktikum/react-developer-burger-ui-components";
 import style from './order-card.module.css';
+import { orderDataType } from "../../utils/types";
 
 export function OrderCard({ order }) {
   const { _id, ingredients, createdAt, name, status, number } = order;
 
   const { ingredientData } = useSelector((store) => store.ingredients)
   const { pathname } = useLocation();
+
+  const statusTranslate = {
+    done: 'Выполнен',
+    created: 'Создан',
+    pending: 'Готовится',
+  }
 
   return (
     <Link to={`${pathname}/${_id}`} className={style.container + ' pb-6 pt-6 pr-6 pl-6'} state={order}>
@@ -18,7 +26,7 @@ export function OrderCard({ order }) {
         <FormattedDate className='text text_type_main-default text_color_inactive' date={new Date(createdAt)} />
       </div>
       <p className={"text text_type_main-medium" + (pathname !== '/profile/orders' ? " mb-6 " : ' ') + style.burgName}>{name}</p>
-      {pathname === '/profile/orders' && <p className={'text text_type_main-default mt-2 nb-6'}>{status}</p>}
+      {pathname === '/profile/orders' && <p className={'text text_type_main-default mt-2 mb-6 ' + (status === 'done' ? style.orderDone : '')}>{statusTranslate[status]}</p>}
       <div className={style.ingrCont}>
         {ingredients.map((elem, i) => {
           if (i < 5) {
@@ -33,7 +41,6 @@ export function OrderCard({ order }) {
             )
           }
           else if (i === 5) {
-            //setIngrsLeft(ingrsLeft + 1);
             return (
               <div key={i} data-num={`${i}`} className={style.ingrIcon}>
                 <div className={style.ingrIconDim}>
@@ -63,3 +70,5 @@ export function OrderCard({ order }) {
     </Link>
   )
 }
+
+OrderCard.propTypes = orderDataType;
