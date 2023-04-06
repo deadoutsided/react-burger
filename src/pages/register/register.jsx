@@ -12,7 +12,7 @@ import { getRegistrationData } from "../../services/actions";
 
 export function Register() {
   const dispatch = useDispatch();
-  const { authData, authorized } = useSelector((store) => store.root);
+  const { authorized } = useSelector((store) => store.root);
 
   const [emailValue, setEmail] = useState("");
   const [password, setPassword] = useState("");

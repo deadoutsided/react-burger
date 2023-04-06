@@ -20,8 +20,8 @@ function IngredientsTab(props) {
 }
 
 IngredientsTab.propTypes = {
-  current: PropTypes.string,
-  setCurrent: PropTypes.func
-}
+  current: PropTypes.string.isRequired,
+  setCurrent: PropTypes.func.isRequired
+}.isRequired
 
 export default IngredientsTab;

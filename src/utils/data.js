@@ -23,5 +23,6 @@ async function request(endpoint, options){
 export const maxOrdersInColumn = 10;
 export const maxOrdersInList = 20;
 export const edgeOrderNumber = 9;
+export const maxIngrIcons = 5;
 
 export default request;

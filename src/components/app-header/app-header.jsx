@@ -4,12 +4,8 @@ import {
   BurgerIcon,
   ListIcon,
   ProfileIcon,
-  Typography,
-  Box,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useLocation } from "react-router-dom";
-import { wsConnectionClose } from "../../services/actions/ws-public";
-import { useDispatch, useSelector } from "react-redux";
 import header from "./app-header.module.css";
 import NavigationLink from "../navigation-link/navigation-link";
 

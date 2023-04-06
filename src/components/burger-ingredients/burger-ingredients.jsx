@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useLayoutEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import style from "./burder-ingredients.module.css";
 import IngredientsTab from "../ingredients-tab/ingredients-tab";
 import CardIngredient from "../card-ingredient/card-ingredient";
@@ -7,7 +7,6 @@ import {
   DELETE_CURRENT_INGREDIENT,
   SET_MODAL_STATE,
 } from "../../services/actions/modal";
-import { getIngredientData } from "../../services/actions/ingredients";
 import IngredientDetails from "../ingredient-details/ingredient-details";
 import Modal from "../modal/modal";
 import { useLocation, useParams, useNavigate } from "react-router-dom";

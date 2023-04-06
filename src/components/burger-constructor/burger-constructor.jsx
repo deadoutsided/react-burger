@@ -15,7 +15,6 @@ import { ORDER_RESET, getOrderData } from "../../services/actions/order";
 import { useDrop } from "react-dnd/dist/hooks/useDrop";
 import { MovableConstructorElement } from "../movable-constructor-element/movable-constructor-element";
 import { useNavigate } from "react-router-dom";
-import { OrderCard } from "../order-card/order-card";
 
 function BurgerConstructor(props) {
   const dispatch = useDispatch();
@@ -48,7 +47,7 @@ function BurgerConstructor(props) {
       hoverIndex: hoverIndex,
       ingredient: constructorIngredients[dragIndex],
     });
-  }, []);
+  }, [constructorIngredients, dispatch]);
 
   const [{ }, constrTar] = useDrop(() => ({
     accept: "constrIngr",

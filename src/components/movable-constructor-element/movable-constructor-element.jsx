@@ -44,4 +44,4 @@ MovableConstructorElement.propTypes = {
   moveIngredient: PropTypes.func,
   findIngredient: PropTypes.func,
   children: PropTypes.array
-}
+}.isRequired

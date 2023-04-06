@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useMemo } from "react";
 import { propTypes } from 'prop-types'
 import { CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useSelector } from 'react-redux';
@@ -6,6 +6,7 @@ import { Link, useLocation } from "react-router-dom";
 import { FormattedDate } from "@ya.praktikum/react-developer-burger-ui-components";
 import style from './order-card.module.css';
 import { orderDataType } from "../../utils/types";
+import { maxIngrIcons } from "../../utils/data";
 
 export function OrderCard({ order }) {
   const { _id, ingredients, createdAt, name, status, number } = order;
@@ -17,7 +18,17 @@ export function OrderCard({ order }) {
     done: 'Выполнен',
     created: 'Создан',
     pending: 'Готовится',
+  };
+
+  const icon = (item) => {
+    return (<img src={ingredientData?.find((el) => {
+      if (el._id === item) return el.image;
+    }).image} alt={ingredientData?.find((el) => {
+      if (el._id === item) return el.image;
+    }).name} className={style.img}></img>)
   }
+
+  const icons = useMemo(() => ingredients.map((el) => {return icon(el)}), [ingredientData, ingredients, icon])
 
   return (
     <Link to={`${pathname}/${_id}`} className={style.container + ' pb-6 pt-6 pr-6 pl-6'} state={order}>
@@ -29,27 +40,19 @@ export function OrderCard({ order }) {
       {pathname === '/profile/orders' && <p className={'text text_type_main-default mt-2 mb-6 ' + (status === 'done' ? style.orderDone : '')}>{statusTranslate[status]}</p>}
       <div className={style.ingrCont}>
         {ingredients.map((elem, i) => {
-          if (i < 5) {
+          if (i < maxIngrIcons) {
             return (
               <div key={i} data-num={`${i}`} className={style.ingrIcon}>
-                <img src={ingredientData?.find((el) => {
-                  if (el._id === elem) return el.image;
-                }).image} alt={ingredientData?.find((el) => {
-                  if (el._id === elem) return el.image;
-                }).name} className={style.img}></img>
+                {icons[i]}
               </div>
             )
           }
-          else if (i === 5) {
+          else if (i === maxIngrIcons) {
             return (
               <div key={i} data-num={`${i}`} className={style.ingrIcon}>
                 <div className={style.ingrIconDim}>
-                  <p className={"text text_type_main-default " + style.ingrCount}>{`+${ingredients.length - 5}`}</p>
-                  <img src={ingredientData?.find((el) => {
-                    if (el._id === elem) return el.image;
-                  }).image} alt={ingredientData?.find((el) => {
-                    if (el._id === elem) return el.image;
-                  }).name} className={style.img}></img>
+                  <p className={"text text_type_main-default " + style.ingrCount}>{`+${ingredients.length - maxIngrIcons}`}</p>
+                  {icons[i]}
                 </div>
               </div>
             )
@@ -71,4 +74,4 @@ export function OrderCard({ order }) {
   )
 }
 
-OrderCard.propTypes = orderDataType;
+OrderCard.propTypes = orderDataType.isRequired;

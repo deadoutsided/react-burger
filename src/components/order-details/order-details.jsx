@@ -1,9 +1,8 @@
 import React from "react";
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import style from './order-details.module.css';
-import { CheckMarkIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 
-export default function OrderDetails(props){
+export default function OrderDetails(){
   const { orderData, orderLoading } = useSelector(store => store.order)
 
   const status = orderLoading === true ? 'Загрузка...' : 'идентификатор заказа'

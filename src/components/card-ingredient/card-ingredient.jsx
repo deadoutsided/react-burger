@@ -61,7 +61,7 @@ function CardIngredient(props) {
           className={"pl-4 pr-4 " + style.img}
           src={props.ingredient.image}
           alt={props.ingredient.name}
-        ></img>
+        />
         <div className={style.price + " mt-1 mb-1"}>
           <p className={"text text_type_digits-default mr-2"}>
             {props.ingredient.price}
@@ -79,8 +79,8 @@ function CardIngredient(props) {
 
 CardIngredient.propTypes = {
   ingredient: ingredientType.isRequired,
-  handleCardClick: PropTypes.func,
-  id: PropTypes.string,
+  handleCardClick: PropTypes.func.isRequired,
+  id: PropTypes.string.isRequired,
 };
 
 export default CardIngredient;

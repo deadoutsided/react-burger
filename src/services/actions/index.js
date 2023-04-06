@@ -1,5 +1,4 @@
 import request, { checkResponse } from "../../utils/data";
-import { useSelector } from "react-redux";
 import { deleteCookie, getCookie, setCookie } from "../../utils/cookie";
 
 export const REGISTRATION_REQUEST = "REGISTRATION_REQUEST";

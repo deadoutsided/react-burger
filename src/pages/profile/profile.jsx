@@ -10,10 +10,7 @@ import {
 import style from "./profile.module.css";
 import {
   getSignOutData,
-  getUserData,
-  getNewToken,
   setUserData,
-  requestWithRefresh,
 } from "../../services/actions";
 import { getCookie } from "../../utils/cookie";
 import { OrderCard } from "../../components/order-card/order-card";
@@ -22,7 +19,7 @@ import { wsPersonalConnectionClose, wsPersonalConnectionStart } from "../../serv
 export function Profile() {
   const dispatch = useDispatch();
   const {state, pathname} = useLocation();
-  const { authData, getUserError, newTokenLoading, newTokenSuccess, accessToken, setUserError, authorized } = useSelector(
+  const { authData } = useSelector(
     (store) => store.root
   );
 

@@ -37,7 +37,7 @@ function NavigationLink({ text, flex, state, to, children }) {
 
 NavigationLink.propTypes = {
   text: PropTypes.string,
-  children: PropTypes.object,
-};
+  children: PropTypes.node,
+}.isRequired;
 
 export default NavigationLink;

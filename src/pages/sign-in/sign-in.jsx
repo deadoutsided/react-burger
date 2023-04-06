@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Link, Navigate, useLocation } from "react-router-dom";
 import style from "./sign-in.module.css";
 import { useDispatch, useSelector } from "react-redux";
@@ -8,7 +8,6 @@ import {
   PasswordInput,
   Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { getCookie } from "../../utils/cookie";
 
 export function SignIn() {
   const dispatch = useDispatch();
