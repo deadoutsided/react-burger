@@ -181,7 +181,14 @@ export function getUserData() {
   };
 };
 
-export const requestWithRefresh = async (url: string, options: RequestInit) => {
+export const requestWithRefresh = async (url: string, options: {
+  method: string;
+  headers: {
+    "Content-Type": "application/json";
+    authorization: string;
+  };
+  body?: string;
+}) => {
   try{
     const res = await fetch(`https://norma.nomoreparties.space/api/${url}`, options);
     return await checkResponse(res);
