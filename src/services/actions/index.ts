@@ -1,33 +1,33 @@
 import request, { checkResponse } from "../../utils/data";
 import { deleteCookie, getCookie, setCookie } from "../../utils/cookie";
 
-export const REGISTRATION_REQUEST = "REGISTRATION_REQUEST";
-export const REGISTRATION_FAILED = "REGISTRATION_FAILED";
-export const REGISTRATION_SUCCESS = "REGISTRATION_SUCCESS";
-export const SIGN_IN_REQUEST = "SIGN_IN_REQUEST";
-export const SIGN_IN_FAILED = "SIGN_IN_FAILED";
-export const SIGN_IN_SUCCESS = "SIGN_IN_SUCCESS";
-export const SIGN_OUT_REQUEST = "SIGN_OUT_REQUEST";
-export const SIGN_OUT_FAILED = "SIGN_OUT_FAILED";
-export const SIGN_OUT_SUCCESS = "SIGN_OUT_SUCCESS";
-export const GET_USER_REQUEST = "GET_USER_REQUEST";
-export const GET_USER_FAILED = "GET_USER_FAILED";
-export const GET_USER_SUCCESS = "GET_USER_SUCCESS";
-export const SET_USER_REQUEST = "SET_USER_REQUEST";
-export const SET_USER_FAILED = "SET_USER_FAILED";
-export const SET_USER_SUCCESS = "SET_USER_SUCCESS";
-export const NEW_TOKEN_REQUEST = "NEW_TOKEN_REQUEST";
-export const NEW_TOKEN_FAILED = "NEW_TOKEN_FAILED";
-export const NEW_TOKEN_SUCCESS = "NEW_TOKEN_SUCCESS";
-export const PASSWORD_FORGOT_REQUEST = "PASSWORD_FORGOT_REQUEST";
-export const PASSWORD_FORGOT_FAILED = "PASSWORD_FORGOT_FAILED";
-export const PASSWORD_FORGOT_SUCCESS = "PASSWORD_FORGOT_SUCCESS";
-export const PASSWORD_RESET_REQUEST = "PASSWORD_RESET_REQUEST";
-export const PASSWORD_RESET_FAILED = "PASSWORD_RESET_FAILED";
-export const PASSWORD_RESET_SUCCESS = "PASSWORD_RESET_SUCCESS";
-export const SET_AUTHORIZED = "SET_AUTHORIZED";
+export const REGISTRATION_REQUEST: "REGISTRATION_REQUEST" = "REGISTRATION_REQUEST";
+export const REGISTRATION_FAILED: "REGISTRATION_FAILED" = "REGISTRATION_FAILED";
+export const REGISTRATION_SUCCESS: "REGISTRATION_SUCCESS" = "REGISTRATION_SUCCESS";
+export const SIGN_IN_REQUEST: "SIGN_IN_REQUEST" = "SIGN_IN_REQUEST";
+export const SIGN_IN_FAILED: "SIGN_IN_FAILED" = "SIGN_IN_FAILED";
+export const SIGN_IN_SUCCESS: "SIGN_IN_SUCCESS" = "SIGN_IN_SUCCESS";
+export const SIGN_OUT_REQUEST: "SIGN_OUT_REQUEST" = "SIGN_OUT_REQUEST";
+export const SIGN_OUT_FAILED: "SIGN_OUT_FAILED" = "SIGN_OUT_FAILED";
+export const SIGN_OUT_SUCCESS: "SIGN_OUT_SUCCESS" = "SIGN_OUT_SUCCESS";
+export const GET_USER_REQUEST: "GET_USER_REQUEST" = "GET_USER_REQUEST";
+export const GET_USER_FAILED: "GET_USER_FAILED" = "GET_USER_FAILED";
+export const GET_USER_SUCCESS: "GET_USER_SUCCESS" = "GET_USER_SUCCESS";
+export const SET_USER_REQUEST: "SET_USER_REQUEST" = "SET_USER_REQUEST";
+export const SET_USER_FAILED: "SET_USER_FAILED" = "SET_USER_FAILED";
+export const SET_USER_SUCCESS: "SET_USER_SUCCESS" = "SET_USER_SUCCESS";
+export const NEW_TOKEN_REQUEST: "NEW_TOKEN_REQUEST" = "NEW_TOKEN_REQUEST";
+export const NEW_TOKEN_FAILED: "NEW_TOKEN_FAILED" = "NEW_TOKEN_FAILED";
+export const NEW_TOKEN_SUCCESS: "NEW_TOKEN_SUCCESS" = "NEW_TOKEN_SUCCESS";
+export const PASSWORD_FORGOT_REQUEST: "PASSWORD_FORGOT_REQUEST" = "PASSWORD_FORGOT_REQUEST";
+export const PASSWORD_FORGOT_FAILED: "PASSWORD_FORGOT_FAILED" = "PASSWORD_FORGOT_FAILED";
+export const PASSWORD_FORGOT_SUCCESS: "PASSWORD_FORGOT_SUCCESS" = "PASSWORD_FORGOT_SUCCESS";
+export const PASSWORD_RESET_REQUEST: "PASSWORD_RESET_REQUEST" = "PASSWORD_RESET_REQUEST";
+export const PASSWORD_RESET_FAILED: "PASSWORD_RESET_FAILED" = "PASSWORD_RESET_FAILED";
+export const PASSWORD_RESET_SUCCESS: "PASSWORD_RESET_SUCCESS" = "PASSWORD_RESET_SUCCESS";
+export const SET_AUTHORIZED: "SET_AUTHORIZED" = "SET_AUTHORIZED";
 
-const registrationRequest = async (name, email, password) => {
+const registrationRequest = async (name: string, email: string, password: string) => {
   return await request("auth/register", {
     method: "POST",
     headers: {
@@ -41,7 +41,7 @@ const registrationRequest = async (name, email, password) => {
   });
 };
 
-export function getRegistrationData(name, email, password) {
+export function getRegistrationData(name: string, email:string, password: string) {
   return function (dispatch) {
     dispatch({ type: REGISTRATION_REQUEST });
     registrationRequest(name, email, password)
@@ -62,7 +62,7 @@ export function getRegistrationData(name, email, password) {
   };
 }
 
-const signInRequest = async (email, password) => {
+const signInRequest = async (email: string, password: string) => {
   return await request("auth/login", {
     method: "POST",
     headers: {
@@ -75,7 +75,7 @@ const signInRequest = async (email, password) => {
   });
 };
 
-export function getSignInData(email, password) {
+export function getSignInData(email: string, password: string) {
   return function (dispatch) {
     dispatch({ type: SIGN_IN_REQUEST });
     signInRequest(email, password)
@@ -160,7 +160,7 @@ const getUserRequest = async () => {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      Authorization:  getCookie('accessToken'),
+      authorization:  getCookie('accessToken'),
     },
   });
 };
@@ -181,7 +181,7 @@ export function getUserData() {
   };
 };
 
-export const requestWithRefresh = async (url, options) => {
+export const requestWithRefresh = async (url: string, options: RequestInit) => {
   try{
     const res = await fetch(`https://norma.nomoreparties.space/api/${url}`, options);
     return await checkResponse(res);
@@ -204,12 +204,12 @@ export const requestWithRefresh = async (url, options) => {
   }
 }
 
-const setUserRequest = async (name, email, password) => {
+const setUserRequest = async (name: string, email: string, password: string) => {
   return await requestWithRefresh("auth/user", {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
-      Authorization: getCookie('accessToken'),
+      authorization: getCookie('accessToken'),
     },
     body: JSON.stringify({
       name,
@@ -219,7 +219,7 @@ const setUserRequest = async (name, email, password) => {
   });
 };
 
-export function setUserData(name, email, password) {
+export function setUserData(name: string, email: string, password: string) {
   return function (dispatch) {
     dispatch({ type: SET_USER_REQUEST });
     return setUserRequest(name, email, password)
@@ -235,7 +235,7 @@ export function setUserData(name, email, password) {
   };
 }
 
-const forgotPasswordRequest = async (email) => {
+const forgotPasswordRequest = async (email: string) => {
   return await request("password-reset", {
     method: "POST",
     headers: {
@@ -247,7 +247,7 @@ const forgotPasswordRequest = async (email) => {
   });
 };
 
-export function forgotPassword(email) {
+export function forgotPassword(email: string) {
   return function (dispatch) {
     dispatch({ type: PASSWORD_FORGOT_REQUEST });
     forgotPasswordRequest(email)
@@ -260,7 +260,7 @@ export function forgotPassword(email) {
   };
 }
 
-const resetPasswordRequest = async (password, token) => {
+const resetPasswordRequest = async (password: string, token: string) => {
   return request("password-reset/reset", {
     method: "POST",
     headers: {
@@ -273,7 +273,7 @@ const resetPasswordRequest = async (password, token) => {
   });
 };
 
-export function resetPassword(password, token) {
+export function resetPassword(password: string, token: string) {
   return function (dispatch) {
     dispatch({ type: PASSWORD_RESET_REQUEST });
     resetPasswordRequest(password, token)

@@ -1,4 +1,4 @@
-import React from "react";
+import React, {FC} from "react";
 import {
   Logo,
   BurgerIcon,
@@ -9,7 +9,7 @@ import { useLocation } from "react-router-dom";
 import header from "./app-header.module.css";
 import NavigationLink from "../navigation-link/navigation-link";
 
-function AppHeader(props) {
+const AppHeader = () => {
   const { pathname } = useLocation();
   
   return (
