@@ -1,0 +1,50 @@
+.container{
+  display: flex;
+  column-gap: 60px;
+  flex-direction: row;
+  margin: 10% 0 0;
+}
+
+.nav_links{
+  display: flex;
+  flex-direction: column;
+  max-width: 320px;
+}
+
+.link{
+  text-decoration: none;
+}
+
+.activeLink{
+  color: #fff;
+}
+
+.buttonCont{
+  display: flex;
+  justify-content: flex-end;
+}
+
+.orders{
+  display:flex;
+  flex-direction: column;
+  row-gap: 24px;
+  position: relative;
+  top: -17%;
+  scrollbar-width: 6px;
+  scrollbar-color: #8585AD #2F2F37;
+  overflow-y: scroll;
+  max-height: 71vh;
+  min-width: 840px;
+}
+
+.orders::-webkit-scrollbar{
+  width: 6px;
+}
+
+.orders::-webkit-scrollbar-thumb{
+  background-color: #8585AD;
+}
+
+.orders::-webkit-scrollbar-track{
+  background-color: #2F2F37;
+}

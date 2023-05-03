@@ -1,0 +1,55 @@
+.scrollable{
+  overflow-y: scroll;
+  max-height: calc(100vh - 65vh);
+  box-sizing: content-box;
+  scrollbar-width: 6px;
+  scrollbar-color: #8585AD #2F2F37;
+  display: flex;
+  flex-direction: column;
+  row-gap: 16px;
+}
+
+.scrollable::-webkit-scrollbar{
+  width: 6px;
+}
+
+.scrollable::-webkit-scrollbar-thumb{
+  background-color: #8585AD;
+}
+
+.scrollable::-webkit-scrollbar-track{
+  background-color: #2F2F37;
+}
+
+.done{
+  color:#00CCCC;
+}
+
+.dateNPriceCont{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.priceCont{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  column-gap: 9px;
+}
+
+.mainCont{
+  display: flex;
+  flex-direction: column;
+  margin-top: 5%;
+  height: calc(100vh - 135px);
+  align-items: center;
+  justify-content: center;
+  max-width: 50%;
+}
+
+.leftSide{
+  align-self:flex-start;
+}

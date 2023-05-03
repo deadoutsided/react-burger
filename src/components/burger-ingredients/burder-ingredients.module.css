@@ -10,6 +10,7 @@
 
 .scrollable{
   max-height: calc(100vh - 250px);
+  position: relative;
   overflow-y: scroll;
   box-sizing: content-box;
   scrollbar-width: 6px;

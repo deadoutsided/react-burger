@@ -15,4 +15,21 @@ const ingredientType = PropTypes.shape({
   __v: PropTypes.number
 })
 
+const orderType = PropTypes.shape({
+  _id: PropTypes.string,
+  ingredients: PropTypes.arrayOf(PropTypes.string),
+  status: PropTypes.string,
+  name: PropTypes.string,
+  createdAt: PropTypes.string,
+  updatedAt: PropTypes.string,
+  number: PropTypes.number,
+})
+
+export const orderDataType = PropTypes.shape({
+  success: PropTypes.bool,
+  orders: PropTypes.arrayOf(PropTypes.shape(orderType.isRequired)),
+  total: PropTypes.number,
+  totalToday: PropTypes.number
+}).isRequired
+
 export default ingredientType;
