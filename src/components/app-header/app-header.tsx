@@ -9,7 +9,7 @@ import { useLocation } from "react-router-dom";
 import header from "./app-header.module.css";
 import NavigationLink from "../navigation-link/navigation-link";
 
-const AppHeader = () => {
+const AppHeader: FC = () => {
   const { pathname } = useLocation();
   
   return (

@@ -1,33 +1,176 @@
 import request, { checkResponse } from "../../utils/data";
 import { deleteCookie, getCookie, setCookie } from "../../utils/cookie";
+import {
+  REGISTRATION_REQUEST,
+  REGISTRATION_FAILED,
+  REGISTRATION_SUCCESS,
+  SIGN_OUT_REQUEST,
+  SIGN_OUT_FAILED,
+  SIGN_OUT_SUCCESS,
+  GET_USER_REQUEST,
+  GET_USER_FAILED,
+  GET_USER_SUCCESS,
+  SET_USER_REQUEST,
+  SET_USER_FAILED,
+  SET_USER_SUCCESS,
+  NEW_TOKEN_REQUEST,
+  NEW_TOKEN_FAILED,
+  NEW_TOKEN_SUCCESS,
+  PASSWORD_FORGOT_REQUEST,
+  PASSWORD_FORGOT_FAILED,
+  PASSWORD_FORGOT_SUCCESS,
+  PASSWORD_RESET_REQUEST,
+  PASSWORD_RESET_FAILED,
+  PASSWORD_RESET_SUCCESS,
+  SET_AUTHORIZED,
+  SIGN_IN_REQUEST,
+  SIGN_IN_FAILED,
+  SIGN_IN_SUCCESS,
+} from "../constants";
+import { TAuthResp, TPasswordForgotRes, TSignOutRes, TTokenRes, TUserData } from "../../utils/types";
+import { AppDispatch } from "../types";
 
-export const REGISTRATION_REQUEST: "REGISTRATION_REQUEST" = "REGISTRATION_REQUEST";
-export const REGISTRATION_FAILED: "REGISTRATION_FAILED" = "REGISTRATION_FAILED";
-export const REGISTRATION_SUCCESS: "REGISTRATION_SUCCESS" = "REGISTRATION_SUCCESS";
-export const SIGN_IN_REQUEST: "SIGN_IN_REQUEST" = "SIGN_IN_REQUEST";
-export const SIGN_IN_FAILED: "SIGN_IN_FAILED" = "SIGN_IN_FAILED";
-export const SIGN_IN_SUCCESS: "SIGN_IN_SUCCESS" = "SIGN_IN_SUCCESS";
-export const SIGN_OUT_REQUEST: "SIGN_OUT_REQUEST" = "SIGN_OUT_REQUEST";
-export const SIGN_OUT_FAILED: "SIGN_OUT_FAILED" = "SIGN_OUT_FAILED";
-export const SIGN_OUT_SUCCESS: "SIGN_OUT_SUCCESS" = "SIGN_OUT_SUCCESS";
-export const GET_USER_REQUEST: "GET_USER_REQUEST" = "GET_USER_REQUEST";
-export const GET_USER_FAILED: "GET_USER_FAILED" = "GET_USER_FAILED";
-export const GET_USER_SUCCESS: "GET_USER_SUCCESS" = "GET_USER_SUCCESS";
-export const SET_USER_REQUEST: "SET_USER_REQUEST" = "SET_USER_REQUEST";
-export const SET_USER_FAILED: "SET_USER_FAILED" = "SET_USER_FAILED";
-export const SET_USER_SUCCESS: "SET_USER_SUCCESS" = "SET_USER_SUCCESS";
-export const NEW_TOKEN_REQUEST: "NEW_TOKEN_REQUEST" = "NEW_TOKEN_REQUEST";
-export const NEW_TOKEN_FAILED: "NEW_TOKEN_FAILED" = "NEW_TOKEN_FAILED";
-export const NEW_TOKEN_SUCCESS: "NEW_TOKEN_SUCCESS" = "NEW_TOKEN_SUCCESS";
-export const PASSWORD_FORGOT_REQUEST: "PASSWORD_FORGOT_REQUEST" = "PASSWORD_FORGOT_REQUEST";
-export const PASSWORD_FORGOT_FAILED: "PASSWORD_FORGOT_FAILED" = "PASSWORD_FORGOT_FAILED";
-export const PASSWORD_FORGOT_SUCCESS: "PASSWORD_FORGOT_SUCCESS" = "PASSWORD_FORGOT_SUCCESS";
-export const PASSWORD_RESET_REQUEST: "PASSWORD_RESET_REQUEST" = "PASSWORD_RESET_REQUEST";
-export const PASSWORD_RESET_FAILED: "PASSWORD_RESET_FAILED" = "PASSWORD_RESET_FAILED";
-export const PASSWORD_RESET_SUCCESS: "PASSWORD_RESET_SUCCESS" = "PASSWORD_RESET_SUCCESS";
-export const SET_AUTHORIZED: "SET_AUTHORIZED" = "SET_AUTHORIZED";
+export interface IRegistrationRequest {
+  readonly type: typeof REGISTRATION_REQUEST;
+}
 
-const registrationRequest = async (name: string, email: string, password: string) => {
+export interface IRegistrationFailed {
+  readonly type: typeof REGISTRATION_FAILED;
+}
+
+export interface IRegistrationSuccess {
+  readonly type: typeof REGISTRATION_SUCCESS;
+  readonly data: TAuthResp;
+}
+
+export interface ISignInRequest {
+  readonly type: typeof SIGN_IN_REQUEST;
+}
+
+export interface ISignInFailed {
+  readonly type: typeof SIGN_IN_FAILED;
+}
+
+export interface ISignInSuccess {
+  readonly type: typeof SIGN_IN_SUCCESS;
+  readonly data: TAuthResp;
+}
+
+export interface ISignOutRequest {
+  readonly type: typeof SIGN_OUT_REQUEST;
+}
+
+export interface ISignOutFailed {
+  readonly type: typeof SIGN_OUT_FAILED;
+}
+
+export interface ISignOutSuccess {
+  readonly type: typeof SIGN_OUT_SUCCESS;
+  readonly res:  TSignOutRes;
+}
+
+export interface IGetUserRequest {
+  readonly type: typeof GET_USER_REQUEST;
+}
+
+export interface IGetUserFailed {
+  readonly type: typeof GET_USER_FAILED;
+}
+
+export interface IGetUserSuccess {
+  readonly type: typeof GET_USER_SUCCESS;
+  readonly res: TAuthResp;
+}
+
+export interface ISetUserRequest {
+  readonly type: typeof SET_USER_REQUEST;
+}
+
+export interface ISetUserFailed {
+  readonly type: typeof SET_USER_FAILED;
+}
+
+export interface ISetUserSuccess {
+  readonly type: typeof SET_USER_SUCCESS;
+  readonly res: TUserData;
+}
+
+export interface INewTokenRequest {
+  readonly type: typeof NEW_TOKEN_REQUEST;
+}
+
+export interface INewTokenFailed {
+  readonly type: typeof NEW_TOKEN_FAILED;
+}
+
+export interface INewTokenSuccess {
+  readonly type: typeof NEW_TOKEN_SUCCESS;
+  readonly res: TTokenRes;
+}
+
+export interface IPasswordForgotRequest {
+  readonly type: typeof PASSWORD_FORGOT_REQUEST;
+}
+
+export interface IPasswordForgotFailed {
+  readonly type: typeof PASSWORD_FORGOT_FAILED;
+}
+
+export interface IPasswordForgotSuccess {
+  readonly type: typeof PASSWORD_FORGOT_SUCCESS;
+  readonly res: TPasswordForgotRes;
+}
+
+export interface IPasswordResetRequest {
+  readonly type: typeof PASSWORD_RESET_REQUEST;
+}
+
+export interface IPasswordResetFailed {
+  readonly type: typeof PASSWORD_RESET_FAILED;
+}
+
+export interface IPasswordResetSuccess {
+  readonly type: typeof PASSWORD_RESET_SUCCESS;
+  readonly password: string;
+}
+
+export interface ISetAuthorized {
+  readonly type: typeof SET_AUTHORIZED;
+  readonly bool: boolean;
+}
+
+export type TIndexActions =
+  | IRegistrationRequest
+  | IRegistrationFailed
+  | IRegistrationSuccess
+  | ISignInRequest
+  | ISignInFailed
+  | ISignInSuccess
+  | ISignOutRequest
+  | ISignOutFailed
+  | ISignOutSuccess
+  | IGetUserRequest
+  | IGetUserFailed
+  | IGetUserSuccess
+  | ISetUserRequest
+  | ISetUserFailed
+  | ISetUserSuccess
+  | INewTokenRequest
+  | INewTokenFailed
+  | INewTokenSuccess
+  | IPasswordForgotRequest
+  | IPasswordForgotFailed
+  | IPasswordForgotSuccess
+  | IPasswordResetRequest
+  | IPasswordResetFailed
+  | IPasswordResetSuccess
+  | ISetAuthorized;
+
+const registrationRequest = async (
+  name: string,
+  email: string,
+  password: string
+) => {
   return await request("auth/register", {
     method: "POST",
     headers: {
@@ -41,8 +184,12 @@ const registrationRequest = async (name: string, email: string, password: string
   });
 };
 
-export function getRegistrationData(name: string, email:string, password: string) {
-  return function (dispatch) {
+export function getRegistrationData(
+  name: string,
+  email: string,
+  password: string
+) {
+  return function (dispatch: AppDispatch) {
     dispatch({ type: REGISTRATION_REQUEST });
     registrationRequest(name, email, password)
       .then((res) => {
@@ -56,7 +203,8 @@ export function getRegistrationData(name: string, email:string, password: string
         });
         if (res) {
           setCookie("accessToken", res.accessToken);
-          setCookie("token", res.refreshToken)};
+          setCookie("token", res.refreshToken);
+        }
       })
       .catch(dispatch({ type: REGISTRATION_FAILED }));
   };
@@ -76,7 +224,7 @@ const signInRequest = async (email: string, password: string) => {
 };
 
 export function getSignInData(email: string, password: string) {
-  return function (dispatch) {
+  return function (dispatch: AppDispatch) {
     dispatch({ type: SIGN_IN_REQUEST });
     signInRequest(email, password)
       .then((res) => {
@@ -89,8 +237,9 @@ export function getSignInData(email: string, password: string) {
           },
         });
         if (res) {
-          setCookie('accessToken', res.accessToken);
-          setCookie("token", res.refreshToken)};
+          setCookie("accessToken", res.accessToken);
+          setCookie("token", res.refreshToken);
+        }
       })
       .catch(dispatch({ type: SIGN_IN_FAILED }));
   };
@@ -109,7 +258,7 @@ const signOutRequest = async () => {
 };
 
 export function getSignOutData() {
-  return function (dispatch) {
+  return function (dispatch: AppDispatch) {
     dispatch({ type: SIGN_OUT_REQUEST });
     signOutRequest()
       .then((res) => {
@@ -139,13 +288,13 @@ const newTokenRequest = async () => {
 };
 
 export function getNewToken() {
-  return function (dispatch) {
+  return function (dispatch: AppDispatch) {
     dispatch({ type: NEW_TOKEN_REQUEST });
     newTokenRequest()
       .then((res) => {
         if (res.success) {
-          deleteCookie('accessToken');
-          deleteCookie('token');
+          deleteCookie("accessToken");
+          deleteCookie("token");
           setCookie("token", res.refreshToken);
           setCookie("accessToken", res.accessToken);
           dispatch({ type: NEW_TOKEN_SUCCESS, res });
@@ -160,13 +309,13 @@ const getUserRequest = async () => {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      authorization:  getCookie('accessToken'),
+      authorization: getCookie("accessToken"),
     },
   });
 };
 
 export function getUserData() {
-  return function (dispatch) {
+  return function (dispatch: AppDispatch) {
     dispatch({ type: GET_USER_REQUEST });
     return getUserRequest()
       .then((res) => {
@@ -179,44 +328,57 @@ export function getUserData() {
       })
       .catch(dispatch({ type: GET_USER_FAILED }));
   };
-};
+}
 
-export const requestWithRefresh = async (url: string, options: {
-  method: string;
-  headers: {
-    "Content-Type": "application/json";
-    authorization: string;
-  };
-  body?: string;
-}) => {
-  try{
-    const res = await fetch(`https://norma.nomoreparties.space/api/${url}`, options);
+export const requestWithRefresh = async (
+  url: string,
+  options: {
+    method: string;
+    headers: {
+      "Content-Type": "application/json";
+      authorization: string;
+    };
+    body?: string;
+  }
+) => {
+  try {
+    const res = await fetch(
+      `https://norma.nomoreparties.space/api/${url}`,
+      options
+    );
     return await checkResponse(res);
   } catch (err) {
-    if(err === 'Ошибка 401' || err === "Ошибка 403"){
+    if (err === "Ошибка 401" || err === "Ошибка 403") {
       const refreshData = await newTokenRequest();
-      if(!refreshData.success){
+      if (!refreshData.success) {
         Promise.reject(refreshData);
       }
-      deleteCookie('accessToken');
-      deleteCookie('token');
-      setCookie('token', refreshData.refreshToken);
-      setCookie('accessToken', refreshData.accessToken);
+      deleteCookie("accessToken");
+      deleteCookie("token");
+      setCookie("token", refreshData.refreshToken);
+      setCookie("accessToken", refreshData.accessToken);
       options.headers.authorization = refreshData.accessToken;
-      const res = await fetch(`https://norma.nomoreparties.space/api/${url}`,options);
+      const res = await fetch(
+        `https://norma.nomoreparties.space/api/${url}`,
+        options
+      );
       return await checkResponse(res);
     } else {
       return Promise.reject(err);
     }
   }
-}
+};
 
-const setUserRequest = async (name: string, email: string, password: string) => {
+const setUserRequest = async (
+  name: string,
+  email: string,
+  password: string
+) => {
   return await requestWithRefresh("auth/user", {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
-      authorization: getCookie('accessToken'),
+      authorization: getCookie("accessToken"),
     },
     body: JSON.stringify({
       name,
@@ -227,7 +389,7 @@ const setUserRequest = async (name: string, email: string, password: string) => 
 };
 
 export function setUserData(name: string, email: string, password: string) {
-  return function (dispatch) {
+  return function (dispatch: AppDispatch) {
     dispatch({ type: SET_USER_REQUEST });
     return setUserRequest(name, email, password)
       .then((res) => {
@@ -255,7 +417,7 @@ const forgotPasswordRequest = async (email: string) => {
 };
 
 export function forgotPassword(email: string) {
-  return function (dispatch) {
+  return function (dispatch: AppDispatch) {
     dispatch({ type: PASSWORD_FORGOT_REQUEST });
     forgotPasswordRequest(email)
       .then((res) => {
@@ -281,7 +443,7 @@ const resetPasswordRequest = async (password: string, token: string) => {
 };
 
 export function resetPassword(password: string, token: string) {
-  return function (dispatch) {
+  return function (dispatch: AppDispatch) {
     dispatch({ type: PASSWORD_RESET_REQUEST });
     resetPasswordRequest(password, token)
       .then((res) => {

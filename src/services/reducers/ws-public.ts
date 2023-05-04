@@ -1,17 +1,22 @@
+import { TWSPublicActions } from "../actions/ws-public";
 import {
   WS_PUBLIC_CONNECTION_SUCCESS,
   WS_PUBLIC_CONNECTION_CLOSED,
   WS_PUBLIC_CONNECTION_ERROR,
   WS_PUBLIC_GET_ORDER,
-} from "../actions/ws-public";
+} from "../constants/ws-public";
+import { TinitialWSPublicState } from "../types/ws";
 
-const initialState = {
+const initialState: TinitialWSPublicState = {
   wsPublicConnected: false,
   wsPublicConnectionError: null,
   ordersPublicData: null,
 };
 
-export const wsPublicReduser = (state = initialState, action) => {
+export const wsPublicReduser = (
+  state: TinitialWSPublicState = initialState,
+  action: TWSPublicActions
+) => {
   switch (action.type) {
     case WS_PUBLIC_CONNECTION_SUCCESS: {
       return {

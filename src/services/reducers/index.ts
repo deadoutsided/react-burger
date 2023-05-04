@@ -25,9 +25,41 @@ import {
   PASSWORD_RESET_FAILED,
   PASSWORD_RESET_SUCCESS,
   SET_AUTHORIZED,
-} from "../actions/index";
+} from "../constants/index";
+import { TIndexActions } from "../actions";
 
-const initialState = {
+type TinitialIndexState = {
+  registrationLoading: boolean;
+  registrationError: boolean;
+  authorized: boolean;
+  authData: {
+    user: {
+      email: string;
+      name: string;
+      pass: string;
+    };
+  };
+  accessToken: string;
+  signInLoading: boolean;
+  signInError: boolean;
+  signOutLoading: boolean;
+  signOutError: boolean;
+  getUserLoading: boolean;
+  getUserError: boolean;
+  setUserLoading: boolean;
+  setUserError: boolean;
+  newTokenLoading: boolean;
+  newTokenError: boolean;
+  newTokenSuccess: boolean;
+  forgotPasswordLoading: boolean;
+  forgotPasswordError: boolean;
+  forgotPasswordSuccess: boolean;
+  resetPasswordRequest: boolean;
+  resetPasswordError: boolean;
+  resetPasswordSuccess: boolean;
+};
+
+const initialState: TinitialIndexState = {
   registrationLoading: false,
   registrationError: false,
   authorized: false,
@@ -58,7 +90,10 @@ const initialState = {
   resetPasswordSuccess: false,
 };
 
-export const reducers = (state = initialState, action) => {
+export const reducers = (
+  state: TinitialIndexState = initialState,
+  action: TIndexActions
+) => {
   switch (action.type) {
     case REGISTRATION_REQUEST: {
       return {
@@ -164,8 +199,8 @@ export const reducers = (state = initialState, action) => {
           success: action.res.success,
           user: {
             ...state.authData.user,
-            email: action.res.user.email,
-            name: action.res.user.name,
+            email: action.res.user?.email,
+            name: action.res.user?.name,
           },
           accessToken: action.res.accessToken,
         },

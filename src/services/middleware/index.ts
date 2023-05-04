@@ -1,9 +1,14 @@
 import { getCookie } from "../../utils/cookie";
-import { WS_CONNECTION_PERSONAL_START } from "../actions/ws-personal";
+import { TWSPersonalActions } from "../actions/ws-personal";
+import { TWSPublicActions } from "../actions/ws-public";
+import { WS_CONNECTION_PERSONAL_START } from "../constants/ws-personal";
+import { Middleware, MiddlewareAPI } from "@reduxjs/toolkit";
+import { AppDispatch, RootState } from "../types";
+import { TWSActions } from "../types/ws";
 
-export const socketMiddleware = (wsUrl, wsActions) => {
-  return (store) => {
-    let socket = null;
+export const socketMiddleware = (wsUrl: string, wsActions: TWSActions): Middleware => {
+  return (store: MiddlewareAPI<AppDispatch, RootState>) => {
+    let socket: WebSocket | null = null;
 
     return (next) => (action) => {
       const { dispatch } = store;
@@ -21,7 +26,7 @@ export const socketMiddleware = (wsUrl, wsActions) => {
           dispatch({ type: onOpen, payload: event });
         };
 
-        socket.onerror = (event) => {
+        socket.onerror = (event: any) => {
           dispatch({ type: onError, payload: event });
         };
 

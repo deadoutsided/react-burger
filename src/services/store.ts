@@ -1,6 +1,7 @@
 import { applyMiddleware, createStore, compose } from "redux";
+import { composeWithDevTools } from "@redux-devtools/extension/lib/types/logOnly";
 import { rootReducer } from "./reducers/root-reducer";
-import { socketMiddleware } from "./middleware";
+import { socketMiddleware } from "./middleware/index";
 import thunkMiddleware from "redux-thunk";
 import {
   WS_CONNECTION_PUBLIC_START,
@@ -8,17 +9,18 @@ import {
   WS_PUBLIC_CONNECTION_CLOSED,
   WS_PUBLIC_CONNECTION_ERROR,
   WS_PUBLIC_GET_ORDER,
-} from "./actions/ws-public";
+} from "./constants/ws-public";
 import {
   WS_CONNECTION_PERSONAL_START,
   WS_PERSONAL_CONNECTION_SUCCESS,
   WS_PERSONAL_CONNECTION_CLOSED,
   WS_PERSONAL_CONNECTION_ERROR,
   WS_PERSONAL_GET_ORDER,
-} from "./actions/ws-personal";
+} from "./constants/ws-personal";
 import { wsUrl } from "../utils/data";
+import { TWSActions } from "./types/ws";
 
-const wsPublicActions = {
+const wsPublicActions: TWSActions = {
   wsInit: WS_CONNECTION_PUBLIC_START,
   onOpen: WS_PUBLIC_CONNECTION_SUCCESS,
   onClose: WS_PUBLIC_CONNECTION_CLOSED,
@@ -27,7 +29,7 @@ const wsPublicActions = {
   wsBreak: WS_PUBLIC_CONNECTION_CLOSED,
 };
 
-const wsPersonalActions = {
+const wsPersonalActions: TWSActions = {
   wsInit: WS_CONNECTION_PERSONAL_START,
   onOpen: WS_PERSONAL_CONNECTION_SUCCESS,
   onClose: WS_PERSONAL_CONNECTION_CLOSED,
@@ -46,5 +48,5 @@ const enhancer = composeEnhancers(
   applyMiddleware(socketMiddleware(wsUrl, wsPersonalActions))
 );
 
-export const initStore = (initialState = {}) =>
-  createStore(rootReducer, initialState, enhancer);
+export const store = 
+  createStore(rootReducer, enhancer);

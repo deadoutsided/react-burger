@@ -3,13 +3,19 @@ import {
   DELETE_CONSTRUCTED_INGREDIENT,
   MOVE_CONSTRUCTED_INGREDIENT,
   RESET_CONSTRUCTED_INGREDIENTS
-} from "../actions/constructor";
+} from "../constants/constructor";
+import { TIngredient } from "../../utils/types";
+import { TConstructorActions } from "../actions/constructor";
 
-const initialState = {
+type TinitialConstructorState = {
+  constructorIngredients: TIngredient[] | null;
+}
+
+const initialState: TinitialConstructorState = {
   constructorIngredients: null
 };
 
-export const constructorReducer = (state = initialState, action) => {
+export const constructorReducer = (state = initialState, action: TConstructorActions) => {
   switch (action.type) {
     case ADD_CONSTRUCTED_INGREDIENT: {
       if (state.constructorIngredients === null) {
@@ -36,15 +42,15 @@ export const constructorReducer = (state = initialState, action) => {
       };
     }
     case DELETE_CONSTRUCTED_INGREDIENT: {
-      state.constructorIngredients.splice(action.index, 1);
+      state.constructorIngredients?.splice(action.index, 1);
       return {
         ...state,
         constructorIngredients: state.constructorIngredients,
       };
     }
     case MOVE_CONSTRUCTED_INGREDIENT: {
-      state.constructorIngredients.splice(action.dragIndex, 1);
-      state.constructorIngredients.splice(
+      state.constructorIngredients?.splice(action.dragIndex, 1);
+      state.constructorIngredients?.splice(
         action.hoverIndex,
         0,
         action.ingredient

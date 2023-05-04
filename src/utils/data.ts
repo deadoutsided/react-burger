@@ -1,6 +1,8 @@
+import { TIngredient, TPasswordForgotRes, TTokenRes } from "./types";
+
 export const BASE_URL: string = "https://norma.nomoreparties.space/api/";
 
-export const wsUrl: string = "wss://norma.nomoreparties.space/orders";
+export const wsUrl: string = "wss://norma.nomoreparties.space/orderы";
 
 type THeaders = {
   "Content-Type": "application/json";
@@ -20,6 +22,8 @@ export type TResponse = {
     name?: string;
     email?: string;
   };
+  data?: TIngredient[];
+  message?: string;
   accessToken: string;
   refreshToken: string;
  }
@@ -31,14 +35,14 @@ export const checkResponse = (res: Response) => {
   return Promise.reject(`Ошибка ${res.status}`);
 }
 
-const checkSuccess = (res: Response & TResponse) => {
+const checkSuccess = (res: Response & TResponse & TTokenRes & TPasswordForgotRes) => {
   if(res && res.success){
     return res;
   }
   return Promise.reject(`Ошибка ${res.status}`);
 }
 
-async function request(endpoint: string, options: TOptions){
+async function request(endpoint: string, options?: TOptions){
   return await fetch(`${BASE_URL + endpoint}`, options).then(checkResponse).then(checkSuccess);
 }
 
