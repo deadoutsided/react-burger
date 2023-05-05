@@ -9,7 +9,7 @@ import {
   maxOrdersInColumn,
   maxOrdersInList,
   edgeOrderNumber,
-} from "../../utils/data";
+} from "../../services/types/data";
 import style from "./feed.module.css";
 
 export const Feed: FC = () => {

@@ -4,7 +4,7 @@ import { useSelector } from "../../services/types/index";
 import { Link, useLocation } from "react-router-dom";
 import { FormattedDate } from "@ya.praktikum/react-developer-burger-ui-components";
 import style from "./order-card.module.css";
-import { maxIngrIcons } from "../../utils/data";
+import { maxIngrIcons } from "../../services/types/data";
 import { TOrder } from "../../services/types/types";
 
 export const OrderCard: FC<TOrder> = ({

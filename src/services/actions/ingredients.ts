@@ -1,4 +1,4 @@
-import request, { TResponse } from "../../utils/data";
+import request, { TResponse } from "../types/data";
 import { TIngredient } from "../types/types";
 import {
   INGREDIENT_REQUEST,

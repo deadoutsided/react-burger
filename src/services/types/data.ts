@@ -1,4 +1,4 @@
-import { TIngredient, TPasswordForgotRes, TTokenRes } from "../services/types/types";
+import { TIngredient, TPasswordForgotRes, TTokenRes } from "./types";
 
 export const BASE_URL: string = "https://norma.nomoreparties.space/api/";
 

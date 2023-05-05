@@ -17,7 +17,7 @@ import {
   WS_PERSONAL_CONNECTION_ERROR,
   WS_PERSONAL_GET_ORDER,
 } from "./constants/ws-personal";
-import { wsUrl } from "../utils/data";
+import { wsUrl } from "./types/data";
 import { TWSActions } from "./types/ws";
 
 const wsPublicActions: TWSActions = {

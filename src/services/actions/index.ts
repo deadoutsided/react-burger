@@ -1,4 +1,4 @@
-import request, { checkResponse } from "../../utils/data";
+import request, { checkResponse } from "../types/data";
 import { deleteCookie, getCookie, setCookie } from "../../utils/cookie";
 import {
   REGISTRATION_REQUEST,
