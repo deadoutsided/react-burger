@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, FC } from "react";
 import AppHeader from "../app-header/app-header";
 import BurgerIngredients from "../burger-ingredients/burger-ingredients";
 import BurgerConstructor from "../burger-constructor/burger-constructor";
@@ -13,14 +13,15 @@ import { ForgotPassword } from "../../pages/forgot-password/forgot-password";
 import { ResetPassword } from "../../pages/reset-password/reset-password";
 import { Profile } from "../../pages/profile/profile";
 import { getCookie } from "../../utils/cookie";
-import { useDispatch, useSelector } from "react-redux";
-import { getUserData, SET_AUTHORIZED } from "../../services/actions";
+import { useDispatch, useSelector } from "../../services/types/index";
+import { getUserData } from "../../services/actions";
+import { SET_AUTHORIZED } from "../../services/constants/index";
 import { ProtectedRouteElement } from "../protected-route-element/protected-route-element";
 import { Feed } from "../../pages/feed/feed";
 import { FeedFull } from "../../pages/feed-full/feed-full";
 import { getIngredientData } from "../../services/actions/ingredients";
 
-function App() {
+const App: FC = () => {
   const dispatch = useDispatch();
   const { authData } = useSelector((store) => store.root);
   const { modalState } = useSelector((store) => store.modal);

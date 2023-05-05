@@ -5,7 +5,7 @@ import {
   WS_PERSONAL_CONNECTION_ERROR,
   WS_PERSONAL_GET_ORDER,
 } from "../constants/ws-personal";
-import { TWSErrorPayload, TWSOrderMessage } from "../../utils/types";
+import { TWSErrorPayload, TWSOrderMessage } from "../types/ws";
 
 export interface IWSConnectionPersonalStart {
   readonly type: typeof WS_CONNECTION_PERSONAL_START;

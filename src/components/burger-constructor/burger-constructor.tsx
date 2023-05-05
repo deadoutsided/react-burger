@@ -1,5 +1,5 @@
-import React, { useState, useTransition, useRef, useCallback, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useState, useTransition, useRef, useCallback, useEffect, FC, LegacyRef, ReactElement, JSXElementConstructor } from "react";
+import { useDispatch, useSelector } from "../../services/types/index";
 import { v4 as uuidv4 } from "uuid";
 import {
   ConstructorElement,
@@ -10,13 +10,15 @@ import {
 import Modal from "../modal/modal";
 import style from "../burger-constructor/burger-constructor.module.css";
 import OrderDetails from "../order-details/order-details";
-import { ADD_CONSTRUCTED_INGREDIENT, DELETE_CONSTRUCTED_INGREDIENT, MOVE_CONSTRUCTED_INGREDIENT, RESET_CONSTRUCTED_INGREDIENTS } from "../../services/actions/constructor";
-import { ORDER_RESET, getOrderData } from "../../services/actions/order";
+import { ADD_CONSTRUCTED_INGREDIENT, DELETE_CONSTRUCTED_INGREDIENT, MOVE_CONSTRUCTED_INGREDIENT, RESET_CONSTRUCTED_INGREDIENTS } from "../../services/constants/constructor";
+import { getOrderData } from "../../services/actions/order";
+import { ORDER_RESET } from "../../services/constants/order";
 import { useDrop } from "react-dnd/dist/hooks/useDrop";
 import { MovableConstructorElement } from "../movable-constructor-element/movable-constructor-element";
 import { useNavigate } from "react-router-dom";
+import { TIngredient } from "../../services/types/types";
 
-function BurgerConstructor(props) {
+const BurgerConstructor: FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -27,37 +29,38 @@ function BurgerConstructor(props) {
   const { constructorIngredients } = useSelector((store) => store.construct);
   const { orderData } = useSelector((store) => store.order);
 
-  const addItem = (item, id) => {
+  const addItem = (item: TIngredient | null, id: number | undefined) => {
     dispatch({
       type: ADD_CONSTRUCTED_INGREDIENT,
       item: { ...item, uuid: uuidv4(), id: id },
     });
   };
-  const [{ isHover }, dropTarget] = useDrop({
+  const [, dropTarget] = useDrop<TIngredient | null , unknown, LegacyRef<HTMLElement> | undefined>({
     accept: "ingredient",
-    drop(item) {
+    drop(item: TIngredient | null) {
       addItem(item, constructorIngredients?.length);
     },
   });
 
-  const moveIngredient = useCallback((dragIndex, hoverIndex) => {
+  const moveIngredient = useCallback((dragIndex: number, hoverIndex: number | undefined) => {
     dispatch({
       type: MOVE_CONSTRUCTED_INGREDIENT,
       dragIndex: dragIndex,
       hoverIndex: hoverIndex,
-      ingredient: constructorIngredients[dragIndex],
+      ingrediens: constructorIngredients ? constructorIngredients[dragIndex] : null,
     });
   }, [constructorIngredients, dispatch]);
 
-  const [{ }, constrTar] = useDrop(() => ({
+  const [{ }, constrTar] = useDrop<TIngredient | null, unknown, {item: TIngredient}>(() => ({
     accept: "constrIngr",
   }));
 
   const [isHidden, setHidden] = useState(true);
   const [isPending, startTransition] = useTransition();
-  const delTarg = useRef(null);
+  //можно убрать функцию, где происходит присваивание current
+  const delTarg = useRef<ReactElement<any, string | JSXElementConstructor<any>> | null>(null);
 
-  const handleBtnClick = (e) => {
+  const handleBtnClick = () => {
     if (!authorized) {
       navigate("/sign-in");
     } else {
@@ -66,23 +69,19 @@ function BurgerConstructor(props) {
     }
   };
 
-  const handleClose = (e) => {
+  const handleClose = () => {
     startTransition(() => {
       setHidden(true);
       dispatch({ type: ORDER_RESET });
     });
   };
-  const handleDelete = (e) => {
-    delTarg.current.childNodes.forEach((el, i) => {
-      if (el === e.currentTarget.closest(".constructor-element").parentNode) {
-        dispatch({ type: DELETE_CONSTRUCTED_INGREDIENT, index: i + 1 });
-      }
-    });
+  const handleDelete = (ingr: TIngredient) => {
+    dispatch({ type: DELETE_CONSTRUCTED_INGREDIENT, id: ingr._id });
   };
 
   useEffect(() => {
     dispatch({type: RESET_CONSTRUCTED_INGREDIENTS})
-  }, [orderData])
+  }, [orderData, dispatch])
 
   const modal = (
     <Modal title="" handleClose={handleClose}>
@@ -130,7 +129,7 @@ function BurgerConstructor(props) {
                     extraClass={style.constructorCont}
                     key={element.uuid}
                     index={i}
-                    id={element.id}
+                    id={element._id}
                     moveIngredient={moveIngredient}
                   >
                     <DragIcon type="primary" />
@@ -139,7 +138,7 @@ function BurgerConstructor(props) {
                       text={element.name}
                       price={element.price}
                       thumbnail={element.image}
-                      handleClose={handleDelete}
+                      handleClose={() => handleDelete(element)}
                     />
                   </MovableConstructorElement>
                 );
@@ -171,7 +170,7 @@ function BurgerConstructor(props) {
               }
             }, 0)}
           </p>
-          <CurrencyIcon />
+          <CurrencyIcon type="primary" />
         </div>
         <Button
           extraClass="ml-10"

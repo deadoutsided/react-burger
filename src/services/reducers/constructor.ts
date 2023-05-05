@@ -4,7 +4,7 @@ import {
   MOVE_CONSTRUCTED_INGREDIENT,
   RESET_CONSTRUCTED_INGREDIENTS
 } from "../constants/constructor";
-import { TIngredient } from "../../utils/types";
+import { TIngredient } from "../types/types";
 import { TConstructorActions } from "../actions/constructor";
 
 type TinitialConstructorState = {
@@ -15,7 +15,7 @@ const initialState: TinitialConstructorState = {
   constructorIngredients: null
 };
 
-export const constructorReducer = (state = initialState, action: TConstructorActions) => {
+export const constructorReducer = (state: TinitialConstructorState = initialState, action: TConstructorActions) => {
   switch (action.type) {
     case ADD_CONSTRUCTED_INGREDIENT: {
       if (state.constructorIngredients === null) {
@@ -42,7 +42,7 @@ export const constructorReducer = (state = initialState, action: TConstructorAct
       };
     }
     case DELETE_CONSTRUCTED_INGREDIENT: {
-      state.constructorIngredients?.splice(action.index, 1);
+      state.constructorIngredients?.filter(ingredient => action.id !== ingredient._id);
       return {
         ...state,
         constructorIngredients: state.constructorIngredients,

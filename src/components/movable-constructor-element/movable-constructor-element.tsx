@@ -1,9 +1,16 @@
-import React, { useRef } from 'react';
+import React, { useRef, FC, ReactNode } from 'react';
 import { useDrag, useDrop } from 'react-dnd'
 import style from './movable-constructor-element.module.css';
-import PropTypes from "prop-types";
 
-export const MovableConstructorElement = ({ index, extraClass, moveIngredient, children, id }) => {
+type TMoveConstrProps = {
+  index: number;
+  extraClass: string;
+  moveIngredient: (dragIndex: number, hoverIndex: number) => void;
+  children: ReactNode;
+  id: string;
+}
+
+export const MovableConstructorElement: FC<TMoveConstrProps> = ({ index, extraClass, moveIngredient, children, id }) => {
   const ref = useRef(null);
   const [{handlerId, isHover}, drop] = useDrop({
     accept: 'constrIngr',
@@ -11,7 +18,7 @@ export const MovableConstructorElement = ({ index, extraClass, moveIngredient, c
       handlerId: monitor.getHandlerId(),
       isHover: monitor.isOver()
     }),
-    drop(item, monitor){
+    drop(item: any){
       if(!ref.current){
         return
       }
@@ -37,11 +44,3 @@ export const MovableConstructorElement = ({ index, extraClass, moveIngredient, c
     </div>
   )
 }
-
-MovableConstructorElement.propTypes = {
-  index: PropTypes.number,
-  extraClass: PropTypes.string,
-  moveIngredient: PropTypes.func,
-  findIngredient: PropTypes.func,
-  children: PropTypes.array
-}.isRequired

@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useEffect, useState, FC } from "react";
+import { useDispatch, useSelector } from "../../services/types/index";
 import { Link, useLocation } from "react-router-dom";
 import PropTypes from "prop-types";
 import style from "./card-ingredient.module.css";
@@ -8,10 +8,17 @@ import {
   CurrencyIcon,
   Counter,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { SET_CURRENT_INGREDIENT } from "../../services/actions/modal";
+import { SET_CURRENT_INGREDIENT } from "../../services/constants/modal";
 import { useDrag } from "react-dnd/dist/hooks";
+import { TIngredient } from "../../services/types/types";
 
-function CardIngredient(props) {
+type TCardProps = {
+  id: string;
+  ingredient: TIngredient | null;
+  handleCardClick: () => void;
+}
+
+const CardIngredient: FC<TCardProps> = (props) => {
   const { id, ingredient } = props;
   const dispatch = useDispatch();
   const { ingredientData } = useSelector(
@@ -22,9 +29,9 @@ function CardIngredient(props) {
   const { pathname } = useLocation();
   const url = window.location.href;
 
-  const [{}, dragRef] = useDrag({
+  const [{ }, dragRef] = useDrag<TIngredient | null, unknown, TIngredient>({
     type: "ingredient",
-    item: { ...ingredient },
+    item: ingredient,
   });
 
   useEffect(() => {
@@ -40,8 +47,8 @@ function CardIngredient(props) {
     }
   });
 
-  const onClick = (e) => {
-    const ingredient = ingredientData.find((el) => el._id === id);
+  const onClick = () => {
+    const ingredient = ingredientData?.find((el) => el._id === id);
     dispatch({ type: SET_CURRENT_INGREDIENT, ingredient: ingredient });
     props.handleCardClick();
   };
@@ -59,28 +66,22 @@ function CardIngredient(props) {
       >
         <img
           className={"pl-4 pr-4 " + style.img}
-          src={props.ingredient.image}
-          alt={props.ingredient.name}
+          src={props.ingredient?.image}
+          alt={props.ingredient?.name}
         />
         <div className={style.price + " mt-1 mb-1"}>
           <p className={"text text_type_digits-default mr-2"}>
-            {props.ingredient.price}
+            {props.ingredient?.price}
           </p>
           <CurrencyIcon type="primary" />
         </div>
         <p className={"text text_type_main-default " + style.name}>
-          {props.ingredient.name}
+          {props.ingredient?.name}
         </p>
         {count > 0 && <Counter count={count} size="default" extraClass="m-1" />}
       </Link>
     </div>
   );
 }
-
-CardIngredient.propTypes = {
-  ingredient: ingredientType.isRequired,
-  handleCardClick: PropTypes.func.isRequired,
-  id: PropTypes.string.isRequired,
-};
 
 export default CardIngredient;

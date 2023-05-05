@@ -1,5 +1,5 @@
 import React from "react";
-import { useSelector } from 'react-redux';
+import { useSelector } from '../../services/types/index';
 import style from './order-details.module.css';
 
 export default function OrderDetails(){

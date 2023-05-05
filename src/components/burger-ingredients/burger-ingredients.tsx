@@ -1,36 +1,37 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, FC } from "react";
 import style from "./burder-ingredients.module.css";
 import IngredientsTab from "../ingredients-tab/ingredients-tab";
 import CardIngredient from "../card-ingredient/card-ingredient";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "../../services/types/index";
 import {
   DELETE_CURRENT_INGREDIENT,
   SET_MODAL_STATE,
-} from "../../services/actions/modal";
+} from "../../services/constants/modal";
 import IngredientDetails from "../ingredient-details/ingredient-details";
 import Modal from "../modal/modal";
 import { useLocation, useParams, useNavigate } from "react-router-dom";
+import { TIngredient } from "../../services/types/types";
 
-function BurgerIngredients() {
+const BurgerIngredients: FC = () => {
   const { ingredientData } = useSelector(
     (store) => store.ingredients
   );
 
   const { currentIngredient } = useSelector((store) => store.modal);
 
-  const { state } = useLocation();
+  const { state }: { state: string} = useLocation();
   const [isHidden, setHidden] = useState(true);
   const [current, setCurrent] = useState("bun");
-  const buns = useRef(null);
-  const sauces = useRef(null);
-  const mains = useRef(null);
-  const scrollable = useRef(null);
+  const buns = useRef<HTMLDivElement>(null);
+  const sauces = useRef<HTMLDivElement>(null);
+  const mains = useRef<HTMLDivElement>(null);
+  const scrollable = useRef<HTMLDivElement>(null);
   const { id } = useParams();
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
-  const ingredient = 
-    state && ingredientData ? {} : ingredientData?.find((el) => el._id === id);
+  const ingredient: TIngredient | null | undefined = 
+    state && ingredientData ? null : ingredientData?.find((el: TIngredient) => el._id === id);
 
   useEffect(() => {
     if(!state && !id){
@@ -39,11 +40,11 @@ function BurgerIngredients() {
     dispatch({type: SET_MODAL_STATE, bool: !id ? true : false})
   }, [dispatch, state]);
 
-  const handleCardClick = (e) => {
+  const handleCardClick = () => {
     setHidden(false);
   };
 
-  const handleClose = (e) => {
+  const handleClose = () => {
     dispatch({ type: DELETE_CURRENT_INGREDIENT });
     navigate("/", { state: {} });
     setHidden(true);
@@ -51,21 +52,21 @@ function BurgerIngredients() {
 
   const modal = state ? (
     <Modal handleClose={handleClose} title="Детали ингредиента">
-      <IngredientDetails ingredient={currentIngredient ? currentIngredient : {}} />
+      <IngredientDetails ingredient={currentIngredient ? currentIngredient : null} />
     </Modal>
   ) : (
-    <IngredientDetails ingredient={ingredient ? ingredient : {}} />
+    <IngredientDetails ingredient={ingredient ? ingredient : null} />
   );
 
-  const onScroll = (e) => {
-    if (
+  const onScroll = () => {
+    if (scrollable.current !== null && sauces.current !== null && mains.current !== null &&
       scrollable.current.scrollTop >= sauces.current.offsetTop - 150 &&
       scrollable.current.scrollTop <= mains.current.offsetTop - 150
     ) {
       setCurrent("sauce");
-    } else if (scrollable.current.scrollTop > mains.current.offsetTop - 150) {
+    } else if (scrollable.current !== null && mains.current !== null && scrollable.current.scrollTop > mains.current.offsetTop - 150) {
       setCurrent("main");
-    } else if (scrollable.current.scrollTop < sauces.current.offsetTop - 150) {
+    } else if (scrollable.current !== null && sauces.current !== null && scrollable.current.scrollTop < sauces.current.offsetTop - 150) {
       setCurrent("bun");
     }
   };
@@ -91,7 +92,7 @@ function BurgerIngredients() {
                     <CardIngredient
                       id={element._id}
                       handleCardClick={handleCardClick}
-                      ingredient={element ? element : {}}
+                      ingredient={element ? element : null}
                       key={element._id}
                     />
                   );
@@ -105,7 +106,7 @@ function BurgerIngredients() {
                     <CardIngredient
                       id={element._id}
                       handleCardClick={handleCardClick}
-                      ingredient={element ? element : {}}
+                      ingredient={element ? element : null}
                       key={element._id}
                     />
                   );
@@ -119,7 +120,7 @@ function BurgerIngredients() {
                     <CardIngredient
                       id={element._id}
                       handleCardClick={handleCardClick}
-                      ingredient={element ? element : {}}
+                      ingredient={element ? element : null}
                       key={element._id}
                     />
                   );

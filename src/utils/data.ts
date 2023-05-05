@@ -1,8 +1,8 @@
-import { TIngredient, TPasswordForgotRes, TTokenRes } from "./types";
+import { TIngredient, TPasswordForgotRes, TTokenRes } from "../services/types/types";
 
 export const BASE_URL: string = "https://norma.nomoreparties.space/api/";
 
-export const wsUrl: string = "wss://norma.nomoreparties.space/orderы";
+export const wsUrl: string = "wss://norma.nomoreparties.space/orders";
 
 type THeaders = {
   "Content-Type": "application/json";

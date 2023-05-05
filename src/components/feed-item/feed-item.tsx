@@ -1,10 +1,15 @@
 import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
-import React from 'react';
-import propTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import React, { FC } from 'react';
 import style from './feed-item.module.css';
 
-export function FeedItem({src, name, num, price}){
+type TFeedProps = {
+  src: string;
+  name: string;
+  num: number;
+  price: number;
+}
+
+export const FeedItem: FC<TFeedProps> = ({src, name, num, price}) => {
 
   return (
     <div className={style.mainCont}>
@@ -14,15 +19,8 @@ export function FeedItem({src, name, num, price}){
       <p className={'mr-4 text text_type_main-default'}>{name}</p>
       <div className={style.priceCont}>
         <p>{`${num} x ${price}`}</p>
-        <CurrencyIcon />
+        <CurrencyIcon type="primary" />
       </div>
     </div>
   )
 }
-
-FeedItem.propTypes = {
-  src: propTypes.string.isRequired,
-  name: propTypes.string.isRequired,
-  num: propTypes.number.isRequired,
-  price: propTypes.bool.isRequired,
-}.isRequired;

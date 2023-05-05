@@ -1,9 +1,10 @@
-import { store } from "../services/store";
+import { store } from "../store";
 
 export type TIngredient = {
   _id: string;
   name: string;
   type: string;
+  uuid?: string;
   proteins: number;
   fat: number;
   carbohydrates: number;
@@ -16,14 +17,16 @@ export type TIngredient = {
 };
 
 export type TUserData = {
-  name?: string;
-  email?: string;
-  pass?: string;
+  user: {
+    name?: string;
+    email?: string;
+    pass?: string;
+  };
 };
 
 export type TAuthResp = {
   success: boolean;
-  user?: TUserData;
+  user?: TUserData["user"];
   accessToken?: string;
 };
 
@@ -45,7 +48,7 @@ export type TTokenRes = {
 
 export type TOrder = {
   createdAt: Date | string;
-  ingredients: TIngredient[];
+  ingredients: string[];
   name: string;
   number: number;
   owner: {
@@ -66,14 +69,9 @@ export type TOrderData = {
   success: boolean;
 };
 
-export type TWSErrorPayload = {
+export type TOrdersData = {
   success: boolean;
-  message: string;
-};
-
-export type TWSOrderMessage = {
-  success: boolean;
-  total: number;
-  totalToday: 160;
   orders: TOrder[];
+  total: number;
+  totalToday: number;
 };

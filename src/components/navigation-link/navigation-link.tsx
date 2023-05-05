@@ -1,9 +1,18 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React, {FC, ReactNode} from "react";
 import style from "./navigation-link.module.css";
 import { NavLink } from "react-router-dom";
 
-function NavigationLink({ text, flex, state, to, children }) {
+type TNavLinkProps = {
+  text: string;
+  children: ReactNode;
+  flex: boolean;
+  state?: {
+    title: string;
+  }
+  to: string;
+}
+
+const NavigationLink: FC<TNavLinkProps> = ({ text, flex, state, to, children }) => {
   return (
     <NavLink
       to={to}
@@ -34,10 +43,5 @@ function NavigationLink({ text, flex, state, to, children }) {
     </NavLink>
   );
 }
-
-NavigationLink.propTypes = {
-  text: PropTypes.string,
-  children: PropTypes.node,
-}.isRequired;
 
 export default NavigationLink;

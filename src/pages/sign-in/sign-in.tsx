@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, FormEvent } from "react";
 import { Link, Navigate, useLocation } from "react-router-dom";
 import style from "./sign-in.module.css";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from "../../services/types/index";
 import { getSignInData } from "../../services/actions";
 import {
   EmailInput,
@@ -16,15 +16,15 @@ export function SignIn() {
   const [emailValue, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const changeEmail = (e) => {
+  const changeEmail = (e: {target: HTMLInputElement}) => {
     setEmail(e.target.value);
   };
 
-  const changePassword = (e) => {
+  const changePassword = (e: {target: HTMLInputElement}) => {
     setPassword(e.target.value);
   };
 
-  const onSubmit = (e) => {
+  const onSubmit = (e: FormEvent) => {
     e.preventDefault();
     dispatch(getSignInData(emailValue, password));
   }

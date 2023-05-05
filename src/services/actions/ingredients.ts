@@ -1,11 +1,11 @@
 import request, { TResponse } from "../../utils/data";
-import { TIngredient } from "../../utils/types";
+import { TIngredient } from "../types/types";
 import {
   INGREDIENT_REQUEST,
   INGREDIENT_FAILED,
   INGREDIENT_SUCCESS,
 } from "../constants/ingredients";
-import { AppDispatch } from "../types";
+import { AppDispatch, AppThunk } from "../types";
 
 export interface IIngredientRequest {
   readonly type: typeof INGREDIENT_REQUEST;
@@ -32,8 +32,8 @@ const getIngredientDataRequest = async (): Promise<{
   return await request("ingredients");
 };
 
-export function getIngredientData(): Function {
-  return function (dispatch: AppDispatch): void {
+export const getIngredientData: AppThunk = () => {
+  return function (dispatch: any) {
     dispatch({
       type: INGREDIENT_REQUEST,
     });

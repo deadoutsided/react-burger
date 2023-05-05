@@ -1,4 +1,4 @@
-import { TIngredient } from "../../utils/types";
+import { TIngredient } from "../types/types";
 import { TModalActions } from "../actions/modal";
 import {
   SET_CURRENT_INGREDIENT,

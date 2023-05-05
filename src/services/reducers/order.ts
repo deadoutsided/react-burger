@@ -1,4 +1,4 @@
-import { TOrderData } from "../../utils/types";
+import { TOrderData } from "../types/types";
 import { TOrdersActions } from "../actions/order";
 import {
   ORDER_REQUEST,
@@ -10,7 +10,7 @@ import {
 type TinitialOrderState = {
   orderLoading: boolean;
   orderError: boolean;
-  orderData: TOrderData;
+  orderData: TOrderData | null;
 }
 
 const initialState = {
@@ -19,7 +19,7 @@ const initialState = {
   orderData: null,
 };
 
-export const orderReduser = (state = initialState, action: TOrdersActions) => {
+export const orderReduser = (state: TinitialOrderState = initialState, action: TOrdersActions) => {
   switch (action.type) {
     case ORDER_REQUEST: {
       return {

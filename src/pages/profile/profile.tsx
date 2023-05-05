@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, FormEvent, FC } from "react";
 import { NavLink, Link, Navigate, useLocation } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from "../../services/types/index";
 import {
   EmailInput,
   PasswordInput,
@@ -16,7 +16,7 @@ import { getCookie } from "../../utils/cookie";
 import { OrderCard } from "../../components/order-card/order-card";
 import { wsPersonalConnectionClose, wsPersonalConnectionStart } from "../../services/actions/ws-personal";
 
-export function Profile() {
+export const Profile: FC = () => {
   const dispatch = useDispatch();
   const {state, pathname} = useLocation();
   const { authData } = useSelector(
@@ -25,16 +25,16 @@ export function Profile() {
 
   const { ordersPersonalData } = useSelector((store) => store.wsPersonal)
 
-  const nameInputRef = useRef(null);
+  const nameInputRef = useRef<HTMLInputElement>(null);
 
   const [emailValue, setEmail] = useState(
-    authData.user.email ?? "" ? authData.user.email : ""
+    authData.user?.email ?? "" ? authData.user?.email : ""
   );
   const [password, setPassword] = useState(
-    authData.user.pass ?? "" ? authData.user.pass : ""
+    authData.user?.pass ?? "" ? authData.user?.pass : ""
   );
   const [nameValue, setName] = useState(
-    authData.user.name ?? "" ? authData.user.name : ""
+    authData.user?.name ?? "" ? authData.user?.name : ""
   );
 
   const [inputDisabled, setInputDisabled] = useState(true);
@@ -47,23 +47,23 @@ export function Profile() {
     }
   }, [authData]);
 
-  const changeEmail = (e) => {
+  const changeEmail = (e: {target: HTMLInputElement}) => {
     setEmail(e.target.value);
   };
 
-  const changePassword = (e) => {
+  const changePassword = (e: {target: HTMLInputElement}) => {
     setPassword(e.target.value);
   };
 
-  const changeName = (e) => {
+  const changeName = (e: {target: HTMLInputElement}) => {
     setName(e.target.value);
   };
 
-  const onClick = (e) => {
+  const onClick = () => {
     dispatch(getSignOutData());
   };
 
-  const onIconClick = (e) => {
+  const onIconClick = () => {
     setInputDisabled(false);
     setTimeout(() => nameInputRef.current?.focus(), 0);
   };
@@ -72,16 +72,16 @@ export function Profile() {
     setInputDisabled(true);
   };
 
-  const onSubmit = (e) => {
+  const onSubmit = (e: FormEvent) => {
     e.preventDefault();
     dispatch(setUserData(nameValue, emailValue, password));
   }
 
-  const onReset = (e) => {
+  const onReset = (e: FormEvent) => {
     e.preventDefault();
-    setEmail(authData.user.email);
-    setPassword(authData.user.pass);
-    setName(authData.user.name);
+    setEmail(authData.user?.email);
+    setPassword(authData.user?.pass);
+    setName(authData.user?.name);
   }
 
   useEffect(() => {
@@ -126,14 +126,14 @@ export function Profile() {
       name="password"
       value={password ? password : ""}
     />
-    {(nameValue !== authData.user.name || emailValue !== authData.user.email || password !== authData.user.pass) && buttons}
+    {(nameValue !== authData.user?.name || emailValue !== authData.user?.email || password !== authData.user?.pass) && buttons}
   </form>);
 
   const orders = (
     <div className={style.orders + ' pr-2'}>
       {ordersPersonalData?.orders?.map((el) => {
         return (
-          <OrderCard key={el.number} order={el} />
+          <OrderCard key={el.number}  createdAt={el.createdAt} ingredients={el.ingredients} name={el.name} number={el.number} owner={el.owner} price={el.price} status={el.status} updatedAt={el.updatedAt} _id={el._id} />
         )
       })}
     </div>
@@ -173,6 +173,7 @@ export function Profile() {
           История заказов
         </NavLink>
         <Link
+          to=""
           onClick={onClick}
           className={
             "mb-20 text text_type_main-medium text_color_inactive " + style.link

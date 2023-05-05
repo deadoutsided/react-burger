@@ -1,9 +1,12 @@
-import React from "react";
-import PropTypes from 'prop-types'
+import React, {FC} from "react";
 import style from "./ingredient-details.module.css";
-import ingredientType from "../../utils/types";
+import { TIngredient } from "../../services/types/types";
 
-export default function IngredientDetails(props) {
+type TIngrDetailsProps = {
+  ingredient: TIngredient | null;
+}
+
+const IngredientDetails: FC<TIngrDetailsProps> = (props) => {
   return (
     <div className={style.detailsCont}>
       <img
@@ -34,6 +37,4 @@ export default function IngredientDetails(props) {
   );
 }
 
-IngredientDetails.propTypes = {
-  ingredient: ingredientType.isRequired 
-}.isRequired
+export default IngredientDetails;

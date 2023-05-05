@@ -1,4 +1,4 @@
-import { TWSErrorPayload, TWSOrderMessage } from "../../utils/types";
+import { TOrder } from "./types";
 
 export type TinitialWSPublicState = {
   wsPublicConnected: boolean;
@@ -19,4 +19,17 @@ export type TWSActions = {
   onError: "WS_PUBLIC_CONNECTION_ERROR" | "WS_PERSONAL_CONNECTION_ERROR";
   onMessage: "WS_PUBLIC_GET_ORDER" | "WS_PERSONAL_GET_ORDER";
   wsBreak: "WS_PERSONAL_CONNECTION_CLOSED" | "WS_PUBLIC_CONNECTION_CLOSED";
+};
+
+
+export type TWSErrorPayload = {
+  success: boolean;
+  message: string;
+};
+
+export type TWSOrderMessage = {
+  success: boolean;
+  total: number;
+  totalToday: 160;
+  orders: TOrder[];
 };

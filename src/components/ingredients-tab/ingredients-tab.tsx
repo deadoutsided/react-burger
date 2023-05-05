@@ -1,9 +1,13 @@
-import React from "react";
+import React, { Dispatch, FC } from "react";
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
 import style from './ingredients-tab.module.css'
-import PropTypes from "prop-types";
 
-function IngredientsTab(props) {
+type TIngredientsTabProps = {
+  current: string;
+  setCurrent: Dispatch<React.SetStateAction<string>>;
+}
+
+const IngredientsTab: FC<TIngredientsTabProps> = (props) => {
   return (
     <div className={style.tabCont}>
       <Tab value="bun" active={props.current === "bun"} onClick={props.setCurrent}>
@@ -18,10 +22,5 @@ function IngredientsTab(props) {
     </div>
   );
 }
-
-IngredientsTab.propTypes = {
-  current: PropTypes.string.isRequired,
-  setCurrent: PropTypes.func.isRequired
-}.isRequired
 
 export default IngredientsTab;

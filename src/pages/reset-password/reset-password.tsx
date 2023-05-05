@@ -1,25 +1,25 @@
-import React, {useState} from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, {useState, FC, FormEvent} from 'react';
+import { useDispatch, useSelector } from '../../services/types/index';
 import { Link, Navigate } from 'react-router-dom';
 import { PasswordInput, Button, Input } from '@ya.praktikum/react-developer-burger-ui-components';
 import style from './reset-password.module.css';
 import { resetPassword } from '../../services/actions';
 
-export function ResetPassword(){
+export const ResetPassword: FC = () => {
   const dispatch = useDispatch();
   const { resetPasswordSuccess, authorized, forgotPasswordSuccess } = useSelector((store) => store.root);
   const [newPassword, setNewPassword] = useState('');
   const [emailToken, setEmailToken] = useState('');
 
-  const changeNewPassword = (e) => {
+  const changeNewPassword = (e: {target: HTMLInputElement}) => {
     setNewPassword(e.target.value);
   }
 
-  const changeEmailToken = (e) => {
+  const changeEmailToken = (e: {target: HTMLInputElement}) => {
     setEmailToken(e.target.value);
   }
 
-  const onSubmit = (e) => {
+  const onSubmit = (e: FormEvent) => {
     e.preventDefault();
     dispatch(resetPassword(newPassword, emailToken));
   }

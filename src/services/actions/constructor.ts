@@ -4,7 +4,7 @@ import {
   MOVE_CONSTRUCTED_INGREDIENT,
   RESET_CONSTRUCTED_INGREDIENTS,
 } from "../constants/constructor";
-import { TIngredient } from "../../utils/types";
+import { TIngredient } from "../types/types";
 
 export interface IAddConstrucredIngredient {
   readonly type: typeof ADD_CONSTRUCTED_INGREDIENT;
@@ -13,7 +13,7 @@ export interface IAddConstrucredIngredient {
 
 export interface IDeleteConstructedIngredient {
   readonly type: typeof DELETE_CONSTRUCTED_INGREDIENT;
-  readonly index: number;
+  readonly id: string;
 }
 
 export interface IMoveConstructedIngredient {

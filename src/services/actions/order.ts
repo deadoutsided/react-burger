@@ -1,6 +1,6 @@
 import { requestWithRefresh } from ".";
 import { getCookie } from "../../utils/cookie";
-import { TIngredient, TOrderData } from "../../utils/types";
+import { TIngredient, TOrderData } from "../types/types";
 import {
   ORDER_REQUEST,
   ORDER_SUCCESS,
@@ -53,8 +53,8 @@ const orderRequest = async (constructorIngredients: TIngredient[]) => {
   });
 };
 
-export function getOrderData(constructorIngredients: TIngredient[]): AppDispatch {
-  return function (dispatch: AppThunk) {
+export const getOrderData: AppThunk = (constructorIngredients: TIngredient[]) => {
+  return function (dispatch: any) {
     dispatch({ type: ORDER_REQUEST });
     orderRequest(constructorIngredients)
       .then((res) => {

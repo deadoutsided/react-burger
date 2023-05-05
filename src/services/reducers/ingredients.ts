@@ -3,11 +3,11 @@ import {
   INGREDIENT_REQUEST,
   INGREDIENT_SUCCESS,
 } from "../constants/ingredients";
-import { TIngredient } from "../../utils/types";
+import { TIngredient } from "../types/types";
 import { TIngredientsActions } from "../actions/ingredients";
 
 type TinitialIngredientState = {
-  ingredientData: TIngredient[] | null;
+  ingredientData?: TIngredient[] | null;
   ingredientLoading: Boolean;
   ingredientError: Boolean;
 };
@@ -18,7 +18,7 @@ const initialState: TinitialIngredientState = {
   ingredientError: false,
 };
 
-export const ingredientsReducer = (state: TinitialIngredientState = initialState, action: TIngredientsActions) => {
+export const ingredientsReducer = (state: TinitialIngredientState = initialState, action: TIngredientsActions):TinitialIngredientState => {
   switch (action.type) {
     case INGREDIENT_REQUEST: {
       return {

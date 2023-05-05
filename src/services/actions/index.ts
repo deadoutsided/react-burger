@@ -27,8 +27,8 @@ import {
   SIGN_IN_FAILED,
   SIGN_IN_SUCCESS,
 } from "../constants";
-import { TAuthResp, TPasswordForgotRes, TSignOutRes, TTokenRes, TUserData } from "../../utils/types";
-import { AppDispatch } from "../types";
+import { TAuthResp, TPasswordForgotRes, TSignOutRes, TTokenRes, TUserData } from "../types/types";
+import { AppThunk } from "../types";
 
 export interface IRegistrationRequest {
   readonly type: typeof REGISTRATION_REQUEST;
@@ -184,12 +184,12 @@ const registrationRequest = async (
   });
 };
 
-export function getRegistrationData(
+export const getRegistrationData: AppThunk = (
   name: string,
   email: string,
   password: string
-) {
-  return function (dispatch: AppDispatch) {
+) => {
+  return function (dispatch: any) {
     dispatch({ type: REGISTRATION_REQUEST });
     registrationRequest(name, email, password)
       .then((res) => {
@@ -223,8 +223,8 @@ const signInRequest = async (email: string, password: string) => {
   });
 };
 
-export function getSignInData(email: string, password: string) {
-  return function (dispatch: AppDispatch) {
+export const getSignInData: AppThunk = (email: string, password: string) => {
+  return function (dispatch: any) {
     dispatch({ type: SIGN_IN_REQUEST });
     signInRequest(email, password)
       .then((res) => {
@@ -257,8 +257,8 @@ const signOutRequest = async () => {
   });
 };
 
-export function getSignOutData() {
-  return function (dispatch: AppDispatch) {
+export const getSignOutData: AppThunk = () => {
+  return function (dispatch: any) {
     dispatch({ type: SIGN_OUT_REQUEST });
     signOutRequest()
       .then((res) => {
@@ -287,8 +287,8 @@ const newTokenRequest = async () => {
   });
 };
 
-export function getNewToken() {
-  return function (dispatch: AppDispatch) {
+export const getNewToken: AppThunk = () => {
+  return function (dispatch: any) {
     dispatch({ type: NEW_TOKEN_REQUEST });
     newTokenRequest()
       .then((res) => {
@@ -314,8 +314,8 @@ const getUserRequest = async () => {
   });
 };
 
-export function getUserData() {
-  return function (dispatch: AppDispatch) {
+export const getUserData: AppThunk = () => {
+  return function (dispatch: any) {
     dispatch({ type: GET_USER_REQUEST });
     return getUserRequest()
       .then((res) => {
@@ -388,8 +388,8 @@ const setUserRequest = async (
   });
 };
 
-export function setUserData(name: string, email: string, password: string) {
-  return function (dispatch: AppDispatch) {
+export const setUserData: AppThunk = (name: string, email: string, password: string) => {
+  return function (dispatch: any) {
     dispatch({ type: SET_USER_REQUEST });
     return setUserRequest(name, email, password)
       .then((res) => {
@@ -416,8 +416,8 @@ const forgotPasswordRequest = async (email: string) => {
   });
 };
 
-export function forgotPassword(email: string) {
-  return function (dispatch: AppDispatch) {
+export const forgotPassword: AppThunk = (email: string) => {
+  return function (dispatch: any) {
     dispatch({ type: PASSWORD_FORGOT_REQUEST });
     forgotPasswordRequest(email)
       .then((res) => {
@@ -442,8 +442,8 @@ const resetPasswordRequest = async (password: string, token: string) => {
   });
 };
 
-export function resetPassword(password: string, token: string) {
-  return function (dispatch: AppDispatch) {
+export const resetPassword: AppThunk = (password: string, token: string) => {
+  return function (dispatch: any) {
     dispatch({ type: PASSWORD_RESET_REQUEST });
     resetPasswordRequest(password, token)
       .then((res) => {

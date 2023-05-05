@@ -33,13 +33,13 @@ type TinitialIndexState = {
   registrationError: boolean;
   authorized: boolean;
   authData: {
-    user: {
-      email: string;
-      name: string;
-      pass: string;
+    user?: {
+      email?: string;
+      name?: string;
+      pass?: string;
     };
   };
-  accessToken: string;
+  accessToken?: string;
   signInLoading: boolean;
   signInError: boolean;
   signOutLoading: boolean;
@@ -93,7 +93,7 @@ const initialState: TinitialIndexState = {
 export const reducers = (
   state: TinitialIndexState = initialState,
   action: TIndexActions
-) => {
+): TinitialIndexState => {
   switch (action.type) {
     case REGISTRATION_REQUEST: {
       return {
@@ -196,14 +196,14 @@ export const reducers = (
         getUserLoading: false,
         getUserError: false,
         authData: {
-          success: action.res.success,
+          //success: action.res.success,
           user: {
             ...state.authData.user,
             email: action.res.user?.email,
             name: action.res.user?.name,
           },
-          accessToken: action.res.accessToken,
         },
+        accessToken: action.res.accessToken,
       };
     }
     case SET_USER_REQUEST: {

@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useState, FC, FormEvent } from "react";
+import { useDispatch, useSelector } from "../../services/types/index";
 import { Link, Navigate } from "react-router-dom";
 import {
   Input,
@@ -10,7 +10,7 @@ import {
 import style from "./register.module.css";
 import { getRegistrationData } from "../../services/actions";
 
-export function Register() {
+export const Register: FC = () => {
   const dispatch = useDispatch();
   const { authorized } = useSelector((store) => store.root);
 
@@ -18,19 +18,19 @@ export function Register() {
   const [password, setPassword] = useState("");
   const [nameValue, setName] = useState("");
 
-  const changeEmail = (e) => {
+  const changeEmail = (e: {target: HTMLInputElement}) => {
     setEmail(e.target.value);
   };
 
-  const changePassword = (e) => {
+  const changePassword = (e: {target: HTMLInputElement}) => {
     setPassword(e.target.value);
   };
 
-  const changeName = (e) => {
+  const changeName = (e: {target: HTMLInputElement}) => {
     setName(e.target.value);
   };
 
-  const onSubmit = (e) => {
+  const onSubmit = (e: FormEvent) => {
     e.preventDefault();
     dispatch(getRegistrationData(nameValue, emailValue, password));
   };

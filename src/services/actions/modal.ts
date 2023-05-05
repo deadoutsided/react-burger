@@ -1,4 +1,4 @@
-import { TIngredient } from "../../utils/types";
+import { TIngredient } from "../types/types";
 import {
   SET_CURRENT_INGREDIENT,
   DELETE_CURRENT_INGREDIENT,
@@ -7,7 +7,7 @@ import {
 
 export interface ISetCurrentIngredient {
   readonly type: typeof SET_CURRENT_INGREDIENT;
-  readonly ingredient: TIngredient;
+  readonly ingredient?: TIngredient;
 }
 
 export interface IDeleteCurrentIngredient {

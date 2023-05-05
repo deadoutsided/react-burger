@@ -1,4 +1,4 @@
-import { TWSErrorPayload, TWSOrderMessage } from "../../utils/types";
+import { TWSErrorPayload, TWSOrderMessage } from "../types/ws";
 import {
   WS_CONNECTION_PUBLIC_START,
   WS_PUBLIC_CONNECTION_SUCCESS,
