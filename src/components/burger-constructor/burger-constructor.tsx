@@ -35,7 +35,7 @@ const BurgerConstructor: FC = () => {
       item: { ...item, uuid: uuidv4(), id: id },
     });
   };
-  const [, dropTarget] = useDrop<TIngredient | null , unknown, LegacyRef<HTMLElement> | undefined>({
+  const [, dropTarget] = useDrop<TIngredient>({
     accept: "ingredient",
     drop(item: TIngredient | null) {
       addItem(item, constructorIngredients?.length);

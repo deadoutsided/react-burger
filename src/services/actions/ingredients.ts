@@ -1,4 +1,4 @@
-import request, { TResponse } from "../types/data";
+import request from "../types/data";
 import { TIngredient } from "../types/types";
 import {
   INGREDIENT_REQUEST,
@@ -33,7 +33,7 @@ const getIngredientDataRequest = async (): Promise<{
 };
 
 export const getIngredientData: AppThunk = () => {
-  return function (dispatch: any) {
+  return function (dispatch: AppDispatch) {
     dispatch({
       type: INGREDIENT_REQUEST,
     });
@@ -44,10 +44,10 @@ export const getIngredientData: AppThunk = () => {
           value: res.data,
         });
       })
-      .catch(
+      .catch((err) =>{
         dispatch({
           type: INGREDIENT_FAILED,
-        })
+        })}
       );
   };
 }

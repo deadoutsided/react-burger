@@ -54,12 +54,12 @@ const orderRequest = async (constructorIngredients: TIngredient[]) => {
 };
 
 export const getOrderData: AppThunk = (constructorIngredients: TIngredient[]) => {
-  return function (dispatch: any) {
+  return function (dispatch: AppDispatch) {
     dispatch({ type: ORDER_REQUEST });
     orderRequest(constructorIngredients)
       .then((res) => {
         dispatch({ type: ORDER_SUCCESS, order: res });
       })
-      .catch(dispatch({ type: ORDER_FAILED }));
+      .catch(() => dispatch({ type: ORDER_FAILED }));
   };
 }

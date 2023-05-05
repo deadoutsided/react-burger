@@ -10,8 +10,8 @@ import { TModalActions } from "../actions/modal";
 import { TOrdersActions } from "../actions/order";
 import { TWSPersonalActions } from "../actions/ws-personal";
 import { TWSPublicActions } from "../actions/ws-public";
-import { ThunkAction, ThunkDispatch } from 'redux-thunk';
-import { Action, ActionCreator } from 'redux';
+import { ThunkAction } from 'redux-thunk';
+import { ActionCreator } from 'redux';
 import { store } from "../store";
 
 export type TApplicationActions = TConstructorActions
@@ -24,15 +24,11 @@ export type TApplicationActions = TConstructorActions
 
 export type RootState = ReturnType<typeof store.getState>;
 
-//export type AppDispatch = ThunkDispatch<RootState, unknown, TApplicationActions>;
 export type AppDispatch = typeof store.dispatch;
-export type AppThunk<TReturn = void> = ActionCreator<
-  ThunkAction<TReturn, Action, RootState, TApplicationActions>
+export type AppThunk = ActionCreator<
+  ThunkAction<void, RootState, unknown, TApplicationActions>
 >;
-
-/* export type AppThunk = ThunkAction<void, Action, RootState, TApplicationActions>; */
 
 export const useSelector: TypedUseSelectorHook<RootState> = selectorHook;
 
 export const useDispatch: () => AppDispatch | AppThunk = dispatchHook;
-//export const useDispatch = () => dispatchHook<AppDispatch>();

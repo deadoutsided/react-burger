@@ -1,9 +1,7 @@
 import React, { useEffect, useState, FC } from "react";
 import { useDispatch, useSelector } from "../../services/types/index";
 import { Link, useLocation } from "react-router-dom";
-import PropTypes from "prop-types";
 import style from "./card-ingredient.module.css";
-import ingredientType from "../../utils/types";
 import {
   CurrencyIcon,
   Counter,
