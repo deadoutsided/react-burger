@@ -52,7 +52,7 @@ const App: FC = () => {
             }
           ></Route>
           <Route
-            path="/login"
+            path="/sign-in"
             element={
               <>
                 <SignIn />
